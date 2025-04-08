@@ -1,48 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.gestaooleos.UI.controller.ContratosController">
 
-    <!-- LADO ESQUERDO: MENU -->
+    <!-- MENU LATERAL -->
     <left>
-        <VBox spacing="10" alignment="TOP_LEFT" style="-fx-background-color: #f9f9dc; -fx-padding: 20;">
-            <Label text="🧃GestÓleos" style="-fx-font-size: 20; -fx-font-weight: bold;" />
+        <VBox spacing="10" style="-fx-background-color: #f9f9dc; -fx-padding: 20;">
+            <Label text="🧴\nGestÓleos" style="-fx-font-size: 20; -fx-font-weight: bold;" />
             <Button text="📄 Os Meus Contratos" maxWidth="200" style="-fx-background-color: #f9e780; -fx-font-weight: bold;" />
             <Button text="🗑 Recolhas" maxWidth="200" />
             <Button text="👥 Utilizadores" maxWidth="200" />
         </VBox>
     </left>
 
-    <!-- CENTRO: CONTEÚDO PRINCIPAL -->
+    <!-- CONTEÚDO PRINCIPAL -->
     <center>
-        <VBox spacing="20" style="-fx-padding: 20;">
-        <!-- Título e indicadores -->
-            <HBox spacing="20" alignment="CENTER_LEFT">
+        <VBox spacing="20">
+            <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 20;">
                 <Label text="←  Contratos" style="-fx-font-size: 26; -fx-font-weight: bold;" />
             </HBox>
 
-            <HBox spacing="20">
-                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5,0,0,2); -fx-border-radius: 10;">
+            <HBox spacing="20" style="-fx-padding: 0 20 0 20;">
+                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5,0,0,2);">
                     <Label text="Contratos Ativos" />
                     <Label text="4" style="-fx-font-size: 24; -fx-font-weight: bold;" />
                 </VBox>
-                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5,0,0,2); -fx-border-radius: 10;">
+                <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5,0,0,2);">
                     <Label text="Contratos Concluídos" />
                     <Label text="58" style="-fx-font-size: 24; -fx-font-weight: bold;" />
                 </VBox>
-                <Button text="➕ Adicionar Contrato" style="-fx-background-color: #f0e6a0; -fx-font-weight: bold; -fx-padding: 20; -fx-border-radius: 10;" />
+                <Button text="➕ Adicionar Contrato" style="-fx-background-color: #f0e6a0; -fx-font-weight: bold; -fx-padding: 20;" />
             </HBox>
 
-            <!-- Tabela -->
-            <TableView fx:id="tabelaContratos" prefHeight="400">
+            <!-- TABELA -->
+            <TableView fx:id="tabelaContratos" prefHeight="400" style="-fx-padding: 20;">
                 <columns>
-                    <TableColumn text="Nome" prefWidth="200" />
-                    <TableColumn text="Data Início" prefWidth="150" />
-                    <TableColumn text="Data Fim" prefWidth="150" />
-                    <TableColumn text="Estado" prefWidth="100" />
+                    <TableColumn fx:id="nomeCol" text="Nome" prefWidth="200"/>
+                    <TableColumn fx:id="dataInicioCol" text="Data Início" prefWidth="150"/>
+                    <TableColumn fx:id="dataFimCol" text="Data Fim" prefWidth="150"/>
+                    <TableColumn fx:id="estadoCol" text="Estado" prefWidth="100"/>
                 </columns>
             </TableView>
         </VBox>
