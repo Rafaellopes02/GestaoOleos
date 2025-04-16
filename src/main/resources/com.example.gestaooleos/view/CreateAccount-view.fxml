@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+
+<StackPane xmlns="http://javafx.com/javafx/23.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.example.gestaooleos.UI.controller.CreateAccountController"
+           stylesheets="@/Styles/login.css">
+
+    <VBox alignment="TOP_CENTER" styleClass="fundo-login">
+
+        <VBox alignment="CENTER" spacing="15" styleClass="caixa-login">
+            <Label text="Criar Conta" styleClass="titulo" />
+
+            <!-- Username -->
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="campo">
+                <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                    <image>
+                        <Image url="@/image/person.png" />
+                    </image>
+                </ImageView>
+                <TextField fx:id="nameField" promptText="Nome" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="campo">
+                <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                    <image>
+                        <Image url="@/image/phone.png" />
+                    </image>
+                </ImageView>
+                <TextField fx:id="phoneField" promptText="Telefone" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="campo">
+                <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                    <image>
+                        <Image url="@/image/morada.png" />
+                    </image>
+                </ImageView>
+                <TextField fx:id="moradaField" promptText="Morada" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="campo">
+                <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                    <image>
+                        <Image url="@/image/person.png" />
+                    </image>
+                </ImageView>
+                <TextField fx:id="usernameField" promptText="Username" />
+            </HBox>
+
+            <!-- Password -->
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="campo">
+                <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                    <image>
+                        <Image url="@/image/locker.png" />
+                    </image>
+                </ImageView>
+                <PasswordField fx:id="passwordField" promptText="Password" />
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="campo">
+                <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
+                    <image>
+                        <Image url="@/image/locker.png" />
+                    </image>
+                </ImageView>
+                <PasswordField fx:id="passwordField1" promptText="Repete a Password" />
+            </HBox>
+
+            <Button text="Criar" fx:id="CriarButton" styleClass="botao-login" />
+
+            <Hyperlink text="Login" fx:id="loginPage" styleClass="criar-conta" />
+        </VBox>
+    </VBox>
+</StackPane>

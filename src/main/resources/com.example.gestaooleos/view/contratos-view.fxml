@@ -65,7 +65,7 @@
                 </graphic>
             </Button>
 
-            <Button text=" Utilizadores" styleClass="botao-menu">
+            <Button fx:id="btnUtilizadores" text=" Utilizadores" styleClass="botao-menu">
                 <graphic>
                     <ImageView fitHeight="25.0" fitWidth="10.0" preserveRatio="true">
                         <image>
