@@ -43,7 +43,14 @@ public class ContratosController {
 
     @FXML
     public void initialize() {
+<<<<<<< Utilizadores
         btnUtilizadores.setOnAction(e -> redirecionarUtilizadores());
+=======
+        tabelaContratos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tabelaContratos.setFocusTraversable(false);
+        tabelaContratos.setSelectionModel(null);
+
+>>>>>>> master
         // Liga as colunas aos campos do DTO
         nomeCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
         dataInicioCol.setCellValueFactory(new PropertyValueFactory<>("dataInicio"));

@@ -81,46 +81,67 @@
 .table-view {
     -fx-font-family: "JetBrains Mono";
     -fx-font-size: 13px;
-    -fx-background-color: transparent;
+
+    -fx-background-color: transparent; /* evita fundo amarelo fora das linhas */
     -fx-table-cell-border-color: transparent;
-    -fx-padding: 10;
-    -fx-border-color: #ccc;
-    -fx-border-radius: 4;
+    -fx-padding: 20 20 20 40;
+    -fx-border-color: white;
+    -fx-background-radius: 20;
+    -fx-border-radius: 70;
+    -fx-column-resize-policy: constrained-resize;
+}
+
+.table-view .filler {
+    -fx-background-color: transparent; /* evita fundo amarelo nas "lacunas" */
 }
 
 /* Cabeçalho da tabela */
 .table-view .column-header-background {
-    -fx-background-color: #F9F9F9;
-    -fx-border-color: #cccccc;
-    -fx-border-width: 0 0 1 0;
+    -fx-background-color: rgba(243, 243, 216, 1);
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
 }
 
+/* Colunas do cabeçalho */
 .table-view .column-header {
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0;
+    -fx-pref-height: 44px;
     -fx-background-color: transparent;
-    -fx-font-weight: bold;
-    -fx-alignment: CENTER;
 }
 
-/* Texto dentro do cabeçalho */
-.table-view .label {
+/* Texto do cabeçalho */
+.table-view .column-header .label {
+    -fx-alignment: CENTER_LEFT;
+    -fx-text-alignment: left;
+    -fx-padding: 0 0 0 12;
+    -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-text-fill: #444;
-    -fx-alignment: CENTER;
+    -fx-text-fill: rgba(116, 116, 116, 1);
 }
 
-/* Linhas da tabela */
+/* Linhas normais */
 .table-row-cell {
     -fx-padding: 6 12;
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: rgba(255, 255, 255, 0.63);
 }
 
-/* Linhas alternadas com cor */
+/* Texto das linhas */
+.table-row-cell .text {
+    -fx-fill: rgba(116, 116, 116, 1);
+    -fx-font-weight: bold;
+}
+
+/* Linhas alternadas */
 .table-row-cell:odd {
-    -fx-background-color: #F5F5DC; /* amarelo claro */
+    -fx-background-color: #f7f7d8;
 }
 
-/* Linha selecionada */
+/* Linha selecionada (sem destaque) */
 .table-row-cell:selected {
-    -fx-background-color: #e0e0e0;
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(116, 116, 116, 1);
 }
+
+
 
