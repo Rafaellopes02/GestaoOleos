@@ -1,0 +1,57 @@
+.fundo-login {
+    -fx-background-color: linear-gradient(to bottom, #44235D, #F4F2F8);
+    -fx-alignment: center;
+}
+
+.caixa-login {
+    -fx-background-color: white;
+    -fx-padding: 30;
+    -fx-spacing: 15;
+    -fx-alignment: center;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);
+    -fx-translate-y: -80;
+    -fx-max-width: 300;
+}
+
+.titulo {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2F1B3A;
+}
+
+.campo {
+    -fx-background-color: #F9C7D1;
+    -fx-padding: 8 12;
+    -fx-background-radius: 20;
+    -fx-spacing: 10;
+}
+
+.campo TextField,
+.campo PasswordField {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-pref-width: 200;
+}
+
+.botao-login {
+    -fx-background-color: #5A326B;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0;
+    -fx-background-radius: 20;
+    -fx-pref-width: 250;
+}
+
+.criar-conta {
+    -fx-text-fill: #5A326B;
+    -fx-font-size: 12px;
+    -fx-padding: 10 0 0 0;
+}
+
+.opcoes-secundarias CheckBox,
+.opcoes-secundarias Hyperlink {
+    -fx-text-fill: #5A326B;
+    -fx-font-size: 12px;
+}

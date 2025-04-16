@@ -23,10 +23,11 @@ public class MainApp extends Application {
         }
 
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/contratos-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/login-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1366, 768);
         primaryStage.setTitle("Gestão de Óleos");
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 

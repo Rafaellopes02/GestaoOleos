@@ -1,0 +1,158 @@
+/* === ESTILO GLOBAL === */
+.root {
+    -fx-font-family: "JetBrains Mono";
+    -fx-text-fill: #333;
+}
+
+/* === BOTÕES DO MENU LATERAL === */
+.botao-menu {
+    -fx-background-color: transparent;
+    -fx-alignment: center-left;
+    -fx-font-weight: 800;
+    -fx-font-size: 15;
+    -fx-background-radius: 6;
+    -fx-pref-height: 25;
+    -fx-max-width: Infinity;
+    -fx-padding: 6 12;
+}
+
+.botao-menu:hover {
+    -fx-background-color: rgba(229, 202, 61, 0.24);
+}
+
+.botao-menu:pressed {
+    -fx-background-color: rgba(229, 202, 61, 0.24);
+}
+
+.fundo-escritorio {
+    -fx-background-color: rgba(74, 144, 226, 0.2);
+    -fx-background-radius: 20%;
+    -fx-padding: 10;
+    -fx-max-height: 30;
+    -fx-max-width: 30;
+}
+
+.fundo-comercial {
+    -fx-background-color: rgba(245, 166, 35, 0.2);
+    -fx-background-radius: 20%;
+    -fx-padding: 10;
+    -fx-max-height: 30;
+    -fx-max-width: 30;
+}
+
+.fundo-funcionarios {
+    -fx-background-color: rgba(126, 211, 33, 0.2);
+    -fx-background-radius: 20%;
+    -fx-padding: 10;
+    -fx-max-height: 30;
+    -fx-max-width: 30;
+}
+
+.fundo-clientes {
+    -fx-background-color: rgba(189, 16, 224, 0.2);
+    -fx-background-radius: 20%;
+    -fx-padding: 10;
+    -fx-max-height: 30;
+    -fx-max-width: 30;
+}
+
+/* === BOTÃO ADICIONAR CONTRATO === */
+.botao-adicionar {
+    -fx-background-color:rgba(240, 233, 179, 1);
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-text-fill: rgba(68, 68, 68, 1);
+    -fx-font-size: 22px;
+    -fx-cursor: hand;
+}
+
+.botao-adicionar:hover {
+    -fx-background-color: #e4d873;
+}
+
+.botao-adicionar:pressed {
+    -fx-background-color: #d8cc60;
+}
+
+/* === TÍTULO CONTRATOS === */
+.titulo {
+    -fx-font-size: 50px;
+    -fx-font-weight: bold;
+}
+
+/* === CARTÕES DE CONTAGEM === */
+.card-info {
+    -fx-background-color: white;
+    -fx-padding: 10;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0, 0, 4);
+}
+
+.card-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 800;
+}
+
+.card-numero {
+    -fx-font-size: 36px;
+    -fx-font-weight: 800;
+}
+
+/* === LINHA DECORATIVA === */
+.linha-horizontal {
+    -fx-background-color: black;
+    -fx-pref-height: 2;
+    -fx-max-width: Infinity;
+}
+
+.botao-atras {
+    -fx-background-color: transparent;
+}
+
+/* Estilo base da tabela */
+.table-view {
+    -fx-font-family: "JetBrains Mono";
+    -fx-font-size: 13px;
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 10;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 4;
+}
+
+/* Cabeçalho da tabela */
+.table-view .column-header-background {
+    -fx-background-color: #F9F9F9;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+}
+
+/* Texto dentro do cabeçalho */
+.table-view .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #444;
+    -fx-alignment: CENTER;
+}
+
+/* Linhas da tabela */
+.table-row-cell {
+    -fx-padding: 6 12;
+    -fx-background-color: #FFFFFF;
+}
+
+/* Linhas alternadas com cor */
+.table-row-cell:odd {
+    -fx-background-color: #F5F5DC; /* amarelo claro */
+}
+
+/* Linha selecionada */
+.table-row-cell:selected {
+    -fx-background-color: #e0e0e0;
+}
+

@@ -13,4 +13,6 @@ public class Utilizadores {
     private String telefone;
     private String morada;
     private int idtipoutilizador;
+    private String username;
+    private String password;
 }
