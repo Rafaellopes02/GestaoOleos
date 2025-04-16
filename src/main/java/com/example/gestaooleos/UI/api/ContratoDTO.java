@@ -15,7 +15,8 @@ public class ContratoDTO {
     @JsonProperty("datafim")
     private String dataFim;
 
-    private String estado;
+    @JsonProperty("idestadocontrato")
+    private int idEstadoContrato;
 
     // Getters
     public Long getIdcontrato() {
@@ -34,8 +35,8 @@ public class ContratoDTO {
         return dataFim;
     }
 
-    public String getEstado() {
-        return estado;
+    public int getIdEstadoContrato() {
+        return idEstadoContrato;
     }
 
     // Setters
@@ -55,7 +56,8 @@ public class ContratoDTO {
         this.dataFim = dataFim;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+
+    public void setIdEstadoContrato(int idEstadoContrato) {
+        this.idEstadoContrato = idEstadoContrato;
     }
 }
