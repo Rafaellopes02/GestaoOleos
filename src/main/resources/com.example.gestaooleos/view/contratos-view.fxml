@@ -111,8 +111,8 @@
 
                     <!-- Número + imagem -->
                     <HBox alignment="CENTER" spacing="10">
-                        <Label text="4" styleClass="card-numero">
-                            <padding>
+                        <Label fx:id="lblAtivos" text="4" styleClass="card-numero">
+                        <padding>
                                 <Insets top="15" left="10"/>
                             </padding>
                         </Label>
@@ -145,11 +145,11 @@
 
                     <!-- Número + imagem -->
                     <HBox alignment="CENTER" spacing="10">
-                        <Label text="58" styleClass="card-numero">
-                        <padding>
-                            <Insets top="15" />
-                        </padding>
-                    </Label>
+                        <Label fx:id="lblConcluidos" text="58" styleClass="card-numero">
+                            <padding>
+                                <Insets top="15" />
+                            </padding>
+                        </Label>
                         <Region fx:id="espaco" HBox.hgrow="ALWAYS" />
                         <ImageView fitHeight="40" fitWidth="40">
                             <HBox.margin>
@@ -165,9 +165,10 @@
                         </padding>
                     </HBox>
 
+
                 </StackPane>
 
-                <Button styleClass="botao-adicionar" prefWidth="250" prefHeight="170">
+                <Button fx:id="btnAdicionar" styleClass="botao-adicionar" prefWidth="250" prefHeight="170">
                     <graphic>
                         <VBox alignment="CENTER" spacing="8">
                             <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">

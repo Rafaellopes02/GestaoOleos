@@ -2,6 +2,7 @@ package com.example.gestaooleos.UI.controller;
 
 import com.example.gestaooleos.UI.api.UtilizadorDTO;
 import com.example.gestaooleos.UI.api.UtilizadoresClient;
+import com.example.gestaooleos.UI.utils.FullscreenHelper;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.application.Platform;
@@ -52,7 +53,7 @@ public class CreateAccountController {
         novo.setIdtipoutilizador(1);
 
         utilizadoresClient.criarUtilizador(novo,
-                resposta -> Platform.runLater(this::redirecionarParaContratos),
+                resposta -> Platform.runLater(this::redirecionarParaLogin),
                 erro -> Platform.runLater(() -> mostrarAlerta("Erro", "Falha ao criar conta: " + erro, Alert.AlertType.ERROR))
         );
     }
@@ -64,15 +65,18 @@ public class CreateAccountController {
         alerta.showAndWait();
     }
 
-    private void redirecionarParaContratos() {
+    private void redirecionarParaLogin() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/contratos-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/Login-view.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
+
             Stage stage = (Stage) CriarButton.getScene().getWindow();
             stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.setTitle("Contratos");
+            stage.setTitle("Login");
+
+            FullscreenHelper.ativarFullscreen(stage);
+
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Erro", "Erro ao carregar a página de contratos.", Alert.AlertType.ERROR);
@@ -83,11 +87,13 @@ public class CreateAccountController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/login-view.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
             Stage stage = (Stage) loginPage.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setMaximized(true);
+
+            stage.getScene().setRoot(root);
             stage.setTitle("Login");
+
+            FullscreenHelper.ativarFullscreen(stage);
+
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Erro", "Erro ao carregar a página de login.", Alert.AlertType.ERROR);

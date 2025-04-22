@@ -1,5 +1,5 @@
 package com.example.gestaooleos.UI.controller;
-
+import com.example.gestaooleos.UI.utils.FullscreenHelper;
 import com.example.gestaooleos.UI.api.UtilizadorDTO;
 import com.example.gestaooleos.UI.api.UtilizadoresClient;
 import javafx.fxml.FXML;
@@ -63,16 +63,19 @@ public class LoginController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/CreateAccount-view.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
             Stage stage = (Stage) PageCriar.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setMaximized(true);
+
+            stage.getScene().setRoot(root);
             stage.setTitle("Criar Conta");
+
+            FullscreenHelper.ativarFullscreen(stage);
+
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta("Erro", "Erro ao carregar a página de login.", Alert.AlertType.ERROR);
+            mostrarAlerta("Erro", "Erro ao carregar a página de criação de conta.", Alert.AlertType.ERROR);
         }
     }
+
 
     private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
@@ -85,14 +88,18 @@ public class LoginController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/contratos-view.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
+
             Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setMaximized(true);
+            stage.getScene().setRoot(root);
             stage.setTitle("Contratos");
+
+            // Ativar fullscreen novamente
+            FullscreenHelper.ativarFullscreen(stage);
+
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Erro", "Erro ao carregar a página de contratos.", Alert.AlertType.ERROR);
         }
     }
+
 }

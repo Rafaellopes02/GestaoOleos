@@ -8,6 +8,6 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("estadoscontratos")
 public class EstadosContratos {
     @Id
-    private Long idestadocontrato;
+    private int idestadocontrato;
     private String nome;
 }

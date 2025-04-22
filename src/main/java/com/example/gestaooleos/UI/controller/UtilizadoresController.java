@@ -2,6 +2,7 @@ package com.example.gestaooleos.UI.controller;
 
 import com.example.gestaooleos.UI.api.UtilizadoresClient;
 import com.example.gestaooleos.UI.api.UtilizadorDTO;
+import com.example.gestaooleos.UI.utils.FullscreenHelper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
@@ -118,11 +119,14 @@ public class UtilizadoresController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/contratos-view.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
             Stage stage = (Stage) btnContratos.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setMaximized(true);
+
+
+            stage.getScene().setRoot(root);
             stage.setTitle("Contratos");
+
+            FullscreenHelper.ativarFullscreen(stage); // aplica fullscreen depois do layout
+
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Erro", "Erro ao carregar a página de contratos.", Alert.AlertType.ERROR);
