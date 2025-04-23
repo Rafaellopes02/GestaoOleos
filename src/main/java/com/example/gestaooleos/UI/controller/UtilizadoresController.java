@@ -10,7 +10,6 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -19,117 +18,92 @@ import java.util.List;
 
 public class UtilizadoresController {
 
-    @FXML private Button btnContratos;
     @FXML private Label ClienteCountLabel;
     @FXML private Label FuncionarioCountLabel;
     @FXML private Label EscritorioCountLabel;
     @FXML private Label ComercialCountLabel;
+    @FXML private Button btnBack;
 
-
-    @FXML
-    private TableView<UtilizadorDTO> tabelaUtilizador;
-
-    @FXML
-    private TableColumn<UtilizadorDTO, String> nomeUtilizador;
-
-    @FXML
-    private TableColumn<UtilizadorDTO, String> telefoneUtilizador;
-
-    @FXML
-    private TableColumn<UtilizadorDTO, String> moradaUtilizador;
-
-    @FXML
-    private TableColumn<UtilizadorDTO, Integer> idtipoutilizadorUtilizador;
-
-    @FXML
-    private TableColumn<UtilizadorDTO, String> usernameUtilizador;
+    @FXML private TableView<UtilizadorDTO> tabelaUtilizador;
+    @FXML private TableColumn<UtilizadorDTO, String> nomeUtilizador;
+    @FXML private TableColumn<UtilizadorDTO, String> telefoneUtilizador;
+    @FXML private TableColumn<UtilizadorDTO, String> moradaUtilizador;
+    @FXML private TableColumn<UtilizadorDTO, Integer> idtipoutilizadorUtilizador;
+    @FXML private TableColumn<UtilizadorDTO, String> usernameUtilizador;
 
     private final UtilizadoresClient utilizadorClient = new UtilizadoresClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
     @FXML
     public void initialize() {
-        btnContratos.setOnAction(e -> redirecionarContratos());
+        // Configura colunas
         nomeUtilizador.setCellValueFactory(new PropertyValueFactory<>("nome"));
         telefoneUtilizador.setCellValueFactory(new PropertyValueFactory<>("telefone"));
         moradaUtilizador.setCellValueFactory(new PropertyValueFactory<>("morada"));
         idtipoutilizadorUtilizador.setCellValueFactory(new PropertyValueFactory<>("idtipoutilizador"));
         usernameUtilizador.setCellValueFactory(new PropertyValueFactory<>("username"));
 
-        idtipoutilizadorUtilizador.setCellFactory(column -> new TableCell<>() {
+        // Traduz o ID do tipo em texto
+        idtipoutilizadorUtilizador.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    String tipoTexto = switch (item) {
+                    setText(switch (item) {
                         case 1 -> "Cliente";
                         case 2 -> "Funcionário";
                         case 3 -> "Escritório";
                         case 6 -> "Comercial";
                         default -> "Outro";
-                    };
-                    setText(tipoTexto);
+                    });
                 }
             }
         });
 
+        // Carrega dados
         carregarUtilizadores();
     }
 
     private void carregarUtilizadores() {
         utilizadorClient.buscarUtilizadores(json -> {
             try {
-                List<UtilizadorDTO> utilizadores = mapper.readValue(json, new TypeReference<>() {});
+                List<UtilizadorDTO> lista = mapper.readValue(json, new TypeReference<>() {});
+                long clientes   = lista.stream().filter(u -> u.getIdtipoutilizador() == 1).count();
+                long funcionarios = lista.stream().filter(u -> u.getIdtipoutilizador() == 2).count();
+                long escritorios  = lista.stream().filter(u -> u.getIdtipoutilizador() == 3).count();
+                long comerciais   = lista.stream().filter(u -> u.getIdtipoutilizador() == 6).count();
 
-                // Atualizar tabela
-                Platform.runLater(() -> tabelaUtilizador.setItems(FXCollections.observableArrayList(utilizadores)));
-
-                // Contagem por tipo de utilizador
-                long clientes = utilizadores.stream().filter(u -> u.getIdtipoutilizador() != null && u.getIdtipoutilizador() == 1).count();
-                long funcionarios = utilizadores.stream().filter(u -> u.getIdtipoutilizador() == 2).count();
-                long escritorios = utilizadores.stream().filter(u -> u.getIdtipoutilizador() == 3).count();
-                long comerciais = utilizadores.stream().filter(u -> u.getIdtipoutilizador() == 6).count();
-
-                // Atualizar labels dos cartões
                 Platform.runLater(() -> {
+                    tabelaUtilizador.setItems(FXCollections.observableArrayList(lista));
                     ClienteCountLabel.setText(String.valueOf(clientes));
                     FuncionarioCountLabel.setText(String.valueOf(funcionarios));
                     EscritorioCountLabel.setText(String.valueOf(escritorios));
                     ComercialCountLabel.setText(String.valueOf(comerciais));
                 });
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }, erro -> Platform.runLater(() ->
-                System.out.println("Erro ao buscar utilizadores: " + erro)
+                System.err.println("Erro ao buscar utilizadores: " + erro)
         ));
     }
 
-    private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType tipo) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setContentText(mensagem);
-        alerta.showAndWait();
-    }
-
-    private void redirecionarContratos() {
+    @FXML
+    private void voltarHome() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/contratos-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com.example.gestaooleos/view/home-funcionario.fxml")
+            );
             Parent root = loader.load();
-            Stage stage = (Stage) btnContratos.getScene().getWindow();
-
-
+            Stage stage = (Stage) btnBack.getScene().getWindow();
             stage.getScene().setRoot(root);
-            stage.setTitle("Contratos");
-
-            FullscreenHelper.ativarFullscreen(stage); // aplica fullscreen depois do layout
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarAlerta("Erro", "Erro ao carregar a página de contratos.", Alert.AlertType.ERROR);
+            stage.setTitle("Página Inicial");
+            FullscreenHelper.ativarFullscreen(stage);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // podes mostrar um alerta aqui, se quiseres
         }
     }
 }

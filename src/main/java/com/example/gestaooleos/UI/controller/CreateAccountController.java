@@ -3,14 +3,17 @@ package com.example.gestaooleos.UI.controller;
 import com.example.gestaooleos.UI.api.UtilizadorDTO;
 import com.example.gestaooleos.UI.api.UtilizadoresClient;
 import com.example.gestaooleos.UI.utils.FullscreenHelper;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.util.List;
 
 public class CreateAccountController {
 
@@ -22,6 +25,7 @@ public class CreateAccountController {
     @FXML private PasswordField passwordField1;
     @FXML private Button CriarButton;
     @FXML private Hyperlink loginPage;
+    @FXML private Label erroLabel;
 
     private final UtilizadoresClient utilizadoresClient = new UtilizadoresClient();
 
@@ -39,65 +43,77 @@ public class CreateAccountController {
         String password = passwordField.getText();
         String passwordConfirm = passwordField1.getText();
 
-        if (!password.equals(passwordConfirm)) {
-            mostrarAlerta("Erro", "As passwords não coincidem.", Alert.AlertType.ERROR);
+        if (nome.isBlank() || telefone.isBlank() || morada.isBlank() || username.isBlank() || password.isBlank()) {
+            mostrarErro("Por favor, preencha todos os campos!");
             return;
         }
 
-        UtilizadorDTO novo = new UtilizadorDTO();
-        novo.setNome(nome);
-        novo.setTelefone(telefone);
-        novo.setMorada(morada);
-        novo.setUsername(username);
-        novo.setPassword(password);
-        novo.setIdtipoutilizador(1);
+        if (!password.equals(passwordConfirm)) {
+            mostrarErro("As passwords não coincidem.");
+            return;
+        }
 
-        utilizadoresClient.criarUtilizador(novo,
-                resposta -> Platform.runLater(this::redirecionarParaLogin),
-                erro -> Platform.runLater(() -> mostrarAlerta("Erro", "Falha ao criar conta: " + erro, Alert.AlertType.ERROR))
-        );
+        utilizadoresClient.buscarUtilizadores(json -> {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                List<UtilizadorDTO> utilizadores = mapper.readValue(json, new TypeReference<>() {});
+
+                boolean usernameExiste = utilizadores.stream()
+                        .anyMatch(u -> username.equalsIgnoreCase(u.getUsername()));
+
+                if (usernameExiste) {
+                    Platform.runLater(() -> mostrarErro("Esse username já está em uso."));
+                    return;
+                }
+
+                UtilizadorDTO novo = new UtilizadorDTO();
+                novo.setNome(nome);
+                novo.setTelefone(telefone);
+                novo.setMorada(morada);
+                novo.setUsername(username);
+                novo.setPassword(password);
+                novo.setIdtipoutilizador(1);
+
+                utilizadoresClient.criarUtilizador(novo,
+                        resposta -> Platform.runLater(this::redirecionarParaLogin),
+                        erro -> Platform.runLater(() -> mostrarErro("Falha ao criar conta: " + erro))
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> mostrarErro("Erro ao processar utilizadores."));
+            }
+        }, erro -> Platform.runLater(() -> mostrarErro("Erro ao comunicar com servidor.")));
     }
 
-    private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType tipo) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setContentText(mensagem);
-        alerta.showAndWait();
+    private void mostrarErro(String mensagem) {
+        erroLabel.setText(mensagem);
+        erroLabel.setStyle("-fx-text-fill: #b20000; -fx-font-weight: bold; -fx-background-color: #ffd6d6; -fx-padding: 8 8; -fx-background-radius: 8;-fx-font-family: Consolas;");
+        erroLabel.setVisible(true);
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ignored) {}
+            Platform.runLater(() -> erroLabel.setVisible(false));
+        }).start();
     }
 
     private void redirecionarParaLogin() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/Login-view.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
-
             Stage stage = (Stage) CriarButton.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Login");
-
-            FullscreenHelper.ativarFullscreen(stage);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarAlerta("Erro", "Erro ao carregar a página de contratos.", Alert.AlertType.ERROR);
-        }
-    }
-
-    private void loginPagehyperlink() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/login-view.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) loginPage.getScene().getWindow();
-
             stage.getScene().setRoot(root);
             stage.setTitle("Login");
 
             FullscreenHelper.ativarFullscreen(stage);
-
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta("Erro", "Erro ao carregar a página de login.", Alert.AlertType.ERROR);
+            mostrarErro("Erro ao carregar a página de login.");
         }
     }
 
+    private void loginPagehyperlink() {
+        redirecionarParaLogin();
+    }
 }

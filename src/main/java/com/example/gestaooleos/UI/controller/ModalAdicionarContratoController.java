@@ -1,11 +1,15 @@
 package com.example.gestaooleos.UI.controller;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
-import javafx.stage.Modality;
+import javafx.stage.StageStyle;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -42,7 +46,6 @@ public class ModalAdicionarContratoController {
         dpFim.getStyleClass().remove("campo-obrigatorio");
         cbEstado.getStyleClass().remove("campo-obrigatorio");
 
-        // Validação visual
         boolean valido = true;
 
         if (nome.isEmpty()) {
@@ -63,11 +66,10 @@ public class ModalAdicionarContratoController {
         }
 
         if (!valido) {
-            mostrarAlerta("Campos obrigatórios", "Por favor preencha todos os campos.", Alert.AlertType.WARNING);
+            mostrarToast("Preencha todos os campos obrigatórios.", false);
             return;
         }
 
-        // Mapeia estado → ID
         int idEstadoContrato = switch (estadoSelecionado) {
             case "Ativo" -> 1;
             case "Suspenso" -> 2;
@@ -96,21 +98,29 @@ public class ModalAdicionarContratoController {
                     .thenAccept(response -> {
                         if (response.statusCode() == 200 || response.statusCode() == 201) {
                             Platform.runLater(() -> {
-                                mostrarAlerta("✔ Sucesso", "Contrato criado com sucesso!", Alert.AlertType.INFORMATION);
+                                mostrarToast("Contrato criado com sucesso!", true);
+
                                 if (contratosController != null) {
                                     contratosController.carregarContratos();
                                     contratosController.carregarContadores();
                                 }
-                                fecharModal();
+
+                                // Espera o toast desaparecer antes de fechar o modal
+                                new Thread(() -> {
+                                    try {
+                                        Thread.sleep(2200); // ⏳ 2.2 segundos
+                                    } catch (InterruptedException ignored) {}
+                                    Platform.runLater(this::fecharModal);
+                                }).start();
                             });
                         } else {
                             Platform.runLater(() ->
-                                    mostrarAlerta("Erro", "Falha ao criar contrato. Código: " + response.statusCode(), Alert.AlertType.ERROR));
+                                    mostrarToast("Erro ao criar contrato. Código: " + response.statusCode(), false));
                         }
                     });
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta("Erro", "Erro ao enviar os dados do contrato.", Alert.AlertType.ERROR);
+            mostrarToast("Erro ao enviar os dados do contrato.", false);
         }
     }
 
@@ -121,22 +131,55 @@ public class ModalAdicionarContratoController {
         stage.close();
     }
 
-    private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType tipo) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensagem);
-
-        // 👉 Garante que o alerta aparece sobre o modal
-        Stage stage = (Stage) txtNome.getScene().getWindow();
-        alerta.initOwner(stage); // Associa o alerta ao modal
-        alerta.initModality(Modality.WINDOW_MODAL); // Modal acima da janela principal
-
-        alerta.showAndWait();
-    }
-
-
     public void setContratosController(ContratosController controller) {
         this.contratosController = controller;
     }
+
+    private void mostrarToast(String mensagem, boolean sucesso) {
+        Label lbl = new Label(mensagem);
+        lbl.setStyle(
+                "-fx-background-color: " + (sucesso ? "#d4edda" : "#f8d7da") + ";" +
+                        "-fx-text-fill: " + (sucesso ? "#155724" : "#721c24") + ";" +
+                        "-fx-padding: 10px 18px;" +
+                        "-fx-background-radius: 10px;" +
+                        "-fx-border-radius: 10px;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-family: 'JetBrains Mono';"
+        );
+
+        StackPane wrapper = new StackPane(lbl);
+        wrapper.setStyle("-fx-background-color: transparent;");
+        wrapper.setPadding(new Insets(30, 20, 0, 20)); // move para cima
+
+        Scene scene = new Scene(wrapper);
+        scene.setFill(null);
+
+        Stage toastStage = new Stage();
+        toastStage.initOwner(txtNome.getScene().getWindow());
+        toastStage.initStyle(StageStyle.TRANSPARENT);
+        toastStage.setAlwaysOnTop(true);
+        toastStage.setResizable(false);
+        toastStage.setScene(scene);
+
+        // posicionar no topo
+        Stage owner = (Stage) txtNome.getScene().getWindow();
+        double centerX = owner.getX() + owner.getWidth() / 2 - 197; // Ajusta o -150 consoante largura do toast
+        double topY = owner.getY() - 10 ; // Sobe mais o toast
+
+        toastStage.setX(centerX);
+        toastStage.setY(topY);
+
+
+        toastStage.show();
+
+        // fechar automaticamente após 2.5s
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ignored) {}
+            Platform.runLater(toastStage::close);
+        }).start();
+    }
+
+
 }

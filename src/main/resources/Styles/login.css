@@ -1,57 +1,98 @@
+.root {
+    -fx-font-family: "JetBrains Mono";
+    -fx-text-fill: #333;
+}
+
+/* === FUNDO === */
+.stackpane-login {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #e4d873, #e8e1a1);
+}
+
+
 .fundo-login {
-    -fx-background-color: linear-gradient(to bottom, #44235D, #F4F2F8);
+    -fx-background-color: transparent;
     -fx-alignment: center;
 }
 
+/* === CAIXA DE LOGIN === */
 .caixa-login {
     -fx-background-color: white;
-    -fx-padding: 30;
-    -fx-spacing: 15;
+    -fx-padding: 40 30;
+    -fx-spacing: 20;
     -fx-alignment: center;
     -fx-border-radius: 15;
     -fx-background-radius: 15;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);
-    -fx-translate-y: -80;
-    -fx-max-width: 300;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 12, 0.3, 0, 3);
+    -fx-max-width: 320;
+    -fx-min-width: 280;
+}
+.caixa-criar {
+    -fx-background-color: white;
+    -fx-padding: 20 30;
+    -fx-spacing: 20;
+    -fx-alignment: center;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 12, 0.3, 0, 3);
+    -fx-max-width: 320;
+    -fx-min-width: 280;
 }
 
+/* === TÍTULO === */
 .titulo {
-    -fx-font-size: 22px;
+    -fx-font-size: 26px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2F1B3A;
+    -fx-text-fill: #000000;
 }
 
+/* === CAMPOS DE TEXTO === */
 .campo {
-    -fx-background-color: #F9C7D1;
-    -fx-padding: 8 12;
-    -fx-background-radius: 20;
+    -fx-background-color: #fff8de;
+    -fx-padding: 10 14;
+    -fx-background-radius: 15;
     -fx-spacing: 10;
+    -fx-border-color: #e4d873;
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
 }
 
 .campo TextField,
 .campo PasswordField {
+    -fx-font-family: "Segoe UI";
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-pref-width: 200;
+    -fx-pref-width: 220;
+    -fx-font-size: 14px;
+    -fx-text-fill: #2f2f2f;
 }
 
+/* === BOTÃO LOGIN === */
 .botao-login {
-    -fx-background-color: #5A326B;
-    -fx-text-fill: white;
+    -fx-background-color: #e4d873;
+    -fx-text-fill: #2f2f2f;
     -fx-font-weight: bold;
     -fx-padding: 10 0;
     -fx-background-radius: 20;
     -fx-pref-width: 250;
+    -fx-font-size: 14px;
 }
 
+.botao-login:hover {
+    -fx-background-color: #d9ce67;
+}
+
+/* === CRIAR CONTA / OPÇÕES === */
 .criar-conta {
-    -fx-text-fill: #5A326B;
-    -fx-font-size: 12px;
-    -fx-padding: 10 0 0 0;
+    -fx-text-fill: #7a732a;
+    -fx-font-size: 16px;
+    -fx-padding: 1 0 0 0;
 }
 
-.opcoes-secundarias CheckBox,
-.opcoes-secundarias Hyperlink {
-    -fx-text-fill: #5A326B;
-    -fx-font-size: 12px;
+.hyperlink {
+    -fx-underline: false;
 }
+
+.hyperlink:hover {
+    -fx-underline: false;
+}
+

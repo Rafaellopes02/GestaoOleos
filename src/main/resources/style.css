@@ -11,17 +11,34 @@
     -fx-font-weight: 800;
     -fx-font-size: 15;
     -fx-background-radius: 6;
-    -fx-pref-height: 25;
+    -fx-pref-height: 35;
     -fx-max-width: Infinity;
-    -fx-padding: 6 12;
+    -fx-padding: 8 12;
+    -fx-content-display: LEFT; /* 👈 isto alinha ícone e texto */
+    -fx-graphic-text-gap: 5px; /* espaço entre ícone e texto */
 }
 
 .botao-menu:hover {
     -fx-background-color: rgba(229, 202, 61, 0.24);
 }
 
-.botao-menu:pressed {
+.botao-menu-ativo {
     -fx-background-color: rgba(229, 202, 61, 0.24);
+}
+
+.botao-logout {
+    -fx-background-color: rgba(202, 19, 19, 0.75);
+    -fx-font-weight: 800;
+    -fx-font-size: 15;
+    -fx-background-radius: 10;
+    -fx-pref-height: 25;
+    -fx-max-width: 150;
+    -fx-padding: 6 8 5 0;
+
+}
+
+.botao-logout:hover {
+    -fx-background-color: rgba(181, 22, 22, 0.75);
 }
 
 /* === BOTÃO ADICIONAR CONTRATO === */
@@ -95,6 +112,8 @@
     -fx-background-color: transparent; /* evita fundo amarelo nas "lacunas" */
 }
 
+
+
 /* Cabeçalho da tabela */
 .table-view .column-header-background {
     -fx-background-color: rgba(243, 243, 216, 1);
@@ -142,6 +161,52 @@
     -fx-background-color: transparent;
     -fx-text-fill: rgba(116, 116, 116, 1);
 }
+
+
+
+
+
+/* Estilo da barra de rolagem vertical e horizontal */
+.table-view .scroll-bar:vertical,
+.table-view .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+/* Parte arrastável */
+/* Scrollbar vertical e horizontal */
+.table-view .scroll-bar:vertical,
+.table-view .scroll-bar:horizontal {
+    -fx-pref-width: 10px;  /* Largura vertical */
+    -fx-pref-height: 12px; /* Altura horizontal */
+}
+
+/* Thumb (parte que desliza) */
+.table-view .scroll-bar .thumb {
+    -fx-background-color: rgba(163, 154, 74, 0.5);
+    -fx-background-radius: 6;
+    -fx-min-height: 20px;
+    -fx-min-width: 10px;
+}
+
+/* Track (trilho da scrollbar) */
+.table-view .scroll-bar .track {
+    -fx-background-color: rgba(243, 243, 216, 1);
+    -fx-background-radius: 6;
+}
+
+/* Remove botões das setas */
+.table-view .scroll-bar .increment-button,
+.table-view .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.table-view .scroll-bar .increment-arrow,
+.table-view .scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
 
 
 

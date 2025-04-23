@@ -4,19 +4,49 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.shape.SVGPath?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Pos?>
 
 <StackPane xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.example.gestaooleos.UI.controller.CreateAccountController"
-           stylesheets="@/Styles/login.css">
+           stylesheets="@/Styles/login.css"
+           styleClass="stackpane-login">
 
-    <VBox alignment="TOP_CENTER" styleClass="fundo-login">
+    <SVGPath content="M0,160 C80,200 320,120 480,160 L480,320 L0,320 Z"
+             style="-fx-fill: #f4efd0; -fx-opacity: 0.6;"
+             scaleX="3.5" scaleY="2"
+             translateY="200"/>
 
-        <VBox alignment="CENTER" spacing="15" styleClass="caixa-login">
+    <SVGPath content="M0,220 C150,210 350,370 500,220 L500,500 L0,270 Z"
+             style="-fx-fill: #fdfccd; -fx-opacity: 0.4"
+             scaleX="2.7" scaleY="3.5"
+             translateY="430" />
+
+
+    <SVGPath content="M0,240 C150,140 350,340 500,240 L500,400 L0,400 Z"
+             style="-fx-fill: #f4efd0;"
+             scaleX="3.4" scaleY="2.2"
+
+             translateY="310" />
+
+    <HBox alignment="TOP_LEFT" spacing="8" StackPane.alignment="TOP_LEFT" style="-fx-padding: 20;">
+        <ImageView fitHeight="60" fitWidth="60" preserveRatio="true">
+            <image>
+                <Image url="@/image/img.png" /><!-- substitui pelo caminho correto -->
+            </image>
+        </ImageView>
+        <Label text="GestÓleos" style="-fx-font-family: 'JetBrains Mono'; -fx-font-size: 44px; -fx-font-weight: bold; -fx-text-fill: black" />
+
+
+    </HBox>
+
+    <VBox alignment="TOP_CENTER" styleClass="fundo-login" spacing="20">
+
+        <VBox alignment="CENTER" spacing="15" styleClass="caixa-criar">
             <Label text="Criar Conta" styleClass="titulo" />
-
+            <Label fx:id="erroLabel" text="" visible="false" style="-fx-font-size: 13px;" />
             <!-- Username -->
             <HBox alignment="CENTER_LEFT" spacing="10" styleClass="campo">
                 <ImageView fitWidth="16" fitHeight="16" preserveRatio="true">
@@ -72,6 +102,7 @@
             <Button text="Criar" fx:id="CriarButton" styleClass="botao-login" />
 
             <Hyperlink text="Login" fx:id="loginPage" styleClass="criar-conta" />
+
         </VBox>
     </VBox>
 </StackPane>

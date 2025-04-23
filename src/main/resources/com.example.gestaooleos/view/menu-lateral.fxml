@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.gestaooleos.UI.controller.MenuLateralController"
+      alignment="TOP_CENTER" prefWidth="250.0" spacing="10"
+      style="-fx-background-color: F3F3D8; -fx-padding: 20;">
+
+    <ImageView fitHeight="75.0" fitWidth="96.0" preserveRatio="true">
+        <image>
+            <Image url="@../../image/img.png" />
+        </image>
+    </ImageView>
+
+    <Label text="GestÓleos" style="-fx-font-size: 25; -fx-font-weight: 900;" />
+    <Region styleClass="linha-horizontal" />
+
+    <Button fx:id="btnPaginaInicial" text=" Página Inicial" styleClass="botao-menu">
+        <VBox.margin>
+            <Insets top="30"/>
+        </VBox.margin>
+        <graphic>
+            <ImageView fitHeight="14" fitWidth="14" preserveRatio="false">
+                <image>
+                    <Image url="@../../image/Home.png" />
+                </image>
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnContratos" text=" Contratos" styleClass="botao-menu">
+        <graphic>
+            <ImageView fitHeight="14" fitWidth="14" preserveRatio="false">
+                <image>
+                    <Image url="@../../image/img_1.png" />
+                </image>
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnRecolhas" text=" Recolhas" styleClass="botao-menu">
+        <graphic>
+            <ImageView fitHeight="14" fitWidth="14" preserveRatio="false">
+                <image>
+                    <Image url="@../../image/img_2.png" />
+                </image>
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnPagamentos" text=" Pagamentos" styleClass="botao-menu">
+        <graphic>
+            <ImageView fitHeight="14" fitWidth="14" preserveRatio="false">
+                <image>
+                    <Image url="@../../image/Pagar.png" />
+                </image>
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="btnUtilizadores" text=" Utilizadores" styleClass="botao-menu">
+        <graphic>
+            <ImageView fitHeight="25.0" fitWidth="13.0" preserveRatio="true">
+                <image>
+                    <Image url="@../../image/person.png" />
+                </image>
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Region VBox.vgrow="ALWAYS" />
+
+    <Button fx:id="btnLogout"
+            text=" Logout"
+            alignment="CENTER"
+            styleClass="botao-logout"
+            onAction="#logout">
+    </Button>
+
+</VBox>
