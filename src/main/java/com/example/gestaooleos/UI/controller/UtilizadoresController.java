@@ -2,7 +2,7 @@ package com.example.gestaooleos.UI.controller;
 
 import com.example.gestaooleos.UI.api.UtilizadoresClient;
 import com.example.gestaooleos.UI.api.UtilizadorDTO;
-import com.example.gestaooleos.UI.utils.FullscreenHelper;
+import com.example.gestaooleos.UI.utils.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
@@ -10,11 +10,18 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 
 public class UtilizadoresController {
 
@@ -30,20 +37,21 @@ public class UtilizadoresController {
     @FXML private TableColumn<UtilizadorDTO, String> moradaUtilizador;
     @FXML private TableColumn<UtilizadorDTO, Integer> idtipoutilizadorUtilizador;
     @FXML private TableColumn<UtilizadorDTO, String> usernameUtilizador;
+    @FXML private TableColumn<UtilizadorDTO, Void> verUtilizador;
 
     private final UtilizadoresClient utilizadorClient = new UtilizadoresClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
     @FXML
     public void initialize() {
-        // Configura colunas
+        // Configurar colunas
         nomeUtilizador.setCellValueFactory(new PropertyValueFactory<>("nome"));
         telefoneUtilizador.setCellValueFactory(new PropertyValueFactory<>("telefone"));
         moradaUtilizador.setCellValueFactory(new PropertyValueFactory<>("morada"));
         idtipoutilizadorUtilizador.setCellValueFactory(new PropertyValueFactory<>("idtipoutilizador"));
         usernameUtilizador.setCellValueFactory(new PropertyValueFactory<>("username"));
 
-        // Traduz o ID do tipo em texto
+        // Traduzir ID para texto
         idtipoutilizadorUtilizador.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
@@ -62,7 +70,28 @@ public class UtilizadoresController {
             }
         });
 
-        // Carrega dados
+        verUtilizador.setCellFactory(coluna -> new TableCell<>() {
+            private final Button btn = new Button();
+
+            {
+                ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/image/ver.png")));
+                icon.setFitHeight(20);
+                icon.setFitWidth(20);
+                btn.setGraphic(icon);
+                btn.setStyle("-fx-background-color: transparent;");
+                btn.setOnAction(event -> {
+                    UtilizadorDTO utilizador = getTableView().getItems().get(getIndex());
+                    abrirDialogUtilizador(utilizador);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : btn);
+            }
+        });
+
         carregarUtilizadores();
     }
 
@@ -70,10 +99,10 @@ public class UtilizadoresController {
         utilizadorClient.buscarUtilizadores(json -> {
             try {
                 List<UtilizadorDTO> lista = mapper.readValue(json, new TypeReference<>() {});
-                long clientes   = lista.stream().filter(u -> u.getIdtipoutilizador() == 1).count();
+                long clientes = lista.stream().filter(u -> u.getIdtipoutilizador() == 1).count();
                 long funcionarios = lista.stream().filter(u -> u.getIdtipoutilizador() == 2).count();
-                long escritorios  = lista.stream().filter(u -> u.getIdtipoutilizador() == 3).count();
-                long comerciais   = lista.stream().filter(u -> u.getIdtipoutilizador() == 6).count();
+                long escritorios = lista.stream().filter(u -> u.getIdtipoutilizador() == 3).count();
+                long comerciais = lista.stream().filter(u -> u.getIdtipoutilizador() == 6).count();
 
                 Platform.runLater(() -> {
                     tabelaUtilizador.setItems(FXCollections.observableArrayList(lista));
@@ -89,13 +118,34 @@ public class UtilizadoresController {
                 System.err.println("Erro ao buscar utilizadores: " + erro)
         ));
     }
+    private void abrirDialogUtilizador(UtilizadorDTO utilizador) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/ver-utilizador-dialog.fxml"));
+
+            Parent root = loader.load();
+
+            VerUtilizadorController controller = loader.getController();
+            controller.setUtilizador(utilizador);
+
+            controller.setOnSaveCallback(this::carregarUtilizadores);
+
+            Stage dialog = new Stage();
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(btnBack.getScene().getWindow()); // Garantir que não minimiza a janela de fundo
+            dialog.setTitle("Detalhes do Utilizador");
+            dialog.setScene(new Scene(root));
+            dialog.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @FXML
     private void voltarHome() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com.example.gestaooleos/view/home-funcionario.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/gestaooleos/view/home-funcionario.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) btnBack.getScene().getWindow();
             stage.getScene().setRoot(root);
@@ -103,7 +153,6 @@ public class UtilizadoresController {
             FullscreenHelper.ativarFullscreen(stage);
         } catch (Exception ex) {
             ex.printStackTrace();
-            // podes mostrar um alerta aqui, se quiseres
         }
     }
 }

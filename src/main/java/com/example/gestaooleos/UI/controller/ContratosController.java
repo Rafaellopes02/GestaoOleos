@@ -1,9 +1,9 @@
 package com.example.gestaooleos.UI.controller;
 
-import com.example.gestaooleos.UI.api.ContadorDTO;
+import com.example.gestaooleos.UI.api.*;
 import com.example.gestaooleos.UI.api.ContratoDTO;
 import com.example.gestaooleos.UI.api.ContratosClient;
-import com.example.gestaooleos.UI.utils.FullscreenHelper;
+import com.example.gestaooleos.UI.utils.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
