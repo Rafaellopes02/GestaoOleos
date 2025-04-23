@@ -5,8 +5,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.shape.SVGPath?>
-<?import javafx.geometry.Insets?>
-<?import javafx.geometry.Pos?>
 
 <StackPane xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -32,14 +30,16 @@
              translateY="310" />
 
     <HBox alignment="TOP_LEFT" spacing="8" StackPane.alignment="TOP_LEFT" style="-fx-padding: 20;">
-        <ImageView fitHeight="60" fitWidth="60" preserveRatio="true">
+        <ImageView fitHeight="80" fitWidth="80" preserveRatio="true">
             <image>
-                <Image url="@/image/img.png" /><!-- substitui pelo caminho correto -->
+                <Image url="@/image/img.png" />
             </image>
         </ImageView>
-        <Label text="GestÓleos" style="-fx-font-family: 'JetBrains Mono'; -fx-font-size: 44px; -fx-font-weight: bold; -fx-text-fill: black" />
-
-
+        <ImageView fitHeight="60" fitWidth="260" preserveRatio="true" translateY="15">
+            <image>
+                <Image url="@/image/letras.png" />
+            </image>
+        </ImageView>
     </HBox>
 
     <VBox alignment="TOP_CENTER" styleClass="fundo-login" spacing="20">
@@ -101,7 +101,11 @@
 
             <Button text="Criar" fx:id="CriarButton" styleClass="botao-login" />
 
-            <Hyperlink text="Login" fx:id="loginPage" styleClass="criar-conta" />
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="Já tens conta?" styleClass="texto-secundario"/>
+                <Hyperlink fx:id="loginPage" text="Entrar" styleClass="criar-conta"/>
+            </VBox>
+
 
         </VBox>
     </VBox>

@@ -84,7 +84,7 @@
 /* === CRIAR CONTA / OPÇÕES === */
 .criar-conta {
     -fx-text-fill: #7a732a;
-    -fx-font-size: 16px;
+    -fx-font-size: 12px;
     -fx-padding: 1 0 0 0;
 }
 
@@ -95,4 +95,11 @@
 .hyperlink:hover {
     -fx-underline: false;
 }
+
+.texto-secundario {
+    -fx-text-fill: #555;
+    -fx-font-size: 13px;
+    -fx-font-family: "Segoe UI"; /* ou outra que combine */
+}
+
 

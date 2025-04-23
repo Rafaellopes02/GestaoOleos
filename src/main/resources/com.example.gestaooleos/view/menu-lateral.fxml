@@ -12,14 +12,24 @@
       alignment="TOP_CENTER" prefWidth="250.0" spacing="10"
       style="-fx-background-color: F3F3D8; -fx-padding: 20;">
 
-    <ImageView fitHeight="75.0" fitWidth="96.0" preserveRatio="true">
+    <ImageView fitHeight="95.0" fitWidth="106.0" preserveRatio="true">
         <image>
             <Image url="@../../image/img.png" />
         </image>
     </ImageView>
+    <ImageView fitHeight="95.0" fitWidth="150.0" preserveRatio="true">
+        <image>
+            <Image url="@../../image/letras.png" />
+        </image>
+    </ImageView>
 
-    <Label text="GestÓleos" style="-fx-font-size: 25; -fx-font-weight: 900;" />
-    <Region styleClass="linha-horizontal" />
+
+    <Region styleClass="linha-horizontal">
+        <VBox.margin>
+            <Insets top="10"/> <!-- Aumenta este valor para descer -->
+        </VBox.margin>
+    </Region>
+
 
     <Button fx:id="btnPaginaInicial" text=" Página Inicial" styleClass="botao-menu">
         <VBox.margin>

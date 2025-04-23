@@ -34,15 +34,18 @@
              translateY="310" />
 
     <HBox alignment="TOP_LEFT" spacing="8" StackPane.alignment="TOP_LEFT" style="-fx-padding: 20;">
-        <ImageView fitHeight="60" fitWidth="60" preserveRatio="true">
+        <ImageView fitHeight="80" fitWidth="80" preserveRatio="true">
             <image>
-                <Image url="@/image/img.png" /><!-- substitui pelo caminho correto -->
+                <Image url="@/image/img.png" />
             </image>
         </ImageView>
-        <Label text="GestÓleos" style="-fx-font-family: 'JetBrains Mono'; -fx-font-size: 44px; -fx-font-weight: bold; -fx-text-fill: black" />
-
-
+        <ImageView fitHeight="60" fitWidth="260" preserveRatio="true" translateY="15">
+            <image>
+                <Image url="@/image/letras.png" />
+            </image>
+        </ImageView>
     </HBox>
+
 
 
 
@@ -73,7 +76,11 @@
             </HBox>
 
             <Button fx:id="loginButton" text="Entrar" styleClass="botao-login" />
-            <Hyperlink fx:id="PageCriar" text="Criar Conta" styleClass="criar-conta" />
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="Ainda não tens conta?" styleClass="texto-secundario"/>
+                <Hyperlink fx:id="PageCriar" text="Criar Conta" styleClass="criar-conta"/>
+            </VBox>
+
         </VBox>
     </VBox>
 </StackPane>
