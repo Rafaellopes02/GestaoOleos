@@ -42,9 +42,8 @@
         </ImageView>
     </HBox>
 
-    <VBox alignment="TOP_CENTER" styleClass="fundo-login" spacing="20">
-
-        <VBox alignment="CENTER" spacing="15" styleClass="caixa-criar">
+    <VBox alignment="TOP_CENTER" styleClass="fundo-login" spacing="20" VBox.vgrow="ALWAYS" maxWidth="Infinity">
+        <VBox alignment="CENTER" spacing="15" styleClass="caixa-criar" maxWidth="400"  VBox.vgrow="NEVER">
             <Label text="Criar Conta" styleClass="titulo" />
             <Label fx:id="erroLabel" text="" visible="false" style="-fx-font-size: 13px;" />
             <!-- Username -->
