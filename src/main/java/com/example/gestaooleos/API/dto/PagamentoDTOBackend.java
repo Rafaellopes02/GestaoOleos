@@ -1,8 +1,8 @@
-package com.example.gestaooleos.UI.api;
+package com.example.gestaooleos.API.dto;
 
 import java.math.BigDecimal;
 
-public class PagamentoDTO {
+public class PagamentoDTOBackend {
     private Long idpagamento;
     private String datapagamento;
     private BigDecimal valor;
@@ -10,6 +10,7 @@ public class PagamentoDTO {
     private String nomeCliente;
     private String estado;
 
+    // Getters e setters
     public Long getIdpagamento() {
         return idpagamento;
     }

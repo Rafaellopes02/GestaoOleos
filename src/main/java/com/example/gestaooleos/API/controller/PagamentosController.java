@@ -1,5 +1,6 @@
 package com.example.gestaooleos.API.controller;
 
+import com.example.gestaooleos.API.dto.PagamentoDTOBackend;
 import com.example.gestaooleos.API.model.Pagamentos;
 import com.example.gestaooleos.API.service.PagamentosService;
 
@@ -43,6 +44,12 @@ public class PagamentosController {
     public Map<String, BigDecimal> obterTotais() {
         return pagamentosService.obterTotais();
     }
+
+    @GetMapping("/completos")
+    public List<PagamentoDTOBackend> listarPagamentosCompletos() {
+        return pagamentosService.listarPagamentosCompletos();
+    }
+
 
 
 }

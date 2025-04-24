@@ -8,14 +8,32 @@ import javafx.scene.control.Label;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import java.math.BigDecimal;
 
-import java.util.Map;
-
-import java.util.List;
 
 public class PagamentosController {
+
+    @FXML
+    private TableColumn<PagamentoDTO, String> colData;
+
+    @FXML
+    private TableColumn<PagamentoDTO, BigDecimal> colValor;
+
+    @FXML
+    private TableColumn<PagamentoDTO, String> colCliente;
+
+    @FXML
+    private TableColumn<PagamentoDTO, String> colContrato;
+
+    @FXML
+    private TableColumn<PagamentoDTO, String> colEstado;
+
+    @FXML
+    private TableView<PagamentoDTO> tabelaPagamentos;
 
     @FXML
     private Label lblRecebido;
@@ -28,6 +46,14 @@ public class PagamentosController {
 
     @FXML
     public void initialize() {
+        colData.setCellValueFactory(new PropertyValueFactory<>("datapagamento"));
+        colValor.setCellValueFactory(new PropertyValueFactory<>("valor"));
+        colCliente.setCellValueFactory(new PropertyValueFactory<>("nomeCliente"));
+        colContrato.setCellValueFactory(new PropertyValueFactory<>("nomeContrato"));
+        colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+
+        // Carregar dados da tabela
+        carregarTabelaPagamentos();
         carregarTotais();
     }
 
@@ -65,5 +91,16 @@ public class PagamentosController {
             e.printStackTrace();
         }
     }
+
+    private void carregarTabelaPagamentos() {
+        pagamentosClient.buscarPagamentosCompletos(pagamentos -> {
+            Platform.runLater(() -> {
+                tabelaPagamentos.getItems().setAll(pagamentos);
+            });
+        }, erro -> {
+            System.err.println("Erro ao carregar pagamentos: " + erro.getMessage());
+        });
+    }
+
 
 }

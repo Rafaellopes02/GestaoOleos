@@ -1,22 +1,35 @@
 package com.example.gestaooleos.API.service;
 
 import com.example.gestaooleos.API.model.Pagamentos;
+import com.example.gestaooleos.API.model.Contratos;
+import com.example.gestaooleos.API.model.Utilizadores;
+import com.example.gestaooleos.API.model.EstadosPagamento;
+import com.example.gestaooleos.API.dto.PagamentoDTOBackend;
 import com.example.gestaooleos.API.repository.PagamentosRepository;
+import com.example.gestaooleos.API.repository.ContratosRepository;
+import com.example.gestaooleos.API.repository.UtilizadoresRepository;
+import com.example.gestaooleos.API.repository.EstadosPagamentoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.time.YearMonth;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-
-import java.util.Optional;
 
 @Service
 public class PagamentosService {
     private final PagamentosRepository pagamentosRepository;
+
+    @Autowired
+    private ContratosRepository contratosRepository;
+
+    @Autowired
+    private UtilizadoresRepository utilizadoresRepository;
+
+    @Autowired
+    private EstadosPagamentoRepository estadosPagamentoRepository;
 
     public PagamentosService(PagamentosRepository pagamentoRepository) {
         this.pagamentosRepository = pagamentoRepository;
@@ -46,13 +59,13 @@ public class PagamentosService {
         YearMonth mesAtual = YearMonth.now();
 
         BigDecimal totalRecebido = todos.stream()
-                .filter(p -> p.getIdestadospagamento() == 2) // Supondo que 2 = Pago
+                .filter(p -> p.getIdestadospagamento() == 5)
                 .filter(p -> YearMonth.from(p.getDatapagamento()).equals(mesAtual))
                 .map(Pagamentos::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal totalPendente = todos.stream()
-                .filter(p -> p.getIdestadospagamento() == 1) // Supondo que 1 = Pendente
+                .filter(p -> p.getIdestadospagamento() == 2)
                 .filter(p -> YearMonth.from(p.getDatapagamento()).equals(mesAtual))
                 .map(Pagamentos::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -63,5 +76,31 @@ public class PagamentosService {
         return totais;
     }
 
+    public List<PagamentoDTOBackend> listarPagamentosCompletos() {
+        List<Pagamentos> pagamentos = StreamSupport
+                .stream(pagamentosRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
 
+        return pagamentos.stream().map(pagamento -> {
+            PagamentoDTOBackend dto = new PagamentoDTOBackend();
+            dto.setIdpagamento(pagamento.getIdpagamento());
+            dto.setDatapagamento(pagamento.getDatapagamento().toString());
+            dto.setValor(pagamento.getValor());
+
+            // Nome do contrato
+            contratosRepository.findById(pagamento.getIdcontrato())
+                    .ifPresent(contrato -> dto.setNomeContrato(contrato.getNome()));
+
+            // Nome do cliente
+            contratosRepository.findById(pagamento.getIdcontrato())
+                    .flatMap(contrato -> utilizadoresRepository.findById(Long.valueOf(contrato.getIdutilizador())))
+                    .ifPresent(user -> dto.setNomeCliente(user.getNome()));
+
+            // Estado do pagamento
+            estadosPagamentoRepository.findById(pagamento.getIdestadospagamento())
+                    .ifPresent(estado -> dto.setEstado(estado.getNome()));
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
 }
