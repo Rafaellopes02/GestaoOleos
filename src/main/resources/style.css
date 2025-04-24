@@ -79,7 +79,12 @@
 }
 
 .card-numero {
-    -fx-font-size: 36px;
+    -fx-font-size: 33px;
+    -fx-font-weight: 800;
+}
+
+.card-numero1 {
+    -fx-font-size: 30px;
     -fx-font-weight: 800;
 }
 
