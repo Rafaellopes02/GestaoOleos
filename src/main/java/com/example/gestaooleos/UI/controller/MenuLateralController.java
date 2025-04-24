@@ -23,6 +23,7 @@ public class MenuLateralController {
         btnRecolhas.setOnAction(e -> navegar("recolhas-view.fxml"));
         btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
         btnUtilizadores.setOnAction(e -> navegar("utilizadores-view.fxml"));
+        btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
         btnLogout.setOnAction(e -> logout());
     }
 

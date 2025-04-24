@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane stylesheets="@/style.css"
+            style="-fx-background-color: white;"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.gestaooleos.UI.controller.PagamentosController">
+
+    <left>
+        <fx:include source="menu-lateral.fxml" />
+    </left>
+
+    <center>
+        <VBox spacing="20" style="-fx-border-color: black; -fx-border-width: 0 0 0 2;">
+
+            <!-- Título e botão voltar -->
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 20;">
+                <Button fx:id="btnBack"
+                        styleClass="botao-atras"
+                        prefWidth="70.0"
+                        onAction="#voltarHome">
+                    <graphic>
+                        <ImageView fitHeight="36.0" fitWidth="36.0" preserveRatio="true">
+                            <image>
+                                <Image url="@/image/img_3.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Label text="Pagamentos" styleClass="titulo" />
+            </HBox>
+
+            <!-- Cartões -->
+            <HBox spacing="40">
+
+                <!-- Cartão: Total Recebido -->
+                <StackPane styleClass="card-info" prefWidth="250" prefHeight="170">
+                    <HBox.margin>
+                        <Insets left="80" />
+                    </HBox.margin>
+
+                    <Label text="Total Recebido / Mês" styleClass="card-label">
+                        <StackPane.alignment>TOP_LEFT</StackPane.alignment>
+                        <padding>
+                            <Insets top="10" left="1" />
+                        </padding>
+                    </Label>
+
+                    <HBox alignment="CENTER" spacing="5">
+                        <Label fx:id="lblRecebido" styleClass="card-numero1">
+                            <padding>
+                                <Insets top="15" left="-10"/>
+                            </padding>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <ImageView fitHeight="60" fitWidth="50">
+                            <HBox.margin>
+                                <Insets top="15" />
+                            </HBox.margin>
+                            <image>
+                                <Image url="@/image/recebido.png" />
+                            </image>
+                        </ImageView>
+                        <StackPane.alignment>CENTER</StackPane.alignment>
+                        <padding>
+                            <Insets left="20" right="20" />
+                        </padding>
+                    </HBox>
+                </StackPane>
+
+                <!-- Cartão: Pendentes -->
+                <StackPane styleClass="card-info" prefWidth="250" prefHeight="170">
+
+                    <Label text="Pendentes (€)" styleClass="card-label">
+                        <StackPane.alignment>TOP_LEFT</StackPane.alignment>
+                        <padding>
+                            <Insets top="10" left="12" />
+                        </padding>
+                    </Label>
+
+                    <HBox alignment="CENTER" spacing="10">
+                        <Label fx:id="lblPendentes" styleClass="card-numero1">
+                            <padding>
+                                <Insets top="15" />
+                            </padding>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <ImageView fitHeight="70" fitWidth="60">
+                            <HBox.margin>
+                                <Insets top="15" left="10" />
+                            </HBox.margin>
+                            <image>
+                                <Image url="@/image/pendente.png" />
+                            </image>
+                        </ImageView>
+                        <StackPane.alignment>CENTER</StackPane.alignment>
+                        <padding>
+                            <Insets left="20" right="20" />
+                        </padding>
+                    </HBox>
+                </StackPane>
+
+            </HBox>
+
+        </VBox>
+    </center>
+</BorderPane>
