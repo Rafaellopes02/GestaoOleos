@@ -12,18 +12,18 @@
            stylesheets="@/Styles/login.css"
            styleClass="stackpane-login">
 
-    <SVGPath fx:id="wave1" content="M0,160 C80,200 320,120 480,160 L480,320 L0,320 Z"
+    <SVGPath content="M0,160 C80,200 320,120 480,160 L480,320 L0,320 Z"
              style="-fx-fill: #f4efd0; -fx-opacity: 0.6;"
              scaleX="3.5" scaleY="2"
              translateY="200"/>
 
-    <SVGPath fx:id="wave2" content="M0,220 C150,210 350,370 500,220 L500,500 L0,270 Z"
+    <SVGPath content="M0,220 C150,210 350,370 500,220 L500,500 L0,270 Z"
              style="-fx-fill: #fdfccd; -fx-opacity: 0.4"
              scaleX="2.7" scaleY="3.5"
              translateY="430" />
 
 
-    <SVGPath  fx:id="wave3" content="M0,240 C150,140 350,340 500,240 L500,400 L0,400 Z"
+    <SVGPath content="M0,240 C150,140 350,340 500,240 L500,400 L0,400 Z"
              style="-fx-fill: #f4efd0;"
              scaleX="3.4" scaleY="2.2"
 

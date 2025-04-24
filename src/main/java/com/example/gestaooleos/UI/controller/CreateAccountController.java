@@ -11,24 +11,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
-import javafx.scene.shape.SVGPath;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.layout.StackPane;
 
 import java.util.List;
 
 public class CreateAccountController {
 
-    @FXML
-    private SVGPath wave1;
-    @FXML
-    private SVGPath wave2;
-    @FXML
-    private SVGPath wave3;
-
-    @FXML
-    private StackPane root;
     @FXML private TextField nameField;
     @FXML private TextField phoneField;
     @FXML private TextField moradaField;
@@ -45,12 +33,6 @@ public class CreateAccountController {
     public void initialize() {
         CriarButton.setOnAction(e -> criarConta());
         loginPage.setOnAction(e -> loginPagehyperlink());
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.widthProperty().addListener((observable, oldValue, newValue) -> adjustWaves());
-        stage.heightProperty().addListener((observable, oldValue, newValue) -> adjustWaves());
-
-        // Ajuste inicial ao carregar
-        adjustWaves();
     }
 
     private void criarConta() {
@@ -133,20 +115,5 @@ public class CreateAccountController {
 
     private void loginPagehyperlink() {
         redirecionarParaLogin();
-    }
-
-    private void adjustWaves() {
-        double width = root.getScene().getWidth();
-        double height = root.getScene().getHeight();
-
-        // Ajuste dinâmico das ondas (modifique os valores conforme necessário)
-        wave1.setScaleX(width / 600); // Ajuste proporcional ao tamanho da largura da janela
-        wave1.setScaleY(height / 800); // Ajuste proporcional ao tamanho da altura da janela
-
-        wave2.setScaleX(width / 500);
-        wave2.setScaleY(height / 700);
-
-        wave3.setScaleX(width / 450);
-        wave3.setScaleY(height / 650);
     }
 }
