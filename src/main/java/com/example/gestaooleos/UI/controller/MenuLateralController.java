@@ -1,6 +1,6 @@
 package com.example.gestaooleos.UI.controller;
 
-import com.example.gestaooleos.UI.utils.FullscreenHelper;
+import com.example.gestaooleos.UI.utils.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

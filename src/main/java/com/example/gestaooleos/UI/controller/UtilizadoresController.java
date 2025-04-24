@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
@@ -126,12 +127,12 @@ public class UtilizadoresController {
 
             VerUtilizadorController controller = loader.getController();
             controller.setUtilizador(utilizador);
-
             controller.setOnSaveCallback(this::carregarUtilizadores);
 
             Stage dialog = new Stage();
+            dialog.initStyle(StageStyle.UNDECORATED);
             dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.initOwner(btnBack.getScene().getWindow()); // Garantir que não minimiza a janela de fundo
+            dialog.initOwner(btnBack.getScene().getWindow());
             dialog.setTitle("Detalhes do Utilizador");
             dialog.setScene(new Scene(root));
             dialog.showAndWait();
@@ -139,8 +140,6 @@ public class UtilizadoresController {
             e.printStackTrace();
         }
     }
-
-
 
     @FXML
     private void voltarHome() {

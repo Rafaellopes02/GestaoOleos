@@ -4,6 +4,7 @@ import com.example.gestaooleos.UI.api.UtilizadorDTO;
 import com.example.gestaooleos.UI.api.UtilizadoresClient;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
@@ -13,7 +14,7 @@ public class VerUtilizadorController {
     @FXML private TextField nomeField;
     @FXML private TextField telefoneField;
     @FXML private TextField moradaField;
-    @FXML private TextField tipoField;
+    @FXML private ComboBox<String> tipoComboBox;
     @FXML private TextField usernameField;
     @FXML private Runnable onSaveCallback;
 
@@ -22,10 +23,14 @@ public class VerUtilizadorController {
 
     public void setUtilizador(UtilizadorDTO utilizador) {
         this.utilizador = utilizador;
+
+        // Preencher ComboBox com as opções (sem "Outro")
+        tipoComboBox.getItems().setAll("Cliente", "Funcionário", "Escritório", "Comercial");
+
         nomeField.setText(utilizador.getNome());
         telefoneField.setText(utilizador.getTelefone());
         moradaField.setText(utilizador.getMorada());
-        tipoField.setText(tipoParaTexto(utilizador.getIdtipoutilizador()));
+        tipoComboBox.setValue(tipoParaTexto(utilizador.getIdtipoutilizador()));
         usernameField.setText(utilizador.getUsername());
     }
 
@@ -35,6 +40,7 @@ public class VerUtilizadorController {
         utilizador.setTelefone(telefoneField.getText());
         utilizador.setMorada(moradaField.getText());
         utilizador.setUsername(usernameField.getText());
+        utilizador.setIdtipoutilizador(textoParaTipo(tipoComboBox.getValue()));
 
         utilizadoresClient.atualizarUtilizador(
                 utilizador.getIdutilizador(),
@@ -53,7 +59,6 @@ public class VerUtilizadorController {
                 )
         );
     }
-
 
     @FXML
     private void fecharJanela() {
@@ -79,7 +84,17 @@ public class VerUtilizadorController {
             case 2 -> "Funcionário";
             case 3 -> "Escritório";
             case 6 -> "Comercial";
-            default -> "Outro";
+            default -> "Cliente"; // Valor padrão caso venha inválido
+        };
+    }
+
+    private int textoParaTipo(String tipo) {
+        return switch (tipo) {
+            case "Cliente" -> 1;
+            case "Funcionário" -> 2;
+            case "Escritório" -> 3;
+            case "Comercial" -> 6;
+            default -> 1; // Valor padrão seguro
         };
     }
 
