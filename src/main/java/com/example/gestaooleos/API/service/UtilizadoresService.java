@@ -29,4 +29,18 @@ public class UtilizadoresService {
     public void removeUtilizadores(Long id) {
         utilizadoresRepository.deleteById(id);
     }
+
+    public Optional<Utilizadores> atualizarUtilizadores(Long id, Utilizadores novosDados) {
+        return utilizadoresRepository.findById(id).map(existente -> {
+            existente.setNome(novosDados.getNome());
+            existente.setTelefone(novosDados.getTelefone());
+            existente.setMorada(novosDados.getMorada());
+            existente.setUsername(novosDados.getUsername());
+            existente.setIdtipoutilizador(novosDados.getIdtipoutilizador());
+            // Se tiveres password ou outros campos, adiciona aqui
+
+            return utilizadoresRepository.save(existente);
+        });
+    }
+
 }

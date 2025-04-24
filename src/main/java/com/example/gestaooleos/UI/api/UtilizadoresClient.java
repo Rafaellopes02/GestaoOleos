@@ -1,6 +1,5 @@
 package com.example.gestaooleos.UI.api;
 
-import com.example.gestaooleos.UI.api.UtilizadorDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.net.URI;
@@ -58,10 +57,12 @@ public class UtilizadoresClient {
         try {
             String json = mapper.writeValueAsString(utilizador);
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(API_URL + "/" + id))
+                    .uri(URI.create(API_URL + "/" + id)) // <-- ID passado diretamente
                     .header("Content-Type", "application/json")
                     .PUT(HttpRequest.BodyPublishers.ofString(json))
                     .build();
+
+            System.out.println("🔁 PUT JSON: " + json); // DEBUG opcional
 
             client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenApply(HttpResponse::body)

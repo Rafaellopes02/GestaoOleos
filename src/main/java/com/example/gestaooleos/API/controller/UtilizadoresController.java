@@ -3,6 +3,7 @@ package com.example.gestaooleos.API.controller;
 
 import com.example.gestaooleos.API.model.Utilizadores;
 import com.example.gestaooleos.API.service.UtilizadoresService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -34,5 +35,12 @@ public class UtilizadoresController {
     @DeleteMapping("/{id}")
     public void removeUtilizadores(@PathVariable Long id) {
         utilizadoresService.removeUtilizadores(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Utilizadores utilizador) {
+        return utilizadoresService.atualizarUtilizadores(id, utilizador)
+                .map(u -> ResponseEntity.ok("Atualizado com sucesso"))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
