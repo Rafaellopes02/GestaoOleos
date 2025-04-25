@@ -3,6 +3,7 @@ package com.example.gestaooleos.UI;
 import com.example.gestaooleos.UI.utils.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -17,6 +18,8 @@ public class MainApp extends Application {
                 "JetBrainsMono-Regular.ttf",
                 "JetBrainsMono-ExtraBold.ttf"
         };
+        primaryStage.getIcons().add(new Image(getClass().getResource("/image/icon.png").toExternalForm()));
+
 
         for (String fonte : fontes) {
             Font.loadFont(getClass().getResource("/fonts/" + fonte).toExternalForm(), 14);

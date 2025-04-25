@@ -77,8 +77,6 @@ public class PagamentosController {
 
     @FXML
     private void voltarHome() {
-        // Aqui colocas a lógica para voltar para a home
-        // Exemplo básico:
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/home-funcionario.fxml"));
             Parent root = loader.load();

@@ -144,14 +144,15 @@ public class UtilizadoresController {
     @FXML
     private void voltarHome() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/gestaooleos/view/home-funcionario.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/home-funcionario.fxml"));
             Parent root = loader.load();
+
             Stage stage = (Stage) btnBack.getScene().getWindow();
             stage.getScene().setRoot(root);
             stage.setTitle("Página Inicial");
-            FullscreenHelper.ativarFullscreen(stage);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

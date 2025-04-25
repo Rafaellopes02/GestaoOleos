@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.gestaooleos.UI.controller.HomeClienteController"
+            stylesheets="@/style.css"
+            style="-fx-background-color: white;">
+
+    <left>
+        <fx:include source="menu-lateral.fxml" />
+    </left>
+
+    <center>
+        <VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 30;">
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <ImageView fitHeight="50" fitWidth="50">
+                    <image>
+                        <Image url="@/image/img.png" />
+                    </image>
+                </ImageView>
+                <Label text="Bem-vindo, Cliente!" styleClass="titulo" />
+            </HBox>
+
+            <HBox spacing="40">
+                <!-- Cartão: Contratos -->
+                <StackPane styleClass="card-info" prefWidth="250" prefHeight="160">
+                    <Label text="Os meus Contratos" styleClass="card-label" StackPane.alignment="TOP_LEFT">
+                        <padding><Insets top="10" left="12"/></padding>
+                    </Label>
+                    <VBox alignment="CENTER" spacing="10">
+                        <ImageView fitWidth="50" fitHeight="50">
+                            <image><Image url="@/image/img_5.png"/></image>
+                        </ImageView>
+                        <Label fx:id="lblTotalContratos" text="-" styleClass="card-numero"/>
+                    </VBox>
+                </StackPane>
+
+                <!-- Cartão: Pagamentos -->
+                <StackPane styleClass="card-info" prefWidth="250" prefHeight="160">
+                    <Label text="Pagamentos Pendentes" styleClass="card-label" StackPane.alignment="TOP_LEFT">
+                        <padding><Insets top="10" left="12"/></padding>
+                    </Label>
+                    <VBox alignment="CENTER" spacing="10">
+                        <ImageView fitWidth="50" fitHeight="50">
+                            <image><Image url="@/image/img_4.png"/></image>
+                        </ImageView>
+                        <Label fx:id="lblPagamentosPendentes" text="-" styleClass="card-numero"/>
+                    </VBox>
+                </StackPane>
+
+                <!-- Cartão: Recolhas -->
+                <StackPane styleClass="card-info" prefWidth="250" prefHeight="160">
+                    <Label text="Minhas Recolhas" styleClass="card-label" StackPane.alignment="TOP_LEFT">
+                        <padding><Insets top="10" left="12"/></padding>
+                    </Label>
+                    <VBox alignment="CENTER" spacing="10">
+                        <ImageView fitWidth="50" fitHeight="50">
+                            <image><Image url="@/image/img_6.png"/></image>
+                        </ImageView>
+                        <Label fx:id="lblRecolhas" text="-" styleClass="card-numero"/>
+                    </VBox>
+                </StackPane>
+            </HBox>
+
+            <Label fx:id="lblMensagem" text="" styleClass="texto-secundario" />
+
+        </VBox>
+    </center>
+</BorderPane>

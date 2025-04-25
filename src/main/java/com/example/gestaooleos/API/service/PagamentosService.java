@@ -1,9 +1,9 @@
 package com.example.gestaooleos.API.service;
 
+import com.example.gestaooleos.API.dto.TotalRecebidoPorDiaDTO;
 import com.example.gestaooleos.API.model.Pagamentos;
-import com.example.gestaooleos.API.model.Contratos;
-import com.example.gestaooleos.API.model.Utilizadores;
-import com.example.gestaooleos.API.model.EstadosPagamento;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import com.example.gestaooleos.API.dto.PagamentoDTOBackend;
 import com.example.gestaooleos.API.repository.PagamentosRepository;
 import com.example.gestaooleos.API.repository.ContratosRepository;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,19 +21,24 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class PagamentosService {
+
     private final PagamentosRepository pagamentosRepository;
+    private final JdbcTemplate jdbcTemplate;
+    private final ContratosRepository contratosRepository;
+    private final UtilizadoresRepository utilizadoresRepository;
+    private final EstadosPagamentoRepository estadosPagamentoRepository;
 
     @Autowired
-    private ContratosRepository contratosRepository;
-
-    @Autowired
-    private UtilizadoresRepository utilizadoresRepository;
-
-    @Autowired
-    private EstadosPagamentoRepository estadosPagamentoRepository;
-
-    public PagamentosService(PagamentosRepository pagamentoRepository) {
-        this.pagamentosRepository = pagamentoRepository;
+    public PagamentosService(PagamentosRepository pagamentosRepository,
+                             JdbcTemplate jdbcTemplate,
+                             ContratosRepository contratosRepository,
+                             UtilizadoresRepository utilizadoresRepository,
+                             EstadosPagamentoRepository estadosPagamentoRepository) {
+        this.pagamentosRepository = pagamentosRepository;
+        this.jdbcTemplate = jdbcTemplate;
+        this.contratosRepository = contratosRepository;
+        this.utilizadoresRepository = utilizadoresRepository;
+        this.estadosPagamentoRepository = estadosPagamentoRepository;
     }
 
     public Iterable<Pagamentos> listarPagamentos() {
@@ -102,5 +108,17 @@ public class PagamentosService {
 
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    public List<TotalRecebidoPorDiaDTO> listarTotaisRecebidosPorDia() {
+        String sql = "SELECT datapagamento, SUM(valor) AS total FROM pagamentos WHERE idestadospagamento = 5 GROUP BY datapagamento ORDER BY datapagamento ASC";
+
+        RowMapper<TotalRecebidoPorDiaDTO> rowMapper = (rs, rowNum) -> {
+            String data = rs.getDate("datapagamento").toLocalDate().toString();
+            BigDecimal total = rs.getBigDecimal("total");
+            return new TotalRecebidoPorDiaDTO(data, total);
+        };
+
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }

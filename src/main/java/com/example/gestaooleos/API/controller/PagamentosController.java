@@ -1,6 +1,7 @@
 package com.example.gestaooleos.API.controller;
 
 import com.example.gestaooleos.API.dto.PagamentoDTOBackend;
+import com.example.gestaooleos.API.dto.TotalRecebidoPorDiaDTO;
 import com.example.gestaooleos.API.model.Pagamentos;
 import com.example.gestaooleos.API.service.PagamentosService;
 
@@ -30,7 +31,7 @@ public class PagamentosController {
         return pagamentosService.obterPagamentos(id);
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public Pagamentos criarPagamentos(@RequestBody Pagamentos pagamento) {
         return pagamentosService.criarPagamentos(pagamento);
     }
@@ -50,6 +51,10 @@ public class PagamentosController {
         return pagamentosService.listarPagamentosCompletos();
     }
 
+    @GetMapping("/totais-dia")
+    public List<TotalRecebidoPorDiaDTO> listarTotaisRecebidosPorDia() {
+        return pagamentosService.listarTotaisRecebidosPorDia();
+    }
 
 
 }
