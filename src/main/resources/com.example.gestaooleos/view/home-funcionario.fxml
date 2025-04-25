@@ -7,6 +7,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.TableView?>
 
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
 <BorderPane fx:controller="com.example.gestaooleos.UI.controller.HomeFuncionarioController"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -78,13 +82,13 @@
                         <padding><Insets top="10" left="12" /></padding>
                     </Label>
                     <HBox alignment="CENTER" spacing="10">
-                        <Label fx:id="lblPagamentosPendentes" text="0" styleClass="card-numero">
-                            <padding><Insets top="15" left="10"/></padding>
+                        <Label fx:id="lblPendentes" styleClass="card-numero1">
+                            <padding><Insets top="15" left="-10"/></padding>
                         </Label>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <ImageView fitHeight="40" fitWidth="40">
-                            <HBox.margin><Insets top="15" /></HBox.margin>
-                            <image><Image url="@/image/img_6.png" /></image>
+                        <ImageView fitHeight="60" fitWidth="60">
+                            <HBox.margin><Insets top="15" left="-15" /></HBox.margin>
+                            <image><Image url="@/image/pendente.png" /></image>
                         </ImageView>
                         <StackPane.alignment>CENTER</StackPane.alignment>
                         <padding><Insets left="20" right="20" /></padding>
@@ -92,11 +96,27 @@
                 </StackPane>
             </HBox>
 
-            <!-- Lista de atividades -->
-            <VBox spacing="10" style="-fx-padding: 10 0 0 5;">
-                <Label text="Últimas Atividades" styleClass="subtitulo" />
-                <ListView fx:id="listaAtividades" prefHeight="150" />
-            </VBox>
+
+            <HBox alignment="BOTTOM_LEFT">
+                <StackPane>
+                <Region  />
+                <LineChart fx:id="graficoTotaisPorDia"
+                           title="Total Recebido"
+                           createSymbols="true"
+                           animated="true"
+                           legendVisible="false"
+                           prefHeight="400"
+                           prefWidth="450"
+                           styleClass="grafico-area">
+                    <xAxis>
+                        <CategoryAxis fx:id="xAxis" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="yAxis" />
+                    </yAxis>
+                </LineChart>
+                </StackPane>
+            </HBox>
         </VBox>
     </center>
 

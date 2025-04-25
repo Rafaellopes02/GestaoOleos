@@ -2,16 +2,14 @@ package com.example.gestaooleos.UI.controller;
 
 import com.example.gestaooleos.UI.api.UtilizadorDTO;
 import com.example.gestaooleos.UI.api.UtilizadoresClient;
-import com.example.gestaooleos.UI.utils.*;
+import com.example.gestaooleos.UI.utils.SessaoUtilizador;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 
 public class LoginController {
 
@@ -20,7 +18,6 @@ public class LoginController {
     @FXML private Button loginButton;
     @FXML private Hyperlink PageCriar;
     @FXML private Label erroLabel;
-
 
     private final UtilizadoresClient utilizadoresClient = new UtilizadoresClient();
 
@@ -33,53 +30,39 @@ public class LoginController {
     private void fazerLogin() {
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
+
         if (username.isEmpty() || password.isEmpty()) {
-            mostrarErro(" Por Favor, preencha todos os campos!");
+            mostrarErro("Por favor, preencha todos os campos!");
             return;
         }
 
-        utilizadoresClient.buscarUtilizadores(
+        utilizadoresClient.login(username, password,
                 json -> {
                     try {
-                        ObjectMapper mapper = new ObjectMapper();
-                        List<UtilizadorDTO> utilizadores = mapper.readValue(json, new TypeReference<>() {});
-                        UtilizadorDTO found = utilizadores.stream()
-                                .filter(u -> username.equals(u.getUsername()) && password.equals(u.getPassword()))
-                                .findFirst()
-                                .orElse(null);
-
-                        if (found != null) {
-                            Platform.runLater(() -> redirecionarParaHome(found));
-
+                        if (json.startsWith("{")) { // Verifica se é um JSON válido
+                            ObjectMapper mapper = new ObjectMapper();
+                            UtilizadorDTO utilizador = mapper.readValue(json, UtilizadorDTO.class);
+                            Platform.runLater(() -> redirecionarParaHome(utilizador));
                         } else {
-                            Platform.runLater(() ->
-                                    mostrarErro("Credenciais inválidas.")
-
-                            );
+                            Platform.runLater(() -> mostrarErro(json)); // Mensagem de erro simples
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        Platform.runLater(() ->
-                                mostrarErro("Erro ao processar resposta da API.")
-                        );
+                        Platform.runLater(() -> mostrarErro("Erro ao processar resposta da API."));
                     }
                 },
-                erro -> Platform.runLater(() ->
-                        mostrarErro( "Erro ao comunicar com o servidor:" + erro)
-                )
+                erro -> Platform.runLater(() -> mostrarErro("Erro ao comunicar com o servidor: " + erro))
         );
     }
 
+
     private void abrirCriarConta() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com.example.gestaooleos/view/CreateAccount-view.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/CreateAccount-view.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) PageCriar.getScene().getWindow();
             stage.getScene().setRoot(root);
             stage.setTitle("Criar Conta");
-            FullscreenHelper.ativarFullscreen(stage);
         } catch (Exception e) {
             e.printStackTrace();
             mostrarErro("Erro ao carregar a página de criação de conta.");
@@ -89,37 +72,46 @@ public class LoginController {
     private void redirecionarParaHome(UtilizadorDTO utilizador) {
         try {
             SessaoUtilizador.setNomeUtilizador(utilizador.getNome());
+            SessaoUtilizador.setTipoUtilizador(utilizador.getIdtipoutilizador());
 
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com.example.gestaooleos/view/home-funcionario.fxml")
-            );
+            Integer idTipo = utilizador.getIdtipoutilizador();
+            String paginaInicial;
+
+            switch (idTipo) {
+                case 1: // Cliente
+                    paginaInicial = "/com.example.gestaooleos/view/home-cliente.fxml";
+                    break;
+                case 2: // Funcionário
+                case 3: // Outro tipo de Funcionário
+                    paginaInicial = "/com.example.gestaooleos/view/home-funcionario.fxml";
+                    break;
+                default:
+                    mostrarErro("Tipo de utilizador inválido.");
+                    return;
+            }
+
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(paginaInicial));
             Parent root = loader.load();
 
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.getScene().setRoot(root);
             stage.setTitle("Página Inicial - " + utilizador.getNome());
-            FullscreenHelper.ativarFullscreen(stage);
+
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarErro( "Erro ao carregar a página inicial.");
+            mostrarErro("Erro ao carregar a página inicial.");
         }
     }
 
-
-
     private void mostrarErro(String mensagem) {
         erroLabel.setText(mensagem);
-        erroLabel.setStyle("-fx-text-fill: #b20000; -fx-font-weight: bold; -fx-background-color: #ffd6d6; -fx-padding: 8 6; -fx-background-radius: 8; -fx-font-family: Consolas;");
+        erroLabel.setStyle("-fx-text-fill: #b20000; -fx-font-weight: bold; -fx-background-color: #ffd6d6; -fx-padding: 8 6; -fx-background-radius: 8;");
         erroLabel.setVisible(true);
 
-        // Apagar após 3 segundos
         new Thread(() -> {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException ignored) {}
+            try { Thread.sleep(3000); } catch (InterruptedException ignored) {}
             Platform.runLater(() -> erroLabel.setVisible(false));
         }).start();
     }
-
-
 }
