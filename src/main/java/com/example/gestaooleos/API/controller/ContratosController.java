@@ -1,6 +1,6 @@
 package com.example.gestaooleos.API.controller;
 
-import com.example.gestaooleos.API.dto.ContratoDTOBackend;
+import com.example.gestaooleos.API.dto.*;
 import com.example.gestaooleos.API.model.Contratos;
 import com.example.gestaooleos.API.service.ContratosService;
 import org.springframework.web.bind.annotation.*;

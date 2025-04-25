@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -11,11 +12,12 @@ import java.util.Date;
 public class Recolhas {
     @Id
     private Long idrecolha;
-    private Date data;
-    private int quantidade;
+    private LocalDate data;
+    private Double quantidade;
     private String observacoes;
-    private int numbidoes;
-    private int idcontrato;
-    private int idutilizador;
-    private int idestadorecolha;
+    private Integer numbidoes;
+    private Integer idcontrato;
+    private Integer idutilizador;
+    private Integer idestadorecolha;
+    private String morada;
 }

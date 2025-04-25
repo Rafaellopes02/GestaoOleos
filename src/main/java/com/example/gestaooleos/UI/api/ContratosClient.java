@@ -8,11 +8,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ContratosClient {
 
     private static final String API_URL = "http://localhost:8080/Contratos/com-estado";
+    private static final String API_URL1 = "http://localhost:8080/Contratos";
     private final HttpClient client = HttpClient.newHttpClient();
 
     public void buscarContratos(Consumer<String> onSuccess, Consumer<String> onError) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_URL))
+                .GET()
+                .build();
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(onSuccess)
+                .exceptionally(ex -> {
+                    onError.accept(ex.getMessage());
+                    return null;
+                });
+    }
+    public void buscarContratossemestado(Consumer<String> onSuccess, Consumer<String> onError) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(API_URL1))
                 .GET()
                 .build();
 
@@ -47,5 +62,20 @@ public class ContratosClient {
         } catch (Exception e) {
             onError.accept(e.getMessage());
         }
+    }
+
+    public void buscarContratoPorId(Long id, Consumer<String> onSuccess, Consumer<String> onError) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/Contratos/" + id))
+                .GET()
+                .build();
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(onSuccess)
+                .exceptionally(ex -> {
+                    onError.accept(ex.getMessage());
+                    return null;
+                });
     }
 }

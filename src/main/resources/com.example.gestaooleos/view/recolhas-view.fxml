@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane stylesheets="@/Styles/Recolhas.css"
+            style="-fx-background-color: white;"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.gestaooleos.UI.controller.RecolhasController">
+
+    <left>
+        <fx:include source="menu-lateral.fxml" />
+    </left>
+
+    <center>
+        <VBox spacing="8" style="-fx-border-color: black; -fx-border-width: 0 0 0 2;" VBox.vgrow="ALWAYS">
+            <!-- Título -->
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 10 20 0 20;">
+                <VBox alignment="TOP_LEFT">
+                    <Button fx:id="btnBack" styleClass="botao-atras" prefWidth="75.0" onAction="#voltarHome">
+                        <graphic>
+                            <ImageView fitHeight="36.0" fitWidth="36.0" preserveRatio="true">
+                                <image>
+                                    <Image url="@../../image/img_3.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </VBox>
+                <VBox alignment="TOP_LEFT">
+                    <Label text="Recolhas" styleClass="titulo" />
+                    <Label text="Solicitar Recolha de Óleo" styleClass="titulo2" />
+                </VBox>
+            </HBox>
+
+            <!-- Formulário Centralizado -->
+            <HBox alignment="CENTER">
+                <GridPane hgap="20" vgap="10" style="-fx-padding: 0 20 0 20;">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="LEFT" />
+                        <ColumnConstraints halignment="RIGHT" />
+                    </columnConstraints>
+
+                    <!-- Linha 1 -->
+                    <Label text="Contrato Associado" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                    <Label text="Morada" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                    <ComboBox fx:id="comboContrato" promptText="Selecione o Contrato..."
+                              GridPane.rowIndex="1" GridPane.columnIndex="0" prefWidth="250"/>
+
+                    <TextField fx:id="txtMorada" promptText="Escreva a morada aqui"
+                               GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="400" />
+
+                    <!-- Linha 2 -->
+                    <Label text="Data da Recolha" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                    <Label text="Quantidade" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                    <DatePicker fx:id="dateRecolha" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                    <TextField fx:id="txtQuantidade" promptText="Litros"
+                               GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="400"/>
+
+                    <!-- Linha 3 -->
+                    <Label text="Número Bidões" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                    <Label text="Observações (Opcional)" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+                    <TextField fx:id="txtBidoes" promptText="5"
+                               GridPane.rowIndex="5" GridPane.columnIndex="0" prefWidth="250"/>
+
+                    <TextArea fx:id="txtObservacoes" promptText="Escreva aqui a sua Observação..."
+                              GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="400" prefHeight="100" wrapText="true"/>
+
+                    <!-- Botão posicionado à direita -->
+                    <Button fx:id="btnSolicitar" text="Solicitar Recolha  ➕" styleClass="botao-solicitar"
+                            onAction="#solicitarRecolha"
+                            GridPane.rowIndex="6" GridPane.columnIndex="1"
+                            alignment="CENTER_RIGHT" maxWidth="200" />
+                </GridPane>
+            </HBox>
+
+            <!-- Tabela -->
+            <TableView fx:id="tabelaRecolhas"
+                       prefHeight="190"
+                       maxHeight="190"
+                       styleClass="tabela-recolhas"
+                       style="-fx-padding: 0 20 20 20;">
+                <columns>
+                    <TableColumn fx:id="nomeContratoRecolha" text="Nome" prefWidth="180" />
+                    <TableColumn fx:id="MoradaRecolha" text="Morada" prefWidth="150" />
+                    <TableColumn fx:id="DataRecolha" text="Data Recolha" prefWidth="150" />
+                    <TableColumn fx:id="estadoRecolha" text="Estado" prefWidth="130" />
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>

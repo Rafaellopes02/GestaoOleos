@@ -21,6 +21,9 @@ public class ContratoDTO {
     @JsonProperty("estado")
     private String estado;
 
+    @JsonProperty("idutilizador")
+    private int idutilizador;
+
     // Getters obrigatórios para o TableView funcionar
     public Long getIdcontrato() {
         return idcontrato;
@@ -46,6 +49,11 @@ public class ContratoDTO {
         return estado;
     }
 
+    public int getIdutilizador() {
+        return idutilizador;
+    }
+
+
     // Setters
     public void setIdcontrato(Long idcontrato) {
         this.idcontrato = idcontrato;
@@ -70,4 +78,9 @@ public class ContratoDTO {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public void setIdutilizador(int idutilizador) {
+        this.idutilizador = idutilizador;
+    }
+
 }

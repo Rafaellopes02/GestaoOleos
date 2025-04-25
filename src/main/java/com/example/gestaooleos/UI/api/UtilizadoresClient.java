@@ -91,4 +91,20 @@ public class UtilizadoresClient {
                     return null;
                 });
     }
+
+    public void buscarUtilizadorPorId(int id, Consumer<String> onSuccess, Consumer<String> onError) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/Utilizadores/" + id))
+                .GET()
+                .build();
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(onSuccess)
+                .exceptionally(ex -> {
+                    onError.accept(ex.getMessage());
+                    return null;
+                });
+    }
+
 }
