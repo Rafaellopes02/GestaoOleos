@@ -2,7 +2,7 @@ package com.example.gestaooleos.UI.controller;
 
 import com.example.gestaooleos.UI.api.UtilizadorDTO;
 import com.example.gestaooleos.UI.api.UtilizadoresClient;
-import com.example.gestaooleos.UI.utils.FullscreenHelper;
+import com.example.gestaooleos.UI.utils.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;

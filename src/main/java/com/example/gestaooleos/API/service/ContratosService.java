@@ -1,6 +1,6 @@
 package com.example.gestaooleos.API.service;
 
-import com.example.gestaooleos.API.dto.ContratoDTOBackend;
+import com.example.gestaooleos.API.dto.*;
 import com.example.gestaooleos.API.model.Contratos;
 import com.example.gestaooleos.API.model.EstadosContratos;
 import com.example.gestaooleos.API.repository.ContratosRepository;

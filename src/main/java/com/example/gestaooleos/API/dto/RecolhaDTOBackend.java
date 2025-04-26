@@ -1,15 +1,14 @@
 package com.example.gestaooleos.API.dto;
 
-public class ContratoDTOBackend {
-    private Long idcontrato;
-    private String nome;
-    private String dataInicio;
-    private String dataFim;
-    private int idEstadoContrato;
-    private String estado; // nome do estado (ex: "Ativo")
-    private int idutilizador;
+public class RecolhaDTOBackend {
+    private Long idrecolha;
+    private String data;
+    private int quantidade;
+    private String observacoes;
+    private int numbidoes;
+    private String morada;
 
-    public Long getIdcontrato() {
+    /*public Long getIdcontrato() {
         return idcontrato;
     }
 
@@ -55,9 +54,5 @@ public class ContratoDTOBackend {
 
     public void setEstado(String estado) {
         this.estado = estado;
-    }
-
-    public int getIdutilizador() {return idutilizador;}
-
-    public void setIdutilizador(int idutilizador) {this.idutilizador = idutilizador;}
+    }*/
 }

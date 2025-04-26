@@ -84,7 +84,7 @@ public class VerUtilizadorController {
             case 2 -> "Funcionário";
             case 3 -> "Escritório";
             case 6 -> "Comercial";
-            default -> "Cliente"; // Valor padrão caso venha inválido
+            default -> "Cliente";
         };
     }
 
@@ -94,7 +94,7 @@ public class VerUtilizadorController {
             case "Funcionário" -> 2;
             case "Escritório" -> 3;
             case "Comercial" -> 6;
-            default -> 1; // Valor padrão seguro
+            default -> 1;
         };
     }
 
