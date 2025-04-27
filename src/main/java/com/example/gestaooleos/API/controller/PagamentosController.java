@@ -5,6 +5,7 @@ import com.example.gestaooleos.API.dto.TotalRecebidoPorDiaDTO;
 import com.example.gestaooleos.API.model.Pagamentos;
 import com.example.gestaooleos.API.service.PagamentosService;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/pagamentos") // Caminho mais padronizado
 public class PagamentosController {
+
 
     private final PagamentosService pagamentosService;
 
@@ -55,6 +57,27 @@ public class PagamentosController {
     public List<TotalRecebidoPorDiaDTO> listarTotaisRecebidosPorDia() {
         return pagamentosService.listarTotaisRecebidosPorDia();
     }
+
+    // Listar pendentes do cliente
+    @GetMapping("/pendentes/{idcliente}")
+    public List<Pagamentos> listarPendentesCliente(@PathVariable Long idcliente) {
+        return pagamentosService.listarPagamentosPendentesCliente(idcliente);
+    }
+
+    // Marcar pagamento como pago
+    @PutMapping("/pagar/{idpagamento}")
+    public ResponseEntity<Void> pagarPagamento(@PathVariable Long idpagamento, @RequestParam Long idmetodopagamento) {
+        pagamentosService.pagarPagamento(idpagamento, idmetodopagamento);
+        return ResponseEntity.ok().build();
+    }
+
+
+    // Cancelar pagamento e suspender contrato
+    @PutMapping("/cancelar/{idpagamento}")
+    public void cancelarPagamento(@PathVariable Long idpagamento) {
+        pagamentosService.cancelarPagamentoEContrato(idpagamento);
+    }
+
 
 
 }

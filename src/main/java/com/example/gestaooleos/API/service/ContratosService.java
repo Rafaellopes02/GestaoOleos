@@ -2,13 +2,21 @@ package com.example.gestaooleos.API.service;
 
 import com.example.gestaooleos.API.dto.*;
 import com.example.gestaooleos.API.model.Contratos;
+import com.example.gestaooleos.API.model.Pagamentos;
+import com.example.gestaooleos.API.model.Utilizadores;
+import com.example.gestaooleos.API.repository.PagamentosRepository;
+import com.example.gestaooleos.API.repository.UtilizadoresRepository;
 import com.example.gestaooleos.API.model.EstadosContratos;
 import com.example.gestaooleos.API.repository.ContratosRepository;
 import com.example.gestaooleos.API.repository.EstadosContratosRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.sql.Date;
+import java.util.*;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -21,6 +29,12 @@ public class ContratosService {
         this.estadosContratosRepository = estadosContratosRepository;
     }
 
+    @Autowired
+    private PagamentosRepository pagamentosRepository;
+
+    @Autowired
+    private UtilizadoresRepository utilizadoresRepository;
+
     public Iterable<Contratos> listarContratos() {
         return contratosRepository.findAll();
     }
@@ -29,8 +43,50 @@ public class ContratosService {
         return contratosRepository.findById(id);
     }
 
-    public Contratos criarContratos(Contratos contrato) {
-        return contratosRepository.save(contrato);
+    public Contratos criarContratoComPagamento(ContratoDTOBackend contratoDTO) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            if (contratoDTO.getDataInicio() == null || contratoDTO.getDataInicio().isBlank()) {
+                throw new IllegalArgumentException("Data de início inválida ou nula.");
+            }
+
+            if (contratoDTO.getDataFim() == null || contratoDTO.getDataFim().isBlank()) {
+                throw new IllegalArgumentException("Data de fim inválida ou nula.");
+            }
+
+
+            // Fazemos o parsing manualmente e com segurança
+            LocalDate dataInicioLocalDate = LocalDate.parse(contratoDTO.getDataInicio(), formatter);
+            LocalDate dataFimLocalDate = LocalDate.parse(contratoDTO.getDataFim(), formatter);
+
+            Date datainicio = Date.valueOf(dataInicioLocalDate);
+            Date datafim = Date.valueOf(dataFimLocalDate);
+
+            // 1. Criar contrato normal
+            Contratos contrato = new Contratos();
+            contrato.setNome(contratoDTO.getNome());
+            contrato.setDatainicio(datainicio);
+            contrato.setDatafim(datafim);
+            contrato.setIdutilizador(contratoDTO.getIdutilizador());
+            contrato.setIdestadocontrato(contratoDTO.getIdEstadoContrato());
+
+            Contratos contratoCriado = contratosRepository.save(contrato);
+
+            // 2. Criar pagamento automático
+            Pagamentos pagamento = new Pagamentos();
+            pagamento.setIdcontrato(contratoCriado.getIdcontrato());
+            pagamento.setValor(BigDecimal.valueOf(contratoDTO.getValor()));
+            pagamento.setIdestadospagamento(2L); // 2 = Pendente
+            pagamento.setIdmetodopagamento(null);
+
+            pagamentosRepository.save(pagamento);
+
+            return contratoCriado;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao criar contrato: " + e.getMessage(), e);
+        }
     }
 
     public void removeContratos(Long id) {
@@ -56,9 +112,7 @@ public class ContratosService {
 
     public List<ContratoDTOBackend> listarContratosComEstado() {
         Iterable<Contratos> contratos = contratosRepository.findAll();
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
 
         return StreamSupport.stream(contratos.spliterator(), false)
                 .map(c -> {
@@ -69,7 +123,6 @@ public class ContratosService {
                     dto.setDataFim(c.getDatafim() != null ? sdf.format(c.getDatafim()) : "");
                     dto.setIdEstadoContrato(c.getIdestadocontrato());
 
-                    // Conversão de int para Long
                     Long idEstado = (long) c.getIdestadocontrato();
 
                     String nomeEstado = estadosContratosRepository.findById(idEstado)
@@ -82,4 +135,32 @@ public class ContratosService {
                 .toList();
     }
 
+    public List<ContratoClienteDTOBackend> listarContratosPorCliente(Long idcliente) {
+        List<Contratos> contratos = contratosRepository.findByIdutilizador(idcliente);
+
+        return contratos.stream().map(contrato -> {
+            ContratoClienteDTOBackend dto = new ContratoClienteDTOBackend();
+            dto.setIdcontrato(contrato.getIdcontrato());
+            dto.setNomeContrato(contrato.getNome());
+            dto.setDataInicio(contrato.getDatainicio().toString());
+            dto.setDataFim(contrato.getDatafim().toString());
+
+            String estado;
+            if (contrato.getIdestadocontrato() == 1) {
+                estado = "Ativo";
+            } else {
+                estado = "Inativo";
+            }
+            dto.setEstado(estado);
+
+            Utilizadores utilizador = utilizadoresRepository.findById((long) contrato.getIdutilizador()).orElse(null);
+            if (utilizador != null) {
+                dto.setMoradaCliente(utilizador.getMorada());
+            } else {
+                dto.setMoradaCliente("Desconhecida");
+            }
+
+            return dto;
+        }).toList();
+    }
 }

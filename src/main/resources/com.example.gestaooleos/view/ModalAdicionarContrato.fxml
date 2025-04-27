@@ -14,13 +14,15 @@
     <Label text="Novo Contrato" style="-fx-font-size: 18; -fx-font-weight: bold;" />
 
     <TextField fx:id="txtNome" promptText="Nome do Contrato" />
+    <ComboBox fx:id="cbCliente" promptText="Selecionar Cliente" />
     <DatePicker fx:id="dpInicio" promptText="Data de Início" />
     <DatePicker fx:id="dpFim" promptText="Data de Fim" />
-    <ComboBox fx:id="cbEstado" promptText="Estado do Contrato" />
+
+    <!-- NOVO: Campo para Valor do Pagamento -->
+    <TextField fx:id="txtValor" promptText="Valor (€) a pagar" />
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button text="Cancelar" onAction="#fecharModal" />
         <Button text="Guardar" onAction="#guardarContrato" />
     </HBox>
 </VBox>
-

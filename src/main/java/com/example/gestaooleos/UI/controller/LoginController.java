@@ -19,6 +19,7 @@ public class LoginController {
     @FXML private Hyperlink PageCriar;
     @FXML private Label erroLabel;
 
+
     private final UtilizadoresClient utilizadoresClient = new UtilizadoresClient();
 
     @FXML
@@ -73,6 +74,7 @@ public class LoginController {
         try {
             SessaoUtilizador.setNomeUtilizador(utilizador.getNome());
             SessaoUtilizador.setTipoUtilizador(utilizador.getIdtipoutilizador());
+            SessaoUtilizador.setIdUtilizador(utilizador.getIdutilizador().intValue());
 
             Integer idTipo = utilizador.getIdtipoutilizador();
             String paginaInicial;
@@ -90,7 +92,6 @@ public class LoginController {
                     return;
             }
 
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource(paginaInicial));
             Parent root = loader.load();
 
@@ -103,6 +104,7 @@ public class LoginController {
             mostrarErro("Erro ao carregar a página inicial.");
         }
     }
+
 
     private void mostrarErro(String mensagem) {
         erroLabel.setText(mensagem);

@@ -82,7 +82,7 @@
             <TableView fx:id="tabelaContratos"
                        VBox.vgrow="ALWAYS"
                        maxWidth="Infinity"
-                       style="-fx-padding: 10;"
+                       style="-fx-padding: 10 0 10 0 ;"
                        styleClass="tabela-contratos">
                 <columns>
                     <TableColumn fx:id="nomeCol" text="Nome" prefWidth="180" />
@@ -91,7 +91,7 @@
                     <TableColumn fx:id="estadoCol" text="Estado" prefWidth="130" />
                 </columns>
                 <VBox.margin>
-                    <Insets top="30" left="80" right="80" />
+                    <Insets top="30" left="80" right="80" bottom="30" />
                 </VBox.margin>
             </TableView>
         </VBox>

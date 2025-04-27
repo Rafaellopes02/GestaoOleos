@@ -2,15 +2,17 @@ package com.example.gestaooleos.API.service;
 
 import com.example.gestaooleos.API.dto.TotalRecebidoPorDiaDTO;
 import com.example.gestaooleos.API.model.Pagamentos;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import com.example.gestaooleos.API.model.Contratos;
 import com.example.gestaooleos.API.dto.PagamentoDTOBackend;
 import com.example.gestaooleos.API.repository.PagamentosRepository;
 import com.example.gestaooleos.API.repository.ContratosRepository;
 import com.example.gestaooleos.API.repository.UtilizadoresRepository;
 import com.example.gestaooleos.API.repository.EstadosPagamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -66,13 +68,13 @@ public class PagamentosService {
 
         BigDecimal totalRecebido = todos.stream()
                 .filter(p -> p.getIdestadospagamento() == 5)
-                .filter(p -> YearMonth.from(p.getDatapagamento()).equals(mesAtual))
+                .filter(p -> p.getDatapagamento() != null && YearMonth.from(p.getDatapagamento()).equals(mesAtual))
                 .map(Pagamentos::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal totalPendente = todos.stream()
                 .filter(p -> p.getIdestadospagamento() == 2)
-                .filter(p -> YearMonth.from(p.getDatapagamento()).equals(mesAtual))
+                .filter(p -> p.getDatapagamento() != null && YearMonth.from(p.getDatapagamento()).equals(mesAtual))
                 .map(Pagamentos::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -82,6 +84,7 @@ public class PagamentosService {
         return totais;
     }
 
+
     public List<PagamentoDTOBackend> listarPagamentosCompletos() {
         List<Pagamentos> pagamentos = StreamSupport
                 .stream(pagamentosRepository.findAll().spliterator(), false)
@@ -90,19 +93,18 @@ public class PagamentosService {
         return pagamentos.stream().map(pagamento -> {
             PagamentoDTOBackend dto = new PagamentoDTOBackend();
             dto.setIdpagamento(pagamento.getIdpagamento());
-            dto.setDatapagamento(pagamento.getDatapagamento().toString());
+            dto.setDatapagamento(
+                    pagamento.getDatapagamento() != null ? pagamento.getDatapagamento().toString() : "Ainda não foi pago"
+            );
             dto.setValor(pagamento.getValor());
 
-            // Nome do contrato
             contratosRepository.findById(pagamento.getIdcontrato())
                     .ifPresent(contrato -> dto.setNomeContrato(contrato.getNome()));
 
-            // Nome do cliente
             contratosRepository.findById(pagamento.getIdcontrato())
                     .flatMap(contrato -> utilizadoresRepository.findById(Long.valueOf(contrato.getIdutilizador())))
                     .ifPresent(user -> dto.setNomeCliente(user.getNome()));
 
-            // Estado do pagamento
             estadosPagamentoRepository.findById(pagamento.getIdestadospagamento())
                     .ifPresent(estado -> dto.setEstado(estado.getNome()));
 
@@ -120,5 +122,64 @@ public class PagamentosService {
         };
 
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    // --------------- NOVOS MÉTODOS AQUI ---------------- //
+
+    public List<Pagamentos> listarPagamentosPendentesCliente(Long idutilizador) {
+        List<Contratos> contratos = contratosRepository.findByIdutilizador(idutilizador);
+
+        if (contratos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Long> idsContratos = contratos.stream()
+                .map(Contratos::getIdcontrato)
+                .collect(Collectors.toList());
+
+        List<Pagamentos> todosPagamentos = StreamSupport
+                .stream(pagamentosRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+
+        return todosPagamentos.stream()
+                .filter(p -> idsContratos.contains(p.getIdcontrato()) && p.getIdestadospagamento() == 2)
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    public void pagarPagamento(Long idPagamento, Long idMetodoPagamento) {
+        Pagamentos pagamento = pagamentosRepository.findById(idPagamento)
+                .orElseThrow(() -> new RuntimeException("Pagamento não encontrado"));
+
+        pagamento.setIdestadospagamento(5L); // 1 = Pago
+        pagamento.setIdmetodopagamento(idMetodoPagamento);
+        pagamento.setDatapagamento(LocalDate.now());
+
+        contratosRepository.findById(pagamento.getIdcontrato())
+                .ifPresent(contrato -> {
+                    contrato.setIdestadocontrato(1); // 1 = Ativo
+                    contratosRepository.save(contrato);
+                });
+        pagamentosRepository.save(pagamento);
+    }
+
+
+    @Transactional
+    public void cancelarPagamentoEContrato(Long idPagamento) {
+        Optional<Pagamentos> pagamentoOpt = pagamentosRepository.findById(idPagamento);
+        if (pagamentoOpt.isPresent()) {
+            Pagamentos pagamento = pagamentoOpt.get();
+            pagamento.setIdestadospagamento(8L); // 3 = Cancelado
+            pagamentosRepository.save(pagamento);
+
+            contratosRepository.findById(pagamento.getIdcontrato())
+                    .ifPresent(contrato -> {
+                        contrato.setIdestadocontrato(3); // 2 = Suspenso
+                        contratosRepository.save(contrato);
+                    });
+        } else {
+            throw new RuntimeException("Pagamento não encontrado.");
+        }
     }
 }

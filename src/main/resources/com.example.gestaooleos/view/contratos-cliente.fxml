@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane stylesheets="@/style.css"
+            style="-fx-background-color: white;"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.gestaooleos.UI.controller.ContratosClienteController">
+
+    <left>
+        <fx:include source="menu-lateral.fxml" />
+    </left>
+
+    <center>
+        <VBox spacing="20" style="-fx-border-color: black; -fx-border-width: 0 0 0 2;" VBox.vgrow="ALWAYS">
+
+            <!-- Título -->
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 20;">
+                <Button fx:id="btnBack" styleClass="botao-atras" prefWidth="70.0" onAction="#voltarHome">
+                    <graphic>
+                        <ImageView fitHeight="36.0" fitWidth="36.0" preserveRatio="true">
+                            <image><Image url="@../../image/img_3.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Label text="Meus Contratos" styleClass="titulo" />
+            </HBox>
+
+            <!-- Tabela de contratos -->
+            <TableView fx:id="tabelaContratos"
+                       VBox.vgrow="ALWAYS"
+                       maxWidth="Infinity"
+                       style="-fx-padding: 10;"
+                       styleClass="tabela-contratos">
+                <columns>
+                    <TableColumn fx:id="nomeContratoColuna" text="Nome do Contrato" prefWidth="200"/>
+                    <TableColumn fx:id="dataInicioColuna" text="Data Início" prefWidth="150"/>
+                    <TableColumn fx:id="dataFimColuna" text="Data Fim" prefWidth="150"/>
+                    <TableColumn fx:id="estadoColuna" text="Estado" prefWidth="150"/>
+                    <TableColumn fx:id="moradaColuna" text="Morada" prefWidth="170"/>
+                </columns>
+                <VBox.margin>
+                    <Insets top="30" left="60" right="60"/>
+                </VBox.margin>
+            </TableView>
+
+            <Label fx:id="lblSemContratos"
+                   text="Não tem contratos ativos no momento."
+                   alignment="CENTER"
+                   style="-fx-font-size: 16px; -fx-text-fill: gray;"
+                   visible="false"
+                   VBox.vgrow="NEVER" />
+        </VBox>
+    </center>
+</BorderPane>

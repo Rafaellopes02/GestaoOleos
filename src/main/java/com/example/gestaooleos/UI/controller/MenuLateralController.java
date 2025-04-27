@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 public class MenuLateralController {
 
     @FXML private Button btnPaginaInicial;
+    @FXML private Button btnPaginaInicialCli;
     @FXML private Button btnContratos;
     @FXML private Button btnRecolhas;
     @FXML private Button btnPagamentos;
@@ -18,14 +19,30 @@ public class MenuLateralController {
 
     @FXML
     public void initialize() {
-        btnPaginaInicial.setOnAction(e -> navegar("home-funcionario.fxml"));
-        btnContratos.setOnAction(e -> navegar("contratos-view.fxml"));
-        btnRecolhas.setOnAction(e -> navegar("recolhas-view.fxml"));
-        btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
-        btnUtilizadores.setOnAction(e -> navegar("utilizadores-view.fxml"));
-        btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
+        if (SessaoUtilizador.getTipoUtilizador() == 1) { // Cliente
+            btnPaginaInicial.setOnAction(e -> navegar("home-cliente.fxml"));
+
+            btnContratos.setText(" Meus Contratos");
+            btnContratos.setOnAction(e -> navegar("contratos-cliente.fxml"));
+            btnPagamentos.setText(" Meus Pagamentos");
+            btnPagamentos.setOnAction(e -> navegar("pagamentos-cliente.fxml"));
+            btnRecolhas.setVisible(false);
+            btnRecolhas.setManaged(false);
+
+            btnUtilizadores.setVisible(false);
+            btnUtilizadores.setManaged(false);
+
+        } else { // Funcionário/Admin
+            btnPaginaInicial.setOnAction(e -> navegar("home-funcionario.fxml"));
+            btnContratos.setOnAction(e -> navegar("contratos-view.fxml"));
+            btnRecolhas.setOnAction(e -> navegar("recolhas-view.fxml"));
+            btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
+            btnUtilizadores.setOnAction(e -> navegar("utilizadores-view.fxml"));
+        }
+
         btnLogout.setOnAction(e -> logout());
     }
+
 
     private void navegar(String nomeFxml) {
         try {

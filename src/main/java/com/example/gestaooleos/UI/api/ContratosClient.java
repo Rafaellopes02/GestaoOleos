@@ -78,4 +78,20 @@ public class ContratosClient {
                     return null;
                 });
     }
+
+    public void buscarContratosDoCliente(Long idCliente, Consumer<String> onSuccess, Consumer<String> onError) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/Contratos/com-estado/cliente/" + idCliente))
+                .GET()
+                .build();
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(onSuccess)
+                .exceptionally(ex -> {
+                    onError.accept(ex.getMessage());
+                    return null;
+                });
+    }
+
 }

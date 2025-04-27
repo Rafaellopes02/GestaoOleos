@@ -44,6 +44,7 @@
         </graphic>
     </Button>
 
+
     <Button fx:id="btnContratos" text=" Contratos" styleClass="botao-menu">
         <graphic>
             <ImageView fitHeight="14" fitWidth="14" preserveRatio="false">

@@ -18,14 +18,15 @@
 
     <center>
         <VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 30;">
-            <HBox alignment="CENTER_LEFT" spacing="20">
-                <ImageView fitHeight="50" fitWidth="50">
-                    <image>
-                        <Image url="@/image/img.png" />
-                    </image>
-                </ImageView>
-                <Label text="Bem-vindo, Cliente!" styleClass="titulo" />
+            <HBox alignment="CENTER_LEFT" spacing="20" >
+                <Label text="Dashboard" styleClass="titulo" />
             </HBox>
+
+            <Label fx:id="lblBemVindo"
+                   styleClass="titulo"
+                   style="-fx-font-size: 18px; -fx-padding: 0 0 10 5;" />
+
+
 
             <HBox spacing="40">
                 <!-- Cartão: Contratos -->
