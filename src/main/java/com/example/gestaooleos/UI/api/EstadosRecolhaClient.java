@@ -24,4 +24,20 @@ public class EstadosRecolhaClient {
                     return null;
                 });
     }
+
+    public void buscarEstados(Consumer<String> onSuccess, Consumer<String> onError) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/EstadosRecolhas")) // sem ID no fim!
+                .GET()
+                .build();
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(onSuccess)
+                .exceptionally(ex -> {
+                    onError.accept(ex.toString());
+                    return null;
+                });
+    }
+
 }
