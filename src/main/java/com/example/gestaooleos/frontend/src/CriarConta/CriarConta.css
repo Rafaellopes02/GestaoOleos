@@ -1,0 +1,69 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.criarconta-screen {
+    height: 100vh;
+    background: linear-gradient(135deg, #d6a741, #ffd600);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.criarconta-card {
+    text-align: center;
+    width: 320px;
+    padding: 40px 20px;
+    border-radius: 10px;
+}
+
+.logo {
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+form input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-bottom: 1px solid #fff;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+}
+
+form input::placeholder {
+    color: #eee;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background: white;
+    color: #ffea00;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+button[type="submit"]:hover {
+    background: #f8f8f8;
+}
+.login-text {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.login-text a {
+    color: white;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+}
