@@ -1,6 +1,9 @@
 package com.example.gestaooleos.API.controller;
 
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 import com.example.gestaooleos.API.model.Utilizadores;
 import com.example.gestaooleos.API.service.UtilizadoresService;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +45,11 @@ public class UtilizadoresController {
         return utilizadoresService.atualizarUtilizadores(id, utilizador)
                 .map(u -> ResponseEntity.ok("Atualizado com sucesso"))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // AQUI adicionamos o novo endpoint
+    @GetMapping("/clientes")
+    public List<Utilizadores> listarClientes() {
+        return (List<Utilizadores>) utilizadoresService.listarClientes();
     }
 }

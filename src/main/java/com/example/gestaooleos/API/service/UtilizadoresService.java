@@ -43,4 +43,9 @@ public class UtilizadoresService {
         });
     }
 
+    public Iterable<Utilizadores> listarClientes() {
+        return utilizadoresRepository.findClientes();
+    }
+
+
 }

@@ -1,21 +1,27 @@
 package com.example.gestaooleos.UI.controller;
 
+import com.example.gestaooleos.UI.api.UtilizadorDTO;
+import com.example.gestaooleos.UI.api.UtilizadoresClient;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.application.Platform;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ModalAdicionarContratoController {
@@ -23,14 +29,75 @@ public class ModalAdicionarContratoController {
     @FXML private TextField txtNome;
     @FXML private DatePicker dpInicio;
     @FXML private DatePicker dpFim;
-    @FXML private ComboBox<String> cbEstado;
+    @FXML private ComboBox<UtilizadorDTO> cbCliente;
+    @FXML private TextField txtValor;
 
     private final ObjectMapper mapper = new ObjectMapper();
+    private final UtilizadoresClient utilizadoresClient = new UtilizadoresClient();
     private ContratosController contratosController;
 
     @FXML
     public void initialize() {
-        cbEstado.getItems().addAll("Ativo", "Suspenso", "Concluído");
+        configurarComboBoxCliente();
+        configurarDatePicker(dpInicio);
+        configurarDatePicker(dpFim);
+        carregarClientes();
+    }
+
+    private void configurarDatePicker(DatePicker datePicker) {
+        datePicker.setConverter(new StringConverter<>() {
+            private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            @Override
+            public String toString(LocalDate date) {
+                return (date != null) ? formatter.format(date) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string == null || string.trim().isEmpty()) {
+                    return null;
+                }
+                return LocalDate.parse(string, formatter);
+            }
+        });
+    }
+
+    private void configurarComboBoxCliente() {
+        cbCliente.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(UtilizadorDTO cliente) {
+                return cliente != null ? cliente.getNome() : "";
+            }
+
+            @Override
+            public UtilizadorDTO fromString(String string) {
+                return null;
+            }
+        });
+    }
+
+    private void carregarClientes() {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/Utilizadores/clientes"))
+                .GET()
+                .build();
+
+        HttpClient.newHttpClient()
+                .sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(response -> {
+                    try {
+                        List<UtilizadorDTO> clientes = mapper.readValue(response, new TypeReference<List<UtilizadorDTO>>() {});
+                        Platform.runLater(() -> cbCliente.getItems().addAll(clientes));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                })
+                .exceptionally(ex -> {
+                    ex.printStackTrace();
+                    return null;
+                });
     }
 
     @FXML
@@ -38,13 +105,10 @@ public class ModalAdicionarContratoController {
         String nome = txtNome.getText().trim();
         LocalDate dataInicio = dpInicio.getValue();
         LocalDate dataFim = dpFim.getValue();
-        String estadoSelecionado = cbEstado.getValue();
+        UtilizadorDTO clienteSelecionado = cbCliente.getValue();
+        String valorTexto = txtValor.getText().trim();
 
-        // Limpa estilos antigos
-        txtNome.getStyleClass().remove("campo-obrigatorio");
-        dpInicio.getStyleClass().remove("campo-obrigatorio");
-        dpFim.getStyleClass().remove("campo-obrigatorio");
-        cbEstado.getStyleClass().remove("campo-obrigatorio");
+        limparEstilos();
 
         boolean valido = true;
 
@@ -60,9 +124,25 @@ public class ModalAdicionarContratoController {
             dpFim.getStyleClass().add("campo-obrigatorio");
             valido = false;
         }
-        if (estadoSelecionado == null) {
-            cbEstado.getStyleClass().add("campo-obrigatorio");
+        if (clienteSelecionado == null) {
+            cbCliente.getStyleClass().add("campo-obrigatorio");
             valido = false;
+        }
+        if (valorTexto.isEmpty()) {
+            txtValor.getStyleClass().add("campo-obrigatorio");
+            valido = false;
+        }
+
+        if (dataInicio == null) {
+            mostrarToast("Por favor, selecione uma data de início.", false);
+            dpInicio.getStyleClass().add("campo-obrigatorio");
+            return;
+        }
+
+        if (dataFim == null) {
+            mostrarToast("Por favor, selecione uma data de fim.", false);
+            dpFim.getStyleClass().add("campo-obrigatorio");
+            return;
         }
 
         if (!valido) {
@@ -70,19 +150,23 @@ public class ModalAdicionarContratoController {
             return;
         }
 
-        int idEstadoContrato = switch (estadoSelecionado) {
-            case "Ativo" -> 1;
-            case "Suspenso" -> 2;
-            case "Concluído" -> 3;
-            default -> 1;
-        };
+        double valor;
+        try {
+            valor = Double.parseDouble(valorTexto);
+        } catch (NumberFormatException e) {
+            txtValor.getStyleClass().add("campo-obrigatorio");
+            mostrarToast("Valor inválido. Introduza um número!", false);
+            return;
+        }
 
+        // ⚡️ Aqui, garantimos que enviamos a data no formato correto "yyyy-MM-dd"
         Map<String, Object> contrato = new HashMap<>();
         contrato.put("nome", nome);
-        contrato.put("datainicio", dataInicio.toString());
-        contrato.put("datafim", dataFim.toString());
-        contrato.put("idestadocontrato", idEstadoContrato);
-        contrato.put("idutilizador", 1); // ⚠️ TEMPORÁRIO
+        contrato.put("dataInicio", dataInicio.toString()); // LocalDate.toString() já dá "yyyy-MM-dd"
+        contrato.put("dataFim", dataFim.toString());
+        contrato.put("idutilizador", clienteSelecionado.getIdutilizador());
+        contrato.put("valor", valor);
+        contrato.put("idEstadoContrato", 2);
 
         try {
             String json = mapper.writeValueAsString(contrato);
@@ -105,25 +189,37 @@ public class ModalAdicionarContratoController {
                                     contratosController.carregarContadores();
                                 }
 
-                                // Espera o toast desaparecer antes de fechar o modal
                                 new Thread(() -> {
                                     try {
-                                        Thread.sleep(2200); // ⏳ 2.2 segundos
+                                        Thread.sleep(2200);
                                     } catch (InterruptedException ignored) {}
                                     Platform.runLater(this::fecharModal);
                                 }).start();
                             });
                         } else {
-                            Platform.runLater(() ->
-                                    mostrarToast("Erro ao criar contrato. Código: " + response.statusCode(), false));
+                            Platform.runLater(() -> {
+                                String errorBody = response.body();
+                                mostrarToast("Erro ao criar contrato: " + errorBody, false);
+                            });
                         }
+                    })
+                    .exceptionally(ex -> {
+                        Platform.runLater(() -> mostrarToast("Erro ao conectar: " + ex.getMessage(), false));
+                        return null;
                     });
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarToast("Erro ao enviar os dados do contrato.", false);
+            mostrarToast("Erro ao preparar envio do contrato.", false);
         }
     }
 
+    private void limparEstilos() {
+        txtNome.getStyleClass().remove("campo-obrigatorio");
+        dpInicio.getStyleClass().remove("campo-obrigatorio");
+        dpFim.getStyleClass().remove("campo-obrigatorio");
+        cbCliente.getStyleClass().remove("campo-obrigatorio");
+        txtValor.getStyleClass().remove("campo-obrigatorio");
+    }
 
     @FXML
     private void fecharModal() {
@@ -131,8 +227,8 @@ public class ModalAdicionarContratoController {
         stage.close();
     }
 
-    public void setContratosController(ContratosController controller) {
-        this.contratosController = controller;
+    public void setContratosController(ContratosController contratosController) {
+        this.contratosController = contratosController;
     }
 
     private void mostrarToast(String mensagem, boolean sucesso) {
@@ -149,7 +245,7 @@ public class ModalAdicionarContratoController {
 
         StackPane wrapper = new StackPane(lbl);
         wrapper.setStyle("-fx-background-color: transparent;");
-        wrapper.setPadding(new Insets(30, 20, 0, 20)); // move para cima
+        wrapper.setPadding(new Insets(30, 20, 0, 20));
 
         Scene scene = new Scene(wrapper);
         scene.setFill(null);
@@ -161,18 +257,15 @@ public class ModalAdicionarContratoController {
         toastStage.setResizable(false);
         toastStage.setScene(scene);
 
-        // posicionar no topo
         Stage owner = (Stage) txtNome.getScene().getWindow();
-        double centerX = owner.getX() + owner.getWidth() / 2 - 197; // Ajusta o -150 consoante largura do toast
-        double topY = owner.getY() - 10 ; // Sobe mais o toast
+        double centerX = owner.getX() + owner.getWidth() / 2 - 197;
+        double topY = owner.getY() - 10;
 
         toastStage.setX(centerX);
         toastStage.setY(topY);
 
-
         toastStage.show();
 
-        // fechar automaticamente após 2.5s
         new Thread(() -> {
             try {
                 Thread.sleep(2000);
@@ -180,6 +273,4 @@ public class ModalAdicionarContratoController {
             Platform.runLater(toastStage::close);
         }).start();
     }
-
-
 }

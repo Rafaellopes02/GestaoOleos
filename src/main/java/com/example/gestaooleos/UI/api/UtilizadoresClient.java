@@ -135,4 +135,20 @@ public class UtilizadoresClient {
                 });
     }
 
+    public void listarClientes(Consumer<String> onSuccess, Consumer<String> onError) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/utilizadores/clientes"))
+                .GET()
+                .build();
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(onSuccess)
+                .exceptionally(ex -> {
+                    onError.accept(ex.getMessage());
+                    return null;
+                });
+    }
+
+
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane stylesheets="@/style.css"
+            style="-fx-background-color: white;"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.gestaooleos.UI.controller.PagamentosClienteController">
+
+    <left>
+        <fx:include source="menu-lateral.fxml" />
+    </left>
+
+    <center>
+        <VBox spacing="20" style="-fx-border-color: black; -fx-border-width: 0 0 0 2;">
+
+            <!-- Título -->
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 20;">
+                <Button fx:id="btnBack"
+                        styleClass="botao-atras"
+                        prefWidth="70.0"
+                        onAction="#voltarHome">
+                    <graphic>
+                        <ImageView fitHeight="36.0" fitWidth="36.0" preserveRatio="true">
+                            <image>
+                                <Image url="@/image/img_3.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Label text="Pagamentos Pendentes" styleClass="titulo" />
+            </HBox>
+
+            <!-- Tabela -->
+            <TableView fx:id="tabelaPagamentos"
+                       prefHeight="400"
+                       maxWidth="830"
+                       style="-fx-padding: 10;"
+                       styleClass="tabela-contratos">
+
+                <columns>
+                    <TableColumn fx:id="nomeContratoCol" text="Contrato" prefWidth="200" />
+                    <TableColumn fx:id="valorCol" text="Valor (€)" prefWidth="100" />
+                    <TableColumn fx:id="dataPagamentoCol" text="Data Pagamento" prefWidth="150" />
+                    <TableColumn fx:id="estadoCol" text="Estado" prefWidth="120" />
+                    <TableColumn fx:id="acoesCol" text="Ações" prefWidth="200" />
+                </columns>
+
+                <VBox.margin>
+                    <Insets top="30" left="80" />
+                </VBox.margin>
+            </TableView>
+
+        </VBox>
+    </center>
+</BorderPane>

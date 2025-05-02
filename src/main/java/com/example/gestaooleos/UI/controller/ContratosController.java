@@ -104,7 +104,7 @@ public class ContratosController {
             modal.initStyle(StageStyle.UNDECORATED);
             modal.initModality(Modality.WINDOW_MODAL);
             modal.initOwner(btnAdicionar.getScene().getWindow());
-            modal.setScene(new Scene(root, 420, 400));
+            modal.setScene(new Scene(root, 420, 460));
             modal.setResizable(false);
             modal.centerOnScreen();
             modal.showAndWait();

@@ -35,9 +35,15 @@ public class ContratosController {
     }
 
     @PostMapping
-    public Contratos criarContratos(@RequestBody Contratos contratos) {
-        return contratosService.criarContratos(contratos);
+    public Contratos criarContratos(@RequestBody ContratoDTOBackend contratoDTOBackend) {
+        try {
+            return contratosService.criarContratoComPagamento(contratoDTOBackend);
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Mostra o erro completo na consola do servidor
+            throw new RuntimeException("Erro ao criar contrato: " + ex.getMessage());
+        }
     }
+
 
     @DeleteMapping("/{id}")
     public void removeContratos(@PathVariable Long id) {
@@ -48,4 +54,12 @@ public class ContratosController {
     public List<ContratoDTOBackend> listarContratosComEstado() {
         return contratosService.listarContratosComEstado();
     }
+
+    @GetMapping("/com-estado/cliente/{idcliente}")
+    public List<ContratoClienteDTOBackend> listarContratosDoCliente(@PathVariable Long idcliente) {
+        return contratosService.listarContratosPorCliente(idcliente);
+    }
+
+
 }
+

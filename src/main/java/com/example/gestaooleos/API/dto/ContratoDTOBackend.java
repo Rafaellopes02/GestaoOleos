@@ -8,6 +8,7 @@ public class ContratoDTOBackend {
     private int idEstadoContrato;
     private String estado; // nome do estado (ex: "Ativo")
     private int idutilizador;
+    private Double valor;
 
     public Long getIdcontrato() {
         return idcontrato;
@@ -60,4 +61,7 @@ public class ContratoDTOBackend {
     public int getIdutilizador() {return idutilizador;}
 
     public void setIdutilizador(int idutilizador) {this.idutilizador = idutilizador;}
+
+    public Double getValor() { return valor; }
+    public void setValor(Double valor) { this.valor = valor; }
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" alignment="CENTER"
+      xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.gestaooleos.UI.controller.SelecionarMetodoPagamentoController"
+      stylesheets="@/Styles/AdicionarContrato.css"
+      styleClass="vbox-modal">
+
+    <!-- Caixa de Sucesso (invisível por padrão) -->
+    <HBox fx:id="sucessoBox" spacing="10" alignment="CENTER"
+          style="-fx-background-color: #d4edda; -fx-padding: 10; -fx-background-radius: 10;"
+          visible="false">
+        <Label fx:id="sucessoLabel" text="Pagamento realizado com sucesso!"
+               style="-fx-text-fill: #155724; -fx-font-weight: bold;" />
+    </HBox>
+
+    <Label text="Escolher Método de Pagamento"
+           style="-fx-font-size: 18; -fx-font-weight: bold;" />
+
+    <ComboBox fx:id="comboMetodo" promptText="Selecionar Método" />
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" onAction="#fechar" />
+        <Button text="Confirmar" onAction="#confirmar" />
+    </HBox>
+
+</VBox>

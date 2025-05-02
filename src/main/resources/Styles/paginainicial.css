@@ -1,6 +1,6 @@
 /* Padding superior no gráfico */
 .grafico-area {
-    -fx-padding: 20 0 20 0;
+    -fx-padding: 2 0 0 -50 0;
 }
 
 /* Fundo do gráfico */
