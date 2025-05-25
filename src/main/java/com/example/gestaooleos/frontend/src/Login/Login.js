@@ -1,14 +1,33 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Login.css';
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Username:', username);
-        console.log('Password:', password);
+
+        if (!username || !password) {
+            setError('Preencha todos os campos.');
+            return;
+        }
+        try {
+            const response = await axios.post('http://localhost:8080/Utilizadores/login', {
+                username,
+                password
+            });
+
+            const token = response.data.token;
+            localStorage.setItem('token', token); // guarda o JWT
+            navigate('/home');
+        } catch (err) {
+            setError('Credenciais inválidas');
+        }
     };
 
     return (
@@ -31,6 +50,7 @@ function Login() {
                     />
                     <button type="submit">LOGIN</button>
                 </form>
+                {error && <p style={{ color: 'yellow' }}>{error}</p>}
                 <p className="register-text">
                     Ainda não tem conta? <a href="/criar-conta">Registe-se</a>
                 </p>

@@ -61,7 +61,7 @@ function CriarConta() {
                     <button type="submit">CRIAR CONTA</button>
                 </form>
                 <p className="login-text">
-                    Já tem conta? <a href="/">Faça Login</a>
+                    Já tem conta? <a href="/Login">Faça Login</a>
                 </p>
             </div>
         </div>

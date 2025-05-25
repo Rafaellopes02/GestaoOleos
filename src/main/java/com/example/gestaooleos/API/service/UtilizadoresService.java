@@ -47,5 +47,7 @@ public class UtilizadoresService {
         return utilizadoresRepository.findClientes();
     }
 
-
+    public Optional<Utilizadores> encontrarPorUsername(String username) {
+        return utilizadoresRepository.findByUsername(username);
+    }
 }
