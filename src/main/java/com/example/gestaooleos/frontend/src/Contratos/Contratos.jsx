@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import SideBar from './../Components/sidebar';
+import SideBar from '../Components/Sidebar/sidebar';
 import NovoContrato from './NovoContrato';
 import './Contratos.css';
 
@@ -31,7 +31,6 @@ function Contratos() {
             const decoded = jwtDecode(token);
             console.log("Token decodificado:", decoded);
 
-            // ✅ Aqui assumimos que o ID vem no sub (ex: "sub": "4")
             const idUtilizador = parseInt(decoded.sub, 10);
 
             const novoContrato = {
@@ -43,7 +42,6 @@ function Contratos() {
                 idEstadoContrato: 1,
             };
 
-            console.log("Contrato a enviar:", novoContrato);
 
             await axios.post("http://localhost:8080/Contratos", novoContrato);
             alert("Contrato criado com sucesso!");

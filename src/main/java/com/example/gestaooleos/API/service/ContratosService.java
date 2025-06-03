@@ -86,6 +86,8 @@ public class ContratosService {
             pagamento.setIdmetodopagamento(1L); // Fixo
             pagamento.setIdestadospagamento(estadoPendenteId);
 
+            System.out.println("Valor vindo do DTO: " + contratoDTO.getValor());
+
             pagamentosRepository.save(pagamento);
 
             return contratoCriado;
@@ -133,13 +135,10 @@ public class ContratosService {
                     dto.setDataInicio(c.getDatainicio() != null ? sdf.format(c.getDatainicio()) : "");
                     dto.setDataFim(c.getDatafim() != null ? sdf.format(c.getDatafim()) : "");
                     dto.setIdEstadoContrato(c.getIdestadocontrato());
-
-                    Long idEstado = (long) c.getIdestadocontrato();
-
-                    String nomeEstado = estadosContratosRepository.findById(idEstado)
+                    dto.setIdutilizador(c.getIdutilizador());
+                    String nomeEstado = estadosContratosRepository.findById((long) c.getIdestadocontrato())
                             .map(EstadosContratos::getNome)
                             .orElse("Desconhecido");
-
                     dto.setEstado(nomeEstado);
                     return dto;
                 })

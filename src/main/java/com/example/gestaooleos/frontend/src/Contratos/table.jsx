@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -117,14 +118,33 @@ export default function TableContratos() {
     const [rows, setRows] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8080/Contratos/com-estado')
-            .then((response) => {
-                setRows(response.data);
-            })
-            .catch((error) => {
+        const fetchContratos = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const decoded = jwtDecode(token);
+                const idUtilizador = parseInt(decoded.sub, 10);
+                const tipo = parseInt(decoded.tipo, 10);
+
+                const response = await axios.get('http://localhost:8080/Contratos/com-estado', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                let contratos = response.data;
+
+                if (tipo === 1) {
+                    contratos = contratos.filter(c =>
+                        c.idutilizador === idUtilizador);
+                }
+
+                setRows(contratos);
+            } catch (error) {
                 console.error('Erro ao buscar contratos:', error);
-            });
+            }
+        };
+
+        fetchContratos();
     }, []);
+
 
     return (
         <Paper style={{ height: 400, width: '90%', margin: '30px auto' }}>

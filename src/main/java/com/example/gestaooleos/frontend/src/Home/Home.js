@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SideBar from './../Components/sidebar';
+import SideBar from '../Components/Sidebar/sidebar';
 import './Home.css';
 
 /*ICONS*/

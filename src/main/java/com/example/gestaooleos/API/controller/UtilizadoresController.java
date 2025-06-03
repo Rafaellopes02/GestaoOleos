@@ -69,7 +69,7 @@ public class UtilizadoresController {
                 return ResponseEntity.status(401).body("Palavra-passe incorreta");
             }
 
-            String token = jwtUtil.generateToken(utilizador.getIdutilizador());
+            String token = jwtUtil.generateToken(utilizador.getIdutilizador(), utilizador.getIdtipoutilizador());
 
             return ResponseEntity.ok().body(Map.of("token", token));
         } catch (Exception e) {

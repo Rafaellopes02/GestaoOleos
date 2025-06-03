@@ -6,6 +6,7 @@ import {
     TextField,
     Button
 } from '@mui/material';
+import { jwtDecode } from 'jwt-decode';
 
 const style = {
     position: 'absolute',
@@ -19,7 +20,7 @@ const style = {
     width: '400px',
 };
 
-export default function NovoContrato({ open, onClose, onSave, userId }) {
+export default function NovoContrato({ open, onClose, onSave }) {
     const [form, setForm] = useState({
         nome: '',
         dataInicio: '',
@@ -33,18 +34,31 @@ export default function NovoContrato({ open, onClose, onSave, userId }) {
     };
 
     const handleSubmit = () => {
+        const token = localStorage.getItem("token");
+        const decoded = jwtDecode(token);
+        const userId = parseInt(decoded.sub, 10);
+
+        const valor = parseFloat(form.valor);
+        if (isNaN(valor)) {
+            alert("Insere um valor numérico válido.");
+            return;
+        }
+
         const payload = {
             nome: form.nome,
             dataInicio: form.dataInicio,
             dataFim: form.dataFim,
-            valor: parseFloat(form.valor),
-            idutilizador: userId,         // Vem do utilizador autenticado
-            idEstadoContrato: 1           // Sempre 'Ativo'
+            valor,
+            idutilizador: userId,
+            idEstadoContrato: 1
         };
+
+        console.log("Payload enviado:", payload);
 
         if (onSave) onSave(payload);
         onClose();
     };
+
 
     return (
         <Modal open={open} onClose={onClose}>
