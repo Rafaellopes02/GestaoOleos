@@ -4,7 +4,11 @@ import com.example.gestaooleos.API.model.Utilizadores;
 import com.example.gestaooleos.API.repository.UtilizadoresRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UtilizadoresService {
@@ -50,4 +54,22 @@ public class UtilizadoresService {
     public Optional<Utilizadores> encontrarPorUsername(String username) {
         return utilizadoresRepository.findByUsername(username);
     }
+
+    public Map<String, Long> contarPorTipo() {
+        Map<Integer, String> mapa = Map.of(
+                1, "Clientes",
+                2, "Empregados",
+                3, "Escritórios",
+                4, "Comerciais"
+        );
+
+        Iterable<Utilizadores> iterable = utilizadoresRepository.findAll();
+
+        return StreamSupport.stream(iterable.spliterator(), false)
+                .collect(Collectors.groupingBy(
+                        u -> mapa.getOrDefault(u.getIdtipoutilizador(), "Outro"),
+                        Collectors.counting()
+                ));
+    }
+
 }

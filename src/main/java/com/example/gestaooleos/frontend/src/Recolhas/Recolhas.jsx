@@ -9,9 +9,6 @@ import ReactVirtualizedTable from './table.jsx';
 import { jwtDecode } from "jwt-decode";
 
 function Recolhas() {
-    const [contagens, setContagens] = useState({});
-    const [modalOpen, setModalOpen] = useState(false);
-
     const [contratos, setContratos] = useState([]);
     const [contratoSelecionado, setContratoSelecionado] = useState("");
     const [morada, setMorada] = useState("");

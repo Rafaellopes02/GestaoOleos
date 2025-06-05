@@ -173,4 +173,28 @@ public class ContratosService {
             return dto;
         }).toList();
     }
+
+    public Map<String, Long> contarContratosPorEstadoDoUtilizador(Long idUtilizador) {
+        List<Contratos> contratos = contratosRepository.findByIdutilizador(idUtilizador);
+
+        long ativos = contratos.stream()
+                .filter(c -> c.getIdestadocontrato() == 1)
+                .count();
+
+        long suspensos = contratos.stream()
+                .filter(c -> c.getIdestadocontrato() == 2)
+                .count();
+
+        long concluidos = contratos.stream()
+                .filter(c -> c.getIdestadocontrato() == 3)
+                .count();
+
+        Map<String, Long> contadores = new HashMap<>();
+        contadores.put("ativos", ativos);
+        contadores.put("suspensos", suspensos);
+        contadores.put("concluidos", concluidos);
+        return contadores;
+    }
+
+
 }

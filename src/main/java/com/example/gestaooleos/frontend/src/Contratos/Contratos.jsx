@@ -15,10 +15,31 @@ function Contratos() {
     const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
-        axios.get('http://localhost:8080/Contratos/contar-estados')
-            .then(response => setContagens(response.data))
-            .catch(error => console.error("Erro ao buscar contagens:", error));
+        const fetchContagens = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) return;
+
+                const decoded = jwtDecode(token);
+                const tipo = parseInt(decoded.tipo, 10);
+                const idUtilizador = parseInt(decoded.sub, 10);
+
+                let response;
+                if (tipo === 1) {
+                    response = await axios.get(`http://localhost:8080/Contratos/contar-estados/utilizador/${idUtilizador}`);
+                } else {
+                    response = await axios.get('http://localhost:8080/Contratos/contar-estados');
+                }
+
+                setContagens(response.data);
+            } catch (error) {
+                console.error("Erro ao buscar contagens:", error);
+            }
+        };
+
+        fetchContagens();
     }, []);
+
 
     const handleSaveContrato = async (form) => {
         try {

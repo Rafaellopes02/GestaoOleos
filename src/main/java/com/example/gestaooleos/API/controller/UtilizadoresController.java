@@ -78,4 +78,8 @@ public class UtilizadoresController {
         }
     }
 
+    @GetMapping("/contar-por-tipo")
+    public Map<String, Long> contarPorTipoUtilizador() {
+        return utilizadoresService.contarPorTipo();
+    }
 }
