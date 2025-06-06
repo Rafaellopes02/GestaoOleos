@@ -92,6 +92,7 @@
                     <TableColumn fx:id="MoradaRecolha" text="Morada" prefWidth="150" />
                     <TableColumn fx:id="DataRecolha" text="Data Recolha" prefWidth="150" />
                     <TableColumn fx:id="estadoRecolha" text="Estado" prefWidth="130" />
+                    <TableColumn fx:id="verRecolha" text="Ver" prefWidth="100"/>
                 </columns>
             </TableView>
         </VBox>

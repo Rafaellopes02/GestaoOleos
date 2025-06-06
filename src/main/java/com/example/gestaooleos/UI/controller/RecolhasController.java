@@ -21,6 +21,7 @@ import com.example.gestaooleos.UI.utils.FullscreenHelper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.util.StringConverter;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -52,10 +53,31 @@ public class RecolhasController {
 
     @FXML
     public void initialize() {
-        nomeContratoRecolha.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        nomeContratoRecolha.setCellValueFactory(new PropertyValueFactory<>("nomeContrato"));
         MoradaRecolha.setCellValueFactory(new PropertyValueFactory<>("morada"));
         DataRecolha.setCellValueFactory(new PropertyValueFactory<>("data"));
         estadoRecolha.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        verRecolha.setCellFactory(coluna -> new TableCell<RecolhaDTO, Void>() {
+            private final Button btn = new Button();
+
+            {
+                ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/image/ver.png")));
+                icon.setFitHeight(20);
+                icon.setFitWidth(20);
+                btn.setGraphic(icon);
+                btn.setStyle("-fx-background-color: transparent;");
+                btn.setOnAction(event -> {
+                    RecolhaDTO recolha = getTableView().getItems().get(getIndex());
+                    abrirDialogRecolha(recolha);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : btn);
+            }
+        });
         btnSolicitar.setOnAction(event -> solicitarRecolha());
         carregarRecolhas();
         carregarContratos();
@@ -269,7 +291,6 @@ public class RecolhasController {
             }
         }, erro -> System.err.println("Erro ao carregar contratos: " + erro));
     }
-
     @FXML
     private void solicitarRecolha() {
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
@@ -336,7 +357,6 @@ public class RecolhasController {
         });
     }
 
-
     private void limparCampos() {
         comboContrato.getSelectionModel().clearSelection();
         txtQuantidade.clear();
@@ -345,7 +365,6 @@ public class RecolhasController {
         dateRecolha.setValue(null);
         txtMorada.clear();
     }
-
     @FXML
     private void voltarHome() {
         try {
@@ -360,6 +379,28 @@ public class RecolhasController {
         } catch (Exception ex) {
             ex.printStackTrace();
             // podes mostrar um alerta aqui, se quiseres
+        }
+    }
+
+    private void abrirDialogRecolha(RecolhaDTO recolha) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/ver-recolha-dialog.fxml"));
+
+            Parent root = loader.load();
+
+            VerRecolhaController controller = loader.getController();
+            controller.setRecolha(recolha);
+            controller.setOnSaveCallback(this::carregarRecolhas);
+
+            Stage dialog = new Stage();
+            dialog.initStyle(StageStyle.UNDECORATED);
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(btnBack.getScene().getWindow());
+            dialog.setTitle("Detalhes do Recolha");
+            dialog.setScene(new Scene(root));
+            dialog.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
