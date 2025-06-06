@@ -5,19 +5,20 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @Table("recolhas")
 public class Recolhas {
+
     @Id
     private Long idrecolha;
+
     private LocalDate data;
-    private Double quantidade;
+    private double quantidade;
     private String observacoes;
-    private Integer numbidoes;
-    private Integer idcontrato;
-    private Integer idutilizador;
-    private Integer idestadorecolha;
+    private int numbidoes;
+    private Long idcontrato;
+    private Long idutilizador;
+    private int idestadorecolha;
     private String morada;
 }

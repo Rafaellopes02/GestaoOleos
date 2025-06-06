@@ -35,4 +35,10 @@ public class RecolhasController {
     public void removeRecolhas(@PathVariable Long id) {
         recolhasService.removeRecolhas(id);
     }
+
+    @PatchMapping("/{id}/estado/{novoEstadoId}")
+    public void atualizarEstadoRecolha(@PathVariable Long id, @PathVariable int novoEstadoId) {
+        recolhasService.atualizarEstado(id, novoEstadoId);
+    }
+
 }

@@ -59,7 +59,9 @@ public class ContratosController {
     public List<ContratoClienteDTOBackend> listarContratosDoCliente(@PathVariable Long idcliente) {
         return contratosService.listarContratosPorCliente(idcliente);
     }
-
-
+    @GetMapping("/contar-estados/utilizador/{id}")
+    public Map<String, Long> contarContratosPorEstadoDoUtilizador(@PathVariable Long id) {
+        return contratosService.contarContratosPorEstadoDoUtilizador(id);
+    }
 }
 

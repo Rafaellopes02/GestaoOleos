@@ -32,8 +32,7 @@ public class RecolhasClient {
 
     public void adicionarRecolha(RecolhaDTO recolha, Consumer<String> onSuccess, Consumer<String> onError) {
         try {
-            String json = mapper.writeValueAsString(recolha);  // ✅ Agora funciona com LocalDate!
-            System.out.println("📤 JSON enviado: " + json);
+            String json = mapper.writeValueAsString(recolha);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL))
@@ -52,5 +51,22 @@ public class RecolhasClient {
         } catch (Exception e) {
             onError.accept(e.getMessage());
         }
+    }
+
+    public void atualizarEstadoRecolha(Long idRecolha, int novoIdEstado, Consumer<String> onSuccess, Consumer<String> onError) {
+        String url = API_URL + "/" + idRecolha + "/estado/" + novoIdEstado;
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .method("PATCH", HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(onSuccess)
+                .exceptionally(ex -> {
+                    onError.accept(ex.toString());
+                    return null;
+                });
     }
 }

@@ -4,13 +4,12 @@ import com.example.gestaooleos.API.dto.*;
 import com.example.gestaooleos.API.model.Contratos;
 import com.example.gestaooleos.API.model.Pagamentos;
 import com.example.gestaooleos.API.model.Utilizadores;
-import com.example.gestaooleos.API.repository.PagamentosRepository;
-import com.example.gestaooleos.API.repository.UtilizadoresRepository;
 import com.example.gestaooleos.API.model.EstadosContratos;
-import com.example.gestaooleos.API.repository.ContratosRepository;
-import com.example.gestaooleos.API.repository.EstadosContratosRepository;
+import com.example.gestaooleos.API.repository.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.math.BigDecimal;
@@ -21,19 +20,23 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class ContratosService {
+
     private final ContratosRepository contratosRepository;
     private final EstadosContratosRepository estadosContratosRepository;
-
-    public ContratosService(ContratosRepository contratosRepository, EstadosContratosRepository estadosContratosRepository) {
-        this.contratosRepository = contratosRepository;
-        this.estadosContratosRepository = estadosContratosRepository;
-    }
 
     @Autowired
     private PagamentosRepository pagamentosRepository;
 
     @Autowired
     private UtilizadoresRepository utilizadoresRepository;
+
+    @Autowired
+    private EstadosPagamentoRepository estadosPagamentoRepository;
+
+    public ContratosService(ContratosRepository contratosRepository, EstadosContratosRepository estadosContratosRepository) {
+        this.contratosRepository = contratosRepository;
+        this.estadosContratosRepository = estadosContratosRepository;
+    }
 
     public Iterable<Contratos> listarContratos() {
         return contratosRepository.findAll();
@@ -55,15 +58,13 @@ public class ContratosService {
                 throw new IllegalArgumentException("Data de fim inválida ou nula.");
             }
 
-
-            // Fazemos o parsing manualmente e com segurança
             LocalDate dataInicioLocalDate = LocalDate.parse(contratoDTO.getDataInicio(), formatter);
             LocalDate dataFimLocalDate = LocalDate.parse(contratoDTO.getDataFim(), formatter);
 
             Date datainicio = Date.valueOf(dataInicioLocalDate);
             Date datafim = Date.valueOf(dataFimLocalDate);
 
-            // 1. Criar contrato normal
+            // 1. Criar contrato
             Contratos contrato = new Contratos();
             contrato.setNome(contratoDTO.getNome());
             contrato.setDatainicio(datainicio);
@@ -73,12 +74,19 @@ public class ContratosService {
 
             Contratos contratoCriado = contratosRepository.save(contrato);
 
-            // 2. Criar pagamento automático
+            // 2. Obter o ID do estado "Pendente"
+            Long estadoPendenteId = estadosPagamentoRepository.findByNome("Pendente")
+                    .map(est -> est.getIdestadospagamento())
+                    .orElseThrow(() -> new RuntimeException("Estado 'Pendente' não encontrado."));
+
+            // 3. Criar pagamento associado
             Pagamentos pagamento = new Pagamentos();
             pagamento.setIdcontrato(contratoCriado.getIdcontrato());
             pagamento.setValor(BigDecimal.valueOf(contratoDTO.getValor()));
-            pagamento.setIdestadospagamento(2L); // 2 = Pendente
-            pagamento.setIdmetodopagamento(null);
+            pagamento.setIdmetodopagamento(1L); // Fixo
+            pagamento.setIdestadospagamento(estadoPendenteId);
+
+            System.out.println("Valor vindo do DTO: " + contratoDTO.getValor());
 
             pagamentosRepository.save(pagamento);
 
@@ -100,12 +108,17 @@ public class ContratosService {
                 .filter(c -> c.getIdestadocontrato() == 1)
                 .count();
 
+        long suspensos = StreamSupport.stream(contratos.spliterator(), false)
+                .filter(c -> c.getIdestadocontrato() == 2)
+                .count();
+
         long concluidos = StreamSupport.stream(contratos.spliterator(), false)
                 .filter(c -> c.getIdestadocontrato() == 3)
                 .count();
 
         Map<String, Long> contadores = new HashMap<>();
         contadores.put("ativos", ativos);
+        contadores.put("suspensos", suspensos);
         contadores.put("concluidos", concluidos);
         return contadores;
     }
@@ -122,13 +135,10 @@ public class ContratosService {
                     dto.setDataInicio(c.getDatainicio() != null ? sdf.format(c.getDatainicio()) : "");
                     dto.setDataFim(c.getDatafim() != null ? sdf.format(c.getDatafim()) : "");
                     dto.setIdEstadoContrato(c.getIdestadocontrato());
-
-                    Long idEstado = (long) c.getIdestadocontrato();
-
-                    String nomeEstado = estadosContratosRepository.findById(idEstado)
+                    dto.setIdutilizador(c.getIdutilizador());
+                    String nomeEstado = estadosContratosRepository.findById((long) c.getIdestadocontrato())
                             .map(EstadosContratos::getNome)
                             .orElse("Desconhecido");
-
                     dto.setEstado(nomeEstado);
                     return dto;
                 })
@@ -163,4 +173,28 @@ public class ContratosService {
             return dto;
         }).toList();
     }
+
+    public Map<String, Long> contarContratosPorEstadoDoUtilizador(Long idUtilizador) {
+        List<Contratos> contratos = contratosRepository.findByIdutilizador(idUtilizador);
+
+        long ativos = contratos.stream()
+                .filter(c -> c.getIdestadocontrato() == 1)
+                .count();
+
+        long suspensos = contratos.stream()
+                .filter(c -> c.getIdestadocontrato() == 2)
+                .count();
+
+        long concluidos = contratos.stream()
+                .filter(c -> c.getIdestadocontrato() == 3)
+                .count();
+
+        Map<String, Long> contadores = new HashMap<>();
+        contadores.put("ativos", ativos);
+        contadores.put("suspensos", suspensos);
+        contadores.put("concluidos", concluidos);
+        return contadores;
+    }
+
+
 }

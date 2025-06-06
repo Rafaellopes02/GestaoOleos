@@ -1,0 +1,70 @@
+.main-content {
+    margin-left: 250px; /* ajusta se a tua sidebar for maior/menor */
+    padding: 30px;
+}
+
+.header h1 {
+    font-size: 30px;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: gray;
+    margin-top: 4px;
+    margin-bottom: 20px;
+}
+
+.cards-row {
+    display: flex;
+    justify-content: center; /* <--- isto centra os cards */
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background-color: #f1f1f1;
+    border-radius: 25px;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
+    width: 20%;
+    padding: 15px;
+    padding-bottom: 30px;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card p {
+    font-size: 18px;
+}
+
+.count {
+    font-size: 35px;
+}
+
+.icon-wrapper {
+    padding: 8px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.icon-wrapper.green {
+    background-color: #6efd90;
+    color: #146c26;
+}
+
+.icon-wrapper.orange {
+    background-color: #ffe0b3;
+    color: #cc7000;
+}
+
+.icon-wrapper.yellow {
+    background-color: #fff3cd;
+    color: #d39e00;
+}

@@ -29,4 +29,13 @@ public class RecolhasService {
     public void removeRecolhas(Long id) {
         recolhasRepository.deleteById(id);
     }
+
+    public void atualizarEstado(Long id, int novoEstadoId) {
+        Optional<Recolhas> recolhaOpt = recolhasRepository.findById(id);
+        if (recolhaOpt.isPresent()) {
+            Recolhas recolha = recolhaOpt.get();
+            recolha.setIdestadorecolha(novoEstadoId);
+            recolhasRepository.save(recolha);
+        }
+    }
 }
