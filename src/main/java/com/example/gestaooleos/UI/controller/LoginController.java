@@ -19,7 +19,6 @@ public class LoginController {
     @FXML private Hyperlink PageCriar;
     @FXML private Label erroLabel;
 
-
     private final UtilizadoresClient utilizadoresClient = new UtilizadoresClient();
 
     @FXML
@@ -40,12 +39,13 @@ public class LoginController {
         utilizadoresClient.login(username, password,
                 json -> {
                     try {
-                        if (json.startsWith("{")) { // Verifica se é um JSON válido
+                        System.out.println("Resposta da API: " + json);
+                        if (json.startsWith("{")) {
                             ObjectMapper mapper = new ObjectMapper();
                             UtilizadorDTO utilizador = mapper.readValue(json, UtilizadorDTO.class);
                             Platform.runLater(() -> redirecionarParaHome(utilizador));
                         } else {
-                            Platform.runLater(() -> mostrarErro(json)); // Mensagem de erro simples
+                            Platform.runLater(() -> mostrarErro(json));
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -55,7 +55,6 @@ public class LoginController {
                 erro -> Platform.runLater(() -> mostrarErro("Erro ao comunicar com o servidor: " + erro))
         );
     }
-
 
     private void abrirCriarConta() {
         try {
@@ -72,6 +71,11 @@ public class LoginController {
 
     private void redirecionarParaHome(UtilizadorDTO utilizador) {
         try {
+            if (utilizador.getIdutilizador() == null) {
+                mostrarErro("ID do utilizador não foi fornecido pela API.");
+                return;
+            }
+
             SessaoUtilizador.setNomeUtilizador(utilizador.getNome());
             SessaoUtilizador.setTipoUtilizador(utilizador.getIdtipoutilizador());
             SessaoUtilizador.setIdUtilizador(utilizador.getIdutilizador().intValue());
@@ -83,8 +87,8 @@ public class LoginController {
                 case 1: // Cliente
                     paginaInicial = "/com.example.gestaooleos/view/home-cliente.fxml";
                     break;
-                case 2: // Funcionário
-                case 3: // Outro tipo de Funcionário
+                case 2:
+                case 3: // Funcionários
                     paginaInicial = "/com.example.gestaooleos/view/home-funcionario.fxml";
                     break;
                 default:
@@ -104,7 +108,6 @@ public class LoginController {
             mostrarErro("Erro ao carregar a página inicial.");
         }
     }
-
 
     private void mostrarErro(String mensagem) {
         erroLabel.setText(mensagem);
