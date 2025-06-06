@@ -86,7 +86,7 @@ function Home() {
 
                 <div className="cards-row">
                     <div className="card">
-                        <p><b>Total de Recolhas</b></p>
+                        <p><b>Total de Recolhass</b></p>
                         <div className="content">
                             <span className="count"><b>{totalRecolhas}</b></span>
                             <span className="icon-wrapper orange">
