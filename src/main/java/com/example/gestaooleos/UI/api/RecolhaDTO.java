@@ -13,7 +13,11 @@ public class RecolhaDTO {
     private int idestadorecolha;
     private String morada;
 
-    // Getters e setters...
+    // Campos para exibição (ViewModel)
+    private String nomeContrato;
+    private String estado;
+
+    // Getters e Setters
     public Long getIdrecolha() { return idrecolha; }
     public void setIdrecolha(Long idrecolha) { this.idrecolha = idrecolha; }
 
@@ -40,4 +44,10 @@ public class RecolhaDTO {
 
     public String getMorada() { return morada; }
     public void setMorada(String morada) { this.morada = morada; }
+
+    public String getNomeContrato() { return nomeContrato; }
+    public void setNomeContrato(String nomeContrato) { this.nomeContrato = nomeContrato; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 }

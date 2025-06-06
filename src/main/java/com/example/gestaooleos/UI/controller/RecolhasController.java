@@ -9,16 +9,23 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import com.example.gestaooleos.UI.utils.*;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 
 
@@ -33,11 +40,12 @@ public class RecolhasController {
     @FXML private Button btnSolicitar;
     @FXML private Button btnBack;
 
-    @FXML private TableView<RecolhaViewModel> tabelaRecolhas;
-    @FXML private TableColumn<RecolhaViewModel, String> nomeContratoRecolha;
-    @FXML private TableColumn<RecolhaViewModel, String> MoradaRecolha;
-    @FXML private TableColumn<RecolhaViewModel, String> DataRecolha;
-    @FXML private TableColumn<RecolhaViewModel, String> estadoRecolha;
+    @FXML private TableView<RecolhaDTO> tabelaRecolhas;
+    @FXML private TableColumn<RecolhaDTO, String> nomeContratoRecolha;
+    @FXML private TableColumn<RecolhaDTO, String> MoradaRecolha;
+    @FXML private TableColumn<RecolhaDTO, String> DataRecolha;
+    @FXML private TableColumn<RecolhaDTO, String> estadoRecolha;
+    @FXML private TableColumn<RecolhaDTO, Void> verRecolha;
 
 
     private final RecolhasClient recolhasClient = new RecolhasClient();
@@ -48,10 +56,31 @@ public class RecolhasController {
 
     @FXML
     public void initialize() {
-        nomeContratoRecolha.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        nomeContratoRecolha.setCellValueFactory(new PropertyValueFactory<>("nomeContrato"));
         MoradaRecolha.setCellValueFactory(new PropertyValueFactory<>("morada"));
         DataRecolha.setCellValueFactory(new PropertyValueFactory<>("data"));
         estadoRecolha.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        verRecolha.setCellFactory(coluna -> new TableCell<RecolhaDTO, Void>() {
+            private final Button btn = new Button();
+
+            {
+                ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/image/ver.png")));
+                icon.setFitHeight(20);
+                icon.setFitWidth(20);
+                btn.setGraphic(icon);
+                btn.setStyle("-fx-background-color: transparent;");
+                btn.setOnAction(event -> {
+                    RecolhaDTO recolha = getTableView().getItems().get(getIndex());
+                    abrirDialogRecolha(recolha);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : btn);
+            }
+        });
         btnSolicitar.setOnAction(event -> solicitarRecolha());
         carregarRecolhas();
         carregarContratos();
@@ -105,7 +134,7 @@ public class RecolhasController {
                             List<RecolhaViewModel> modelos = futuros.stream()
                                     .map(CompletableFuture::join)
                                     .toList();
-                            Platform.runLater(() -> tabelaRecolhas.setItems(FXCollections.observableArrayList(modelos)));
+                            Platform.runLater(() -> tabelaRecolhas.setItems(FXCollections.observableArrayList()));
                         });
 
             } catch (Exception e) {
@@ -141,7 +170,6 @@ public class RecolhasController {
             }
         }, erro -> System.err.println("Erro ao carregar contratos: " + erro));
     }
-
     @FXML
     private void solicitarRecolha() {
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
@@ -208,7 +236,6 @@ public class RecolhasController {
         });
     }
 
-
     private void limparCampos() {
         comboContrato.getSelectionModel().clearSelection();
         txtQuantidade.clear();
@@ -217,7 +244,6 @@ public class RecolhasController {
         dateRecolha.setValue(null);
         txtMorada.clear();
     }
-
     @FXML
     private void voltarHome() {
         try {
@@ -232,6 +258,28 @@ public class RecolhasController {
         } catch (Exception ex) {
             ex.printStackTrace();
             // podes mostrar um alerta aqui, se quiseres
+        }
+    }
+
+    private void abrirDialogRecolha(RecolhaDTO recolha) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/ver-recolha-dialog.fxml"));
+
+            Parent root = loader.load();
+
+            VerRecolhaController controller = loader.getController();
+            controller.setRecolha(recolha);
+            controller.setOnSaveCallback(this::carregarRecolhas);
+
+            Stage dialog = new Stage();
+            dialog.initStyle(StageStyle.UNDECORATED);
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(btnBack.getScene().getWindow());
+            dialog.setTitle("Detalhes do Recolha");
+            dialog.setScene(new Scene(root));
+            dialog.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
