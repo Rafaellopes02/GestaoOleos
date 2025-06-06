@@ -39,7 +39,7 @@ public class ContratosController {
         try {
             return contratosService.criarContratoComPagamento(contratoDTOBackend);
         } catch (Exception ex) {
-            ex.printStackTrace(); // Mostra o erro completo na consola do servidor
+            ex.printStackTrace();
             throw new RuntimeException("Erro ao criar contrato: " + ex.getMessage());
         }
     }

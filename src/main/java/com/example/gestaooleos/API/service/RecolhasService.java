@@ -3,11 +3,19 @@ package com.example.gestaooleos.API.service;
 import com.example.gestaooleos.API.model.Recolhas;
 import com.example.gestaooleos.API.repository.RecolhasRepository;
 import org.springframework.stereotype.Service;
+import com.example.gestaooleos.API.model.Pagamentos;
+import com.example.gestaooleos.API.repository.PagamentosRepository;
+import java.math.BigDecimal;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
 
 @Service
 public class RecolhasService {
+
+    @Autowired
+    private PagamentosRepository pagamentosRepository;
+
     private final RecolhasRepository recolhasRepository;
 
     public RecolhasService(RecolhasRepository recolhasRepository) {
@@ -23,8 +31,26 @@ public class RecolhasService {
     }
 
     public Recolhas criarRecolhas(Recolhas recolha) {
-        return recolhasRepository.save(recolha);
+        Recolhas recolhaCriada = recolhasRepository.save(recolha);
+
+        // Calcula o valor com base na quantidade
+        double quantidade = recolha.getQuantidade();
+        int numBidoes = (int) Math.ceil(quantidade / 5000.0);
+        double valor = quantidade * 0.002;
+
+        // Cria o pagamento associado
+        Pagamentos pagamento = new Pagamentos();
+        pagamento.setIdcontrato(recolhaCriada.getIdcontrato());
+        pagamento.setValor(BigDecimal.valueOf(valor));
+        pagamento.setIdmetodopagamento(4L);
+        pagamento.setIdestadospagamento(1L);
+        pagamento.setDatapagamento(null);
+
+        pagamentosRepository.save(pagamento);
+
+        return recolhaCriada;
     }
+
 
     public void removeRecolhas(Long id) {
         recolhasRepository.deleteById(id);

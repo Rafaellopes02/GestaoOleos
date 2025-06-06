@@ -86,3 +86,20 @@
     border: 1px solid #ccc;
     resize: vertical;
 }
+
+.input-com-sufixo {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.input-com-sufixo input {
+    width: 100px;
+    padding: 5px;
+}
+
+.input-com-sufixo .sufixo {
+    font-weight: bold;
+    margin-left: 4px;
+}
+

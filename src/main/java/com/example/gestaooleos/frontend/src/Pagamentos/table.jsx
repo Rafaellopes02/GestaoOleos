@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import { TableVirtuoso } from 'react-virtuoso';
 import { FaEye } from "react-icons/fa";
 import Chip from '@mui/material/Chip';
+import { jwtDecode } from "jwt-decode";
 
 import DetalhesPagamento from './DetalhesPagamento';
 import EfetuarPagamento from './EfetuarPagamento';
@@ -65,6 +66,10 @@ export default function TablePagamentos() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const token = localStorage.getItem("token");
+                const decoded = jwtDecode(token);
+                const idUtilizador = parseInt(decoded.sub, 10);
+
                 const [pagamentos, contratos, metodos, estados] = await Promise.all([
                     fetch('http://localhost:8080/api/pagamentos').then(res => res.json()),
                     fetch('http://localhost:8080/Contratos/com-estado').then(res => res.json()),
@@ -72,19 +77,22 @@ export default function TablePagamentos() {
                     fetch('http://localhost:8080/api/estadospagamento').then(res => res.json())
                 ]);
 
+                const contratosFiltrados = contratos.filter(c => c.idutilizador === idUtilizador);
+                const contratosDoUtilizador = new Set(contratosFiltrados.map(c => c.idcontrato));
+
                 const contratoMap = new Map(contratos.map(c => [c.idcontrato, c.nome]));
                 const metodoMap = new Map(metodos.map(m => [m.idmetodopagamento, m.metodo]));
                 const estadoMap = new Map(estados.map(e => [e.idestadospagamento, e.nome]));
 
-                const data = pagamentos.map(p => {
-                    return {
+                const data = pagamentos
+                    .filter(p => contratosDoUtilizador.has(p.idcontrato))
+                    .map(p => ({
                         contrato: contratoMap.get(p.idcontrato) || `#${p.idcontrato}`,
                         metodo: metodoMap.get(p.idmetodopagamento) || `#${p.idmetodopagamento}`,
                         valor: p.valor,
                         estado: estadoMap.get(Number(p.idestadospagamento)) || `#${p.idestadospagamento}`,
                         detalhes: p
-                    };
-                });
+                    }));
 
                 setRows(data);
                 setMetodosPagamento(metodos);
@@ -122,11 +130,9 @@ export default function TablePagamentos() {
     };
 
     const EstadoChip = ({ estado }) => {
-        let cor = 'default';
         let estilo = {};
 
         if (estado === 'Concluido') {
-            cor = 'success';
             estilo = {
                 backgroundColor: '#ccffcc',
                 color: 'green',
@@ -135,7 +141,6 @@ export default function TablePagamentos() {
                 padding: '0 10px'
             };
         } else if (estado === 'Pendente') {
-            cor = 'error';
             estilo = {
                 backgroundColor: '#ffe6e6',
                 color: 'red',
@@ -147,7 +152,6 @@ export default function TablePagamentos() {
 
         return <Chip label={estado} style={estilo} />;
     };
-
 
     return (
         <>

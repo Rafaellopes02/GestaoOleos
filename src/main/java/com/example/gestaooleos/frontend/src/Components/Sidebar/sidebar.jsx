@@ -22,7 +22,6 @@ function Sidebar() {
                 <Link to="/Contratos"><FileText size={18} /> Contratos</Link>
                 <Link to="/Recolhas"><Truck size={18} /> Recolhas</Link>
                 <Link to="/Pagamentos"><CreditCard size={18} /> Pagamentos</Link>
-                <Link to="/Utilizadores"><Users size={18} /> Utilizadores</Link>
                 <button onClick={handleLogout}>
                     <LogOut size={18} /> Logout
                 </button>

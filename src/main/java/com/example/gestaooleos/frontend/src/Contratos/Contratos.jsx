@@ -50,8 +50,6 @@ function Contratos() {
             }
 
             const decoded = jwtDecode(token);
-            console.log("Token decodificado:", decoded);
-
             const idUtilizador = parseInt(decoded.sub, 10);
 
             const novoContrato = {
@@ -59,12 +57,12 @@ function Contratos() {
                 dataInicio: form.dataInicio,
                 dataFim: form.dataFim,
                 idutilizador: idUtilizador,
-                valor: 0,
                 idEstadoContrato: 1,
             };
 
-
+            // Apenas cria o contrato — o backend trata do resto
             await axios.post("http://localhost:8080/Contratos", novoContrato);
+
             alert("Contrato criado com sucesso!");
             setModalOpen(false);
         } catch (error) {
@@ -72,6 +70,7 @@ function Contratos() {
             alert("Erro ao guardar contrato!");
         }
     };
+
 
     return (
         <div>

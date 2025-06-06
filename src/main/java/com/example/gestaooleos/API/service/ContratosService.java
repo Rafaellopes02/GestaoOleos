@@ -6,6 +6,8 @@ import com.example.gestaooleos.API.model.Pagamentos;
 import com.example.gestaooleos.API.model.Utilizadores;
 import com.example.gestaooleos.API.model.EstadosContratos;
 import com.example.gestaooleos.API.repository.*;
+import com.example.gestaooleos.API.model.PedidosContrato;
+import com.example.gestaooleos.API.repository.PedidosContratoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,17 @@ import java.sql.Date;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
+
+
 @Service
 public class ContratosService {
 
     private final ContratosRepository contratosRepository;
     private final EstadosContratosRepository estadosContratosRepository;
+
+
+    @Autowired
+    private PedidosContratoRepository pedidosContratoRepository;
 
     @Autowired
     private PagamentosRepository pagamentosRepository;
@@ -49,22 +57,11 @@ public class ContratosService {
     public Contratos criarContratoComPagamento(ContratoDTOBackend contratoDTO) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-            if (contratoDTO.getDataInicio() == null || contratoDTO.getDataInicio().isBlank()) {
-                throw new IllegalArgumentException("Data de início inválida ou nula.");
-            }
-
-            if (contratoDTO.getDataFim() == null || contratoDTO.getDataFim().isBlank()) {
-                throw new IllegalArgumentException("Data de fim inválida ou nula.");
-            }
-
             LocalDate dataInicioLocalDate = LocalDate.parse(contratoDTO.getDataInicio(), formatter);
             LocalDate dataFimLocalDate = LocalDate.parse(contratoDTO.getDataFim(), formatter);
-
             Date datainicio = Date.valueOf(dataInicioLocalDate);
             Date datafim = Date.valueOf(dataFimLocalDate);
 
-            // 1. Criar contrato
             Contratos contrato = new Contratos();
             contrato.setNome(contratoDTO.getNome());
             contrato.setDatainicio(datainicio);
@@ -74,21 +71,11 @@ public class ContratosService {
 
             Contratos contratoCriado = contratosRepository.save(contrato);
 
-            // 2. Obter o ID do estado "Pendente"
-            Long estadoPendenteId = estadosPagamentoRepository.findByNome("Pendente")
-                    .map(est -> est.getIdestadospagamento())
-                    .orElseThrow(() -> new RuntimeException("Estado 'Pendente' não encontrado."));
-
-            // 3. Criar pagamento associado
-            Pagamentos pagamento = new Pagamentos();
-            pagamento.setIdcontrato(contratoCriado.getIdcontrato());
-            pagamento.setValor(BigDecimal.valueOf(contratoDTO.getValor()));
-            pagamento.setIdmetodopagamento(1L); // Fixo
-            pagamento.setIdestadospagamento(estadoPendenteId);
-
-            System.out.println("Valor vindo do DTO: " + contratoDTO.getValor());
-
-            pagamentosRepository.save(pagamento);
+            PedidosContrato pedido = new PedidosContrato();
+            pedido.setData(new java.sql.Date(System.currentTimeMillis()));
+            pedido.setIdcontrato(contratoCriado.getIdcontrato().intValue());
+            pedido.setIdestadopedido(1);
+            pedidosContratoRepository.save(pedido);
 
             return contratoCriado;
 

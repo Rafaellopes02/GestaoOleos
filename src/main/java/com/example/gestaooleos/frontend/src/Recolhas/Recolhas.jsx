@@ -12,11 +12,11 @@ function Recolhas() {
     const [contratos, setContratos] = useState([]);
     const [contratoSelecionado, setContratoSelecionado] = useState("");
     const [morada, setMorada] = useState("");
-    const [codigoPostal, setCodigoPostal] = useState("");
+    const [numbidoes, setNumBidoes] = useState("");
+    const [quantidade, setQuantidade] = useState("");
     const [dataRecolha, setDataRecolha] = useState("");
-    const [horaRecolha, setHoraRecolha] = useState("");
     const [observacoes, setObservacoes] = useState("");
-
+    const [valor, setValor] = useState("");
 
     useEffect(() => {
         const fetchContratos = async () => {
@@ -56,12 +56,11 @@ function Recolhas() {
             const novaRecolha = {
                 idcontrato: contratoSelecionado,
                 idutilizador: idUtilizador,
-                quantidade: 0,
-                numbidoes: 0,
-                morada,
-                codigopostal: codigoPostal,
-                data: `${dataRecolha}T${horaRecolha}`,
-                observacoes,
+                quantidade: quantidade,
+                numbidoes: numbidoes,
+                morada: morada,
+                data: `${dataRecolha}`,
+                observacoes: observacoes,
                 idestadorecolha: 1
             };
 
@@ -74,6 +73,20 @@ function Recolhas() {
             alert("Erro ao solicitar recolha!");
         }
     };
+
+    useEffect(() => {
+        const qtd = parseFloat(quantidade);
+        if (!isNaN(qtd) && qtd > 0) {
+            const bidões = Math.ceil(qtd / 5000);
+            setNumBidoes(bidões);
+
+            const preco = (qtd / 5000) * 10;
+            setValor(preco.toFixed(2)); // duas casas decimais
+        } else {
+            setNumBidoes("");
+            setValor("");
+        }
+    }, [quantidade]);
 
     return (
         <div>
@@ -99,13 +112,43 @@ function Recolhas() {
 
                         <div className="linha-form">
                             <input type="text" placeholder="Morada da Recolha" value={morada} onChange={e => setMorada(e.target.value)} />
-                            <input type="text" placeholder="Código-Postal" value={codigoPostal} onChange={e => setCodigoPostal(e.target.value)} />
                         </div>
 
                         <div className="linha-form">
                             <input type="date" value={dataRecolha} onChange={e => setDataRecolha(e.target.value)} />
-                            <input type="time" value={horaRecolha} onChange={e => setHoraRecolha(e.target.value)} />
                         </div>
+
+                            <div className="linha-form">
+                                <div className="input-com-sufixo">
+                                    <input
+                                        type="number"
+                                        placeholder="Quantidade"
+                                        value={quantidade}
+                                        onChange={e => setQuantidade(e.target.value)}
+                                    />
+                                    <span className="sufixo">ml</span>
+                                </div>
+
+                                <div className="input-com-sufixo">
+                                    <input
+                                        type="number"
+                                        placeholder="Número de Bidões"
+                                        value={numbidoes}
+                                        readOnly
+                                    />
+                                    <span className="sufixo">Bidões</span>
+                                </div>
+
+                                <div className="input-com-sufixo">
+                                    <input
+                                        type="number"
+                                        placeholder="Preço"
+                                        value={valor}
+                                        readOnly
+                                    />
+                                    <span className="sufixo">€</span>
+                                </div>
+                            </div>
 
                         <div className="linha-form">
                             <textarea className="textarea-observacoes" placeholder="Observações (Opcional)" value={observacoes} onChange={e => setObservacoes(e.target.value)} />

@@ -38,17 +38,10 @@ export default function NovoContrato({ open, onClose, onSave }) {
         const decoded = jwtDecode(token);
         const userId = parseInt(decoded.sub, 10);
 
-        const valor = parseFloat(form.valor);
-        if (isNaN(valor)) {
-            alert("Insere um valor numérico válido.");
-            return;
-        }
-
         const payload = {
             nome: form.nome,
             dataInicio: form.dataInicio,
             dataFim: form.dataFim,
-            valor,
             idutilizador: userId,
             idEstadoContrato: 1
         };
@@ -96,16 +89,6 @@ export default function NovoContrato({ open, onClose, onSave }) {
                     onChange={handleChange}
                     margin="normal"
                     InputLabelProps={{ shrink: true }}
-                />
-
-                <TextField
-                    fullWidth
-                    label="Valor (€)"
-                    name="valor"
-                    type="number"
-                    value={form.valor}
-                    onChange={handleChange}
-                    margin="normal"
                 />
 
                 <Box mt={2} display="flex" justifyContent="flex-end">
