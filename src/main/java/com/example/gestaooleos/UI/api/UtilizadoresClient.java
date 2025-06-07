@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 
 public class UtilizadoresClient {
 
+    private static final String BASE_URL = "http://localhost:8080";
     private static final String API_URL = "http://localhost:8080/Utilizadores";
     private static final String LOGIN_URL = "http://localhost:8080/api/auth/login";
     private final HttpClient client = HttpClient.newHttpClient();
@@ -150,5 +151,20 @@ public class UtilizadoresClient {
                 });
     }
 
+    public void buscarEmpregados(Consumer<String> onSuccess, Consumer<String> onError) {
+        String endpoint = "/api/utilizadores/empregados";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + endpoint))
+                .GET()
+                .build();
 
+        HttpClient.newHttpClient().sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(onSuccess)
+                .exceptionally(ex -> {
+                    onError.accept(ex.getMessage());
+                    return null;
+                });
+    }
 }
+

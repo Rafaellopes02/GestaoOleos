@@ -19,32 +19,59 @@ public class MenuLateralController {
 
     @FXML
     public void initialize() {
-        if (SessaoUtilizador.getTipoUtilizador() == 1) { // Cliente
-            btnPaginaInicial.setOnAction(e -> navegar("home-cliente.fxml"));
+            int tipo = SessaoUtilizador.getTipoUtilizador();
 
-            btnContratos.setText(" Meus Contratos");
-            btnContratos.setOnAction(e -> navegar("contratos-cliente.fxml"));
-            btnPagamentos.setText(" Meus Pagamentos");
-            btnPagamentos.setOnAction(e -> navegar("pagamentos-cliente.fxml"));
-            btnRecolhas.setVisible(false);
-            btnRecolhas.setManaged(false);
+            if (tipo == 1) { // Cliente
+                btnPaginaInicial.setOnAction(e -> navegar("home-cliente.fxml"));
 
-            btnUtilizadores.setVisible(false);
-            btnUtilizadores.setManaged(false);
+                btnContratos.setText(" Meus Contratos");
+                btnContratos.setOnAction(e -> navegar("contratos-cliente.fxml"));
 
-        } else { // Funcionário/Admin
-            btnPaginaInicial.setOnAction(e -> navegar("home-funcionario.fxml"));
-            btnContratos.setOnAction(e -> navegar("contratos-view.fxml"));
-            btnRecolhas.setOnAction(e -> navegar("recolhas-view.fxml"));
-            btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
-            btnUtilizadores.setOnAction(e -> navegar("utilizadores-view.fxml"));
+                btnPagamentos.setText(" Meus Pagamentos");
+                btnPagamentos.setOnAction(e -> navegar("pagamentos-cliente.fxml"));
+
+                btnRecolhas.setVisible(false);
+                btnRecolhas.setManaged(false);
+
+                btnUtilizadores.setVisible(false);
+                btnUtilizadores.setManaged(false);
+
+            } else if (tipo == 2) { // Empregado (normal)
+                btnPaginaInicial.setOnAction(e -> navegar("home-empregado.fxml"));
+
+                btnContratos.setVisible(false);
+                btnContratos.setManaged(false);
+
+                btnPagamentos.setVisible(false);
+                btnPagamentos.setManaged(false);
+
+                btnUtilizadores.setVisible(false);
+                btnUtilizadores.setManaged(false);
+
+            } else if (tipo == 3) { // Escritório
+                btnPaginaInicial.setOnAction(e -> navegar("home-escritorio.fxml"));
+
+                btnContratos.setOnAction(e -> navegar("contratos-view.fxml"));
+                btnRecolhas.setOnAction(e -> navegar("recolhas-view.fxml"));
+                btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
+
+                btnUtilizadores.setVisible(false);
+                btnUtilizadores.setManaged(false);
+
+            } else { // Admin ou genérico
+                btnPaginaInicial.setOnAction(e -> navegar("home-funcionario.fxml"));
+                btnContratos.setOnAction(e -> navegar("contratos-view.fxml"));
+                btnRecolhas.setOnAction(e -> navegar("recolhas-view.fxml"));
+                btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
+                btnUtilizadores.setOnAction(e -> navegar("utilizadores-view.fxml"));
+            }
+
+            btnLogout.setOnAction(e -> logout());
         }
 
-        btnLogout.setOnAction(e -> logout());
-    }
 
 
-    private void navegar(String nomeFxml) {
+        private void navegar(String nomeFxml) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/" + nomeFxml));
             Parent root = loader.load();

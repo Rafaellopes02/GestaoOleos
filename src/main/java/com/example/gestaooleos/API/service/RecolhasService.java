@@ -64,4 +64,11 @@ public class RecolhasService {
             recolhasRepository.save(recolha);
         }
     }
+
+    public int contarPorEstado(int estadoId) {
+        return (int) recolhasRepository.countByIdestadorecolha(estadoId);
+    }
+
+
+
 }

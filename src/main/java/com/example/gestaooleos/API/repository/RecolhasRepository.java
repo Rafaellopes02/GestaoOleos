@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RecolhasRepository extends CrudRepository<Recolhas, Long> {
+    long countByIdestadorecolha(int idestadorecolha);
+
 }
