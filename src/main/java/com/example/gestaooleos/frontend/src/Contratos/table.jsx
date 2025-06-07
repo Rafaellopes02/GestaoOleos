@@ -69,7 +69,7 @@ function getEstadoStyle(estado) {
         case 'suspenso':
             return {
                 backgroundColor: '#fff4e5',
-                color: '#ef6c00',
+                color: '#efbf00',
                 fontWeight: 'bold',
                 padding: '6px 12px',
                 borderRadius: '20px',
@@ -80,7 +80,18 @@ function getEstadoStyle(estado) {
         case 'encerrado':
             return {
                 backgroundColor: '#fdecea',
-                color: '#d32f2f',
+                color: '#ff7300',
+                fontWeight: 'bold',
+                padding: '6px 12px',
+                borderRadius: '20px',
+                display: 'inline-block',
+                textAlign: 'center',
+                minWidth: '80px',
+            };
+        case 'não aceite':
+            return {
+                backgroundColor: '#fdecea',
+                color: '#ff0000',
                 fontWeight: 'bold',
                 padding: '6px 12px',
                 borderRadius: '20px',
@@ -103,8 +114,10 @@ function rowContent(_index, row) {
                 >
                     {column.dataKey === 'estado' ? (
                         <span style={getEstadoStyle(row.estado)}>
-                            {row.estado}
-                        </span>
+        {row.estado}
+    </span>
+                    ) : column.dataKey === 'nome' ? (
+                        `${row.idcontrato} - ${row.nome}`
                     ) : (
                         row[column.dataKey]
                     )}
@@ -131,10 +144,15 @@ export default function TableContratos() {
 
                 let contratos = response.data;
 
+                // Filtrar contratos do próprio utilizador (caso tipo === 1)
                 if (tipo === 1) {
-                    contratos = contratos.filter(c =>
-                        c.idutilizador === idUtilizador);
+                    contratos = contratos.filter(c => c.idutilizador === idUtilizador);
                 }
+
+                // Filtrar contratos com estado diferente de "Pendente"
+                contratos = contratos.filter(c => c.idEstadoContrato !== 4);
+
+                contratos.sort((a, b) => b.idcontrato - a.idcontrato);
 
                 setRows(contratos);
             } catch (error) {

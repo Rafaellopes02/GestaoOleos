@@ -9,14 +9,16 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { FaEye } from 'react-icons/fa';
 
 import { TableVirtuoso } from 'react-virtuoso';
 
 const columns = [
     { width: 200, label: 'Contrato', dataKey: 'idcontrato' },
     { width: 150, label: 'Morada', dataKey: 'morada' },
-    { width: 150, label: 'Data Recolha', dataKey: 'data' },
+    { width: 100, label: 'Data Recolha', dataKey: 'data' },
     { width: 100, label: 'Estado', dataKey: 'idestadorecolha' },
+    { width: 50, label: 'Ver', dataKey: 'ver' },
 ];
 
 const VirtuosoTableComponents = {
@@ -56,61 +58,26 @@ function fixedHeaderContent() {
 function getEstadoEstilo(id) {
     switch (id) {
         case 1:
-            return {
-                texto: 'Pendente',
-                estilo: {
-                    backgroundColor: '#b2c8ff',
-                    color: '#25324c',
-                },
-            };
+            return { texto: 'Pendente', estilo: { backgroundColor: '#b2c8ff', color: '#25324c' } };
         case 2:
-            return {
-                texto: 'Em Andamento',
-                estilo: {
-                    backgroundColor: '#ede7f6',
-                    color: '#6a1b9a',
-                },
-            };
+            return { texto: 'Em Andamento', estilo: { backgroundColor: '#ede7f6', color: '#6a1b9a' } };
         case 3:
-            return {
-                texto: 'Concluído',
-                estilo: {
-                    backgroundColor: '#ccffde',
-                    color: '#2e7d32',
-                },
-            };
+            return { texto: 'Concluído', estilo: { backgroundColor: '#ccffde', color: '#2e7d32' } };
         case 4:
-            return {
-                texto: 'Cancelado',
-                estilo: {
-                    backgroundColor: '#fdecea',
-                    color: '#d32f2f',
-                },
-            };
+            return { texto: 'Cancelado', estilo: { backgroundColor: '#fdecea', color: '#d32f2f' } };
         case 5:
-            return {
-                texto: 'Aguardando Coleta',
-                estilo: {
-                    backgroundColor: '#fff4e5',
-                    color: '#ef6c00',
-                },
-            };
+            return { texto: 'Aguardando Coleta', estilo: { backgroundColor: '#fff4e5', color: '#ef6c00' } };
         default:
-            return {
-                texto: 'Desconhecido',
-                estilo: {
-                    backgroundColor: '#eeeeee',
-                    color: '#757575',
-                },
-            };
+            return { texto: 'Desconhecido', estilo: { backgroundColor: '#eeeeee', color: '#757575' } };
     }
 }
 
-function rowContent(_index, row) {
-    return (
+// Row content separado para poder receber função onVerClick
+function rowContentFactory(onVerClick) {
+    return (_index, row) => (
         <>
             {columns.map((column) => (
-                <TableCell key={column.dataKey} align={column.numeric ? 'right' : 'left'}>
+                <TableCell key={column.dataKey} align="left">
                     {column.dataKey === 'idestadorecolha' ? (
                         (() => {
                             const { texto, estilo } = getEstadoEstilo(row[column.dataKey]);
@@ -132,6 +99,11 @@ function rowContent(_index, row) {
                         })()
                     ) : column.dataKey === 'idcontrato' ? (
                         `${row.idcontrato} - ${row.nome}`
+                    ) : column.dataKey === 'ver' ? (
+                        <FaEye
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => onVerClick(row)}
+                        />
                     ) : (
                         row[column.dataKey]
                     )}
@@ -143,6 +115,13 @@ function rowContent(_index, row) {
 
 export default function TableContratos() {
     const [rows, setRows] = useState([]);
+    const [modalAberto, setModalAberto] = useState(false);
+    const [recolhaSelecionada, setRecolhaSelecionada] = useState(null);
+
+    const abrirModal = (row) => {
+        setRecolhaSelecionada(row);
+        setModalAberto(true);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -178,6 +157,7 @@ export default function TableContratos() {
                     recolhasComNome = recolhasComNome.filter(r => r.idutilizador === idutilizador);
                 }
 
+                recolhasComNome.sort((a, b) => b.idrecolha - a.idrecolha);
 
                 setRows(recolhasComNome);
             } catch (error) {
@@ -189,13 +169,30 @@ export default function TableContratos() {
     }, []);
 
     return (
-        <Paper style={{ height: 400, width: '90%', margin: '30px auto' }}>
-            <TableVirtuoso
-                data={rows}
-                components={VirtuosoTableComponents}
-                fixedHeaderContent={fixedHeaderContent}
-                itemContent={rowContent}
-            />
-        </Paper>
+        <>
+            <Paper style={{ height: 400, width: '90%', margin: '30px auto' }}>
+                <TableVirtuoso
+                    data={rows}
+                    components={VirtuosoTableComponents}
+                    fixedHeaderContent={fixedHeaderContent}
+                    itemContent={rowContentFactory(abrirModal)}
+                />
+            </Paper>
+
+            {modalAberto && recolhaSelecionada && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2>Detalhes da Recolha</h2>
+                        <p><strong>Contrato:</strong> {recolhaSelecionada.idcontrato} - {recolhaSelecionada.nome}</p>
+                        <p><strong>Morada:</strong> {recolhaSelecionada.morada}</p>
+                        <p><strong>Data:</strong> {recolhaSelecionada.data}</p>
+                        <p><strong>Quantidade:</strong> {recolhaSelecionada.quantidade} ml</p>
+                        <p><strong>Número de Bidões:</strong> {recolhaSelecionada.numbidoes}</p>
+                        <p><strong>Observações:</strong> {recolhaSelecionada.observacoes || "Nenhuma"}</p>
+                        <button onClick={() => setModalAberto(false)}>Fechar</button>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }

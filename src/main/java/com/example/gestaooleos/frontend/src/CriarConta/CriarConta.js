@@ -10,10 +10,44 @@ function CriarConta() {
     const [password1, setPassword1] = useState('');
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Username:', username);
-        console.log('Password:', password);
+
+        if (password !== password1) {
+            alert("As passwords não coincidem.");
+            return;
+        }
+
+        const novoUtilizador = {
+            nome: name,
+            telefone: phone,
+            morada: street,
+            username: username,
+            password: password,
+            idtipoutilizador: 1
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/Utilizadores', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify(novoUtilizador)
+            });
+
+            if (response.ok) {
+                alert("Conta criada com sucesso!");
+                window.location.href = "/Login";
+            } else {
+                const erro = await response.text();
+                alert("Erro ao criar conta: " + erro);
+            }
+        } catch (error) {
+            console.error("Erro:", error);
+            alert("Erro ao comunicar com o servidor.");
+        }
     };
 
     return (
@@ -53,7 +87,7 @@ function CriarConta() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <input
-                        type="password1"
+                        type="password"
                         placeholder="Repita a Password"
                         value={password1}
                         onChange={(e) => setPassword1(e.target.value)}

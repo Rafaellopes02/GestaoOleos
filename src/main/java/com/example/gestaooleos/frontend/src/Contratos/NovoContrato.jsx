@@ -43,10 +43,8 @@ export default function NovoContrato({ open, onClose, onSave }) {
             dataInicio: form.dataInicio,
             dataFim: form.dataFim,
             idutilizador: userId,
-            idEstadoContrato: 1
+            idEstadoContrato: 4
         };
-
-        console.log("Payload enviado:", payload);
 
         if (onSave) onSave(payload);
         onClose();
