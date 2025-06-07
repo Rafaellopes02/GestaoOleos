@@ -152,13 +152,13 @@ public class PagamentosService {
         Pagamentos pagamento = pagamentosRepository.findById(idPagamento)
                 .orElseThrow(() -> new RuntimeException("Pagamento não encontrado"));
 
-        pagamento.setIdestadospagamento(5L); // 1 = Pago
+        pagamento.setIdestadospagamento(2L);
         pagamento.setIdmetodopagamento(idMetodoPagamento);
         pagamento.setDatapagamento(LocalDate.now());
 
         contratosRepository.findById(pagamento.getIdcontrato())
                 .ifPresent(contrato -> {
-                    contrato.setIdestadocontrato(1); // 1 = Ativo
+                    contrato.setIdestadocontrato(1);
                     contratosRepository.save(contrato);
                 });
         pagamentosRepository.save(pagamento);
@@ -170,12 +170,12 @@ public class PagamentosService {
         Optional<Pagamentos> pagamentoOpt = pagamentosRepository.findById(idPagamento);
         if (pagamentoOpt.isPresent()) {
             Pagamentos pagamento = pagamentoOpt.get();
-            pagamento.setIdestadospagamento(8L); // 3 = Cancelado
+            pagamento.setIdestadospagamento(8L);
             pagamentosRepository.save(pagamento);
 
             contratosRepository.findById(pagamento.getIdcontrato())
                     .ifPresent(contrato -> {
-                        contrato.setIdestadocontrato(3); // 2 = Suspenso
+                        contrato.setIdestadocontrato(3);
                         contratosRepository.save(contrato);
                     });
         } else {

@@ -91,6 +91,9 @@ public class LoginController {
                 case 3: // Funcionários
                     paginaInicial = "/com.example.gestaooleos/view/home-funcionario.fxml";
                     break;
+                case 4: // Comercial
+                    paginaInicial = "/com.example.gestaooleos/view/home-funcionario.fxml";
+                    break;
                 default:
                     mostrarErro("Tipo de utilizador inválido.");
                     return;

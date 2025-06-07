@@ -4,6 +4,7 @@ import com.example.gestaooleos.API.dto.PagamentoDTOBackend;
 import com.example.gestaooleos.API.dto.TotalRecebidoPorDiaDTO;
 import com.example.gestaooleos.API.model.Pagamentos;
 import com.example.gestaooleos.API.service.PagamentosService;
+import com.example.gestaooleos.API.dto.MetodoPagamentoRequest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -71,13 +72,15 @@ public class PagamentosController {
         return ResponseEntity.ok().build();
     }
 
-
     // Cancelar pagamento e suspender contrato
     @PutMapping("/cancelar/{idpagamento}")
     public void cancelarPagamento(@PathVariable Long idpagamento) {
         pagamentosService.cancelarPagamentoEContrato(idpagamento);
     }
 
-
-
+    @PostMapping("/{id}/concluir")
+    public ResponseEntity<Void> concluirPagamento(@PathVariable Long id, @RequestBody MetodoPagamentoRequest request) {
+        pagamentosService.pagarPagamento(id, request.getIdmetodopagamento());
+        return ResponseEntity.noContent().build();
+    }
 }
