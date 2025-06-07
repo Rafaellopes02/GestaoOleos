@@ -18,6 +18,9 @@ function Recolhas() {
     const [observacoes, setObservacoes] = useState("");
     const [valor, setValor] = useState("");
 
+    const [refreshKey, setRefreshKey] = useState(0);
+
+
     useEffect(() => {
         const fetchContratos = async () => {
             try {
@@ -68,6 +71,16 @@ function Recolhas() {
 
             await axios.post("http://localhost:8080/Recolhas", novaRecolha);
             alert("Recolha solicitada com sucesso!");
+
+            setContratoSelecionado("");
+            setMorada("");
+            setQuantidade("");
+            setNumBidoes("");
+            setDataRecolha("");
+            setObservacoes("");
+            setValor("");
+
+            setRefreshKey(prev => prev + 1);
         } catch (error) {
             console.error("Erro ao solicitar recolha:", error);
             alert("Erro ao solicitar recolha!");
@@ -81,7 +94,7 @@ function Recolhas() {
             setNumBidoes(bidões);
 
             const preco = (qtd / 5000) * 10;
-            setValor(preco.toFixed(2)); // duas casas decimais
+            setValor(preco.toFixed(2));
         } else {
             setNumBidoes("");
             setValor("");
@@ -162,7 +175,7 @@ function Recolhas() {
                     </div>
                 </div>
 
-                <ReactVirtualizedTable />
+                <ReactVirtualizedTable key={refreshKey} />
             </div>
         </div>
     );

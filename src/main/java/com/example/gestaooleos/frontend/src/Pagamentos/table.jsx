@@ -12,7 +12,6 @@ import Chip from '@mui/material/Chip';
 import { jwtDecode } from "jwt-decode";
 
 import DetalhesPagamento from './DetalhesPagamento';
-import EfetuarPagamento from './EfetuarPagamento';
 
 const columns = [
     { width: 200, label: 'Contrato', dataKey: 'contrato' },
@@ -86,6 +85,7 @@ export default function TablePagamentos() {
 
                 const data = pagamentos
                     .filter(p => contratosDoUtilizador.has(p.idcontrato))
+                    .sort((a, b) => b.idpagamento - a.idpagamento)
                     .map(p => ({
                         contrato: contratoMap.get(p.idcontrato) || `#${p.idcontrato}`,
                         metodo: metodoMap.get(p.idmetodopagamento) || `#${p.idmetodopagamento}`,
@@ -105,13 +105,8 @@ export default function TablePagamentos() {
     }, []);
 
     const abrirDetalhes = (pagamento) => {
-        if (pagamento.estado === 'Concluido') {
-            setPagamentoSelecionado(pagamento);
-            setModalOpen(true);
-        } else if (pagamento.estado === 'Pendente') {
-            setPagamentoSelecionado(pagamento);
-            setModalPagarOpen(true);
-        }
+        setPagamentoSelecionado(pagamento);
+        setModalOpen(true);
     };
 
     const fecharDetalhes = () => {
@@ -178,14 +173,6 @@ export default function TablePagamentos() {
                 open={modalOpen}
                 onClose={fecharDetalhes}
                 pagamento={pagamentoSelecionado}
-            />
-
-            <EfetuarPagamento
-                open={modalPagarOpen}
-                onClose={fecharPagar}
-                pagamento={pagamentoSelecionado}
-                metodosPagamento={metodosPagamento}
-                onPagar={pagar}
             />
         </>
     );

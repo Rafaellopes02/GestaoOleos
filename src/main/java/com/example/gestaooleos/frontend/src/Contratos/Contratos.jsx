@@ -57,7 +57,7 @@ function Contratos() {
                 dataInicio: form.dataInicio,
                 dataFim: form.dataFim,
                 idutilizador: idUtilizador,
-                idEstadoContrato: 1,
+                idEstadoContrato: 4,
             };
 
             // Apenas cria o contrato — o backend trata do resto
