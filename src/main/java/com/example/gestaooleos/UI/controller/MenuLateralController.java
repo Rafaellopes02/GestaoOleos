@@ -32,14 +32,14 @@ public class MenuLateralController {
             btnUtilizadores.setVisible(false);
             btnUtilizadores.setManaged(false);
 
-        } else if (SessaoUtilizador.getTipoUtilizador() == 3) { // Funcionário/Admin
+        } else if (SessaoUtilizador.getTipoUtilizador() == 3) { //Escritório
             btnPaginaInicial.setOnAction(e -> navegar("home-funcionario.fxml"));
             btnContratos.setOnAction(e -> navegar("contratos-view.fxml"));
             btnRecolhas.setOnAction(e -> navegar("recolhas-view.fxml"));
-            btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
             btnUtilizadores.setOnAction(e -> navegar("utilizadores-view.fxml"));
-        } else {
-            btnPaginaInicial.setOnAction(e -> navegar("home-funcionario.fxml"));
+            btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
+        } else if (SessaoUtilizador.getTipoUtilizador() == 4) { //Comercial
+            btnPaginaInicial.setOnAction(e -> navegar("home-comercial.fxml"));
             btnContratos.setOnAction(e -> navegar("contratos-view.fxml"));
             btnRecolhas.setOnAction(e -> navegar("recolhas-view.fxml"));
             btnUtilizadores.setOnAction(e -> navegar("utilizadores-view.fxml"));
