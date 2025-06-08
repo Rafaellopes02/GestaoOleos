@@ -87,9 +87,11 @@ public class LoginController {
                 case 1: // Cliente
                     paginaInicial = "/com.example.gestaooleos/view/home-cliente.fxml";
                     break;
-                case 2:
-                case 3: // Funcionários
-                    paginaInicial = "/com.example.gestaooleos/view/home-funcionario.fxml";
+                case 2: // Empregado
+                    paginaInicial = "/com.example.gestaooleos/view/home-empregado.fxml";
+                    break;
+                case 3: // Escritório
+                    paginaInicial = "/com.example.gestaooleos/view/home-escritorio.fxml";
                     break;
                 case 4: // Comercial
                     paginaInicial = "/com.example.gestaooleos/view/home-comercial.fxml";
@@ -98,6 +100,7 @@ public class LoginController {
                     mostrarErro("Tipo de utilizador inválido.");
                     return;
             }
+
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource(paginaInicial));
             Parent root = loader.load();

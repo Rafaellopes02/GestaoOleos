@@ -20,23 +20,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.util.StringConverter;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class RecolhasController {
 
-    @FXML private ComboBox<ContratoDTO> comboContrato;
-    @FXML private TextField txtQuantidade;
-    @FXML private DatePicker dateRecolha;
-    @FXML private TextField txtMorada;
-    @FXML private TextField txtBidoes;
-    @FXML private TextArea txtObservacoes;
-    @FXML private Button btnSolicitar;
     @FXML private Button btnBack;
     @FXML private TableView<RecolhaViewModel> tabelaRecolhas;
     @FXML private TableColumn<RecolhaViewModel, String> nomeContratoRecolha;
@@ -44,23 +33,28 @@ public class RecolhasController {
     @FXML private TableColumn<RecolhaViewModel, String> DataRecolha;
     @FXML private TableColumn<RecolhaViewModel, String> estadoRecolha;
     @FXML private TableColumn<RecolhaViewModel, Void> verRecolha;
+    @FXML private ComboBox<UtilizadorDTO> comboEmpregados;
+    @FXML private Button btnNotificar;
 
+    private final UtilizadoresClient utilizadoresClient = new UtilizadoresClient();
     private final RecolhasClient recolhasClient = new RecolhasClient();
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private final ContratosClient contratosClient = new ContratosClient();
-    private final UtilizadoresClient utilizadoresClient = new UtilizadoresClient();
     private final EstadosRecolhaClient estadosRecolhaClient = new EstadosRecolhaClient();
 
     private List<Long> idsRecolhas;
 
     @FXML
     public void initialize() {
-        nomeContratoRecolha.setCellValueFactory(new PropertyValueFactory<>("nomeContrato"));
+        nomeContratoRecolha.setCellValueFactory(new PropertyValueFactory<>("nome"));
         MoradaRecolha.setCellValueFactory(new PropertyValueFactory<>("morada"));
         DataRecolha.setCellValueFactory(new PropertyValueFactory<>("data"));
         estadoRecolha.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        btnNotificar.setOnAction(e -> notificarEmpregado());
+        carregarEmpregados();
 
-        verRecolha.setCellFactory(coluna -> new TableCell<RecolhaViewModel, Void>() {
+
+        verRecolha.setCellFactory(coluna -> new TableCell<>() {
             private final Button btn = new Button();
 
             {
@@ -83,9 +77,7 @@ public class RecolhasController {
             }
         });
 
-        btnSolicitar.setOnAction(event -> solicitarRecolha());
         carregarRecolhas();
-        carregarContratos();
     }
 
     private void abrirDialogEditarRecolha(RecolhaViewModel recolha, Long idRecolha) {
@@ -111,7 +103,10 @@ public class RecolhasController {
                 Platform.runLater(() -> {
                     comboEstado.getItems().clear();
                     for (EstadoRecolhaDTO estado : estados) {
-                        comboEstado.getItems().add(estado.getNome());
+                        String nome = estado.getNome().toLowerCase();
+                        if (!nome.equals("concluído") && !nome.equals("cancelado")) {
+                            comboEstado.getItems().add(estado.getNome());
+                        }
                     }
                     comboEstado.setValue(recolha.getEstado());
                 });
@@ -121,11 +116,9 @@ public class RecolhasController {
         }, erro -> System.err.println("Erro ao carregar estados: " + erro));
 
         Button btnGuardar = new Button("Guardar");
-        btnGuardar.setStyle("-fx-background-color: #f4d35e; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 8 20;");
-
         Button btnFechar = new Button("Fechar");
-        btnFechar.setStyle("-fx-background-color: #f4d35e; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 8 20;");
-
+        btnGuardar.setStyle("-fx-background-color: #f4d35e; -fx-font-weight: bold;");
+        btnFechar.setStyle("-fx-background-color: #f4d35e; -fx-font-weight: bold;");
         btnFechar.setOnAction(e -> dialogStage.close());
 
         btnGuardar.setOnAction(e -> {
@@ -140,15 +133,11 @@ public class RecolhasController {
 
                     if (estadoSelecionado != null) {
                         recolhasClient.atualizarEstadoRecolha(idRecolha, estadoSelecionado.getId(),
-                                sucesso -> {
-                                    Platform.runLater(() -> {
-                                        carregarRecolhas();
-                                        dialogStage.close();
-                                    });
-                                },
+                                sucesso -> Platform.runLater(() -> {
+                                    carregarRecolhas();
+                                    dialogStage.close();
+                                }),
                                 erro -> System.err.println("Erro ao atualizar estado: " + erro));
-                    } else {
-                        System.err.println("Estado selecionado não encontrado!");
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -157,10 +146,9 @@ public class RecolhasController {
         });
 
         HBox botoes = new HBox(10, btnGuardar, btnFechar);
-        botoes.setStyle("-fx-alignment: center; -fx-padding: 10 0 0 0;");
+        botoes.setStyle("-fx-alignment: center;");
 
         conteudo.getChildren().addAll(lblTitulo, lblNome, lblMorada, lblData, new Label("Estado:"), comboEstado, botoes);
-
         Scene scene = new Scene(conteudo);
         dialogStage.setScene(scene);
         dialogStage.initOwner(tabelaRecolhas.getScene().getWindow());
@@ -168,7 +156,7 @@ public class RecolhasController {
         dialogStage.show();
     }
 
-    public void carregarRecolhas() {
+    private void carregarRecolhas() {
         recolhasClient.buscarRecolhas(json -> {
             try {
                 List<RecolhaDTO> lista = mapper.readValue(json, new TypeReference<>() {});
@@ -221,98 +209,47 @@ public class RecolhasController {
         }, erro -> System.err.println("Erro ao buscar recolhas: " + erro));
     }
 
-    private void carregarContratos() {
-        contratosClient.buscarContratossemestado(json -> {
+    private void carregarEmpregados() {
+        utilizadoresClient.buscarEmpregados(json -> {
             try {
-                List<ContratoDTO> contratos = mapper.readValue(json, new TypeReference<>() {});
-                Platform.runLater(() -> {
-                    comboContrato.setItems(FXCollections.observableArrayList(contratos));
-                    comboContrato.setConverter(new StringConverter<>() {
-                        @Override
-                        public String toString(ContratoDTO contrato) {
-                            return contrato != null ? contrato.getNome() : "";
-                        }
-
-                        @Override
-                        public ContratoDTO fromString(String string) {
-                            return comboContrato.getItems().stream()
-                                    .filter(c -> c.getNome().equals(string))
-                                    .findFirst()
-                                    .orElse(null);
-                        }
-                    });
-                });
+                List<UtilizadorDTO> empregados = mapper.readValue(json, new TypeReference<>() {});
+                Platform.runLater(() -> comboEmpregados.setItems(FXCollections.observableArrayList(empregados)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, erro -> System.err.println("Erro ao carregar contratos: " + erro));
+        }, erro -> System.err.println("Erro ao carregar empregados: " + erro));
     }
 
-    @FXML
-    private void solicitarRecolha() {
-        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacao.setTitle("Confirmação de Recolha");
-        confirmacao.setHeaderText("Deseja mesmo registar esta recolha?");
-        confirmacao.setContentText("Clique em 'Sim' para continuar ou 'Não' para cancelar.");
+    private void notificarEmpregado() {
+        RecolhaViewModel selecionada = tabelaRecolhas.getSelectionModel().getSelectedItem();
+        if (selecionada == null) {
+            System.out.println("⚠️ Selecione uma recolha na tabela!");
+            return;
+        }
 
-        ButtonType botaoSim = new ButtonType("Sim");
-        ButtonType botaoNao = new ButtonType("Não", ButtonBar.ButtonData.CANCEL_CLOSE);
-        confirmacao.getButtonTypes().setAll(botaoSim, botaoNao);
+        UtilizadorDTO empregado = comboEmpregados.getSelectionModel().getSelectedItem();
+        if (empregado == null) {
+            System.out.println("⚠️ Selecione um empregado!");
+            return;
+        }
 
-        confirmacao.showAndWait().ifPresent(botao -> {
-            if (botao == botaoSim) {
-                ContratoDTO contratoSelecionado = comboContrato.getSelectionModel().getSelectedItem();
-                if (contratoSelecionado == null) {
-                    System.out.println("❌ Nenhum contrato selecionado!");
-                    return;
-                }
+        // Aqui identificas a recolha via índice
+        int index = tabelaRecolhas.getItems().indexOf(selecionada);
+        Long idRecolha = idsRecolhas.get(index);
 
-                int idutilizador = contratoSelecionado.getIdutilizador();
-                if (idutilizador == 0) {
-                    System.out.println("❌ Este contrato não tem utilizador associado!");
-                    return;
-                }
-
-                try {
-                    LocalDate data = dateRecolha.getValue();
-                    double quantidade = Double.parseDouble(txtQuantidade.getText());
-                    int numbidoes = Integer.parseInt(txtBidoes.getText());
-                    String observacoes = txtObservacoes.getText();
-                    String morada = txtMorada.getText();
-
-                    RecolhaDTO novaRecolha = new RecolhaDTO();
-                    novaRecolha.setData(data);
-                    novaRecolha.setQuantidade((int) quantidade);
-                    novaRecolha.setNumbidoes(numbidoes);
-                    novaRecolha.setObservacoes(observacoes);
-                    novaRecolha.setIdcontrato(contratoSelecionado.getIdcontrato().intValue());
-                    novaRecolha.setIdutilizador(idutilizador);
-                    novaRecolha.setIdestadorecolha(1);
-                    novaRecolha.setMorada(morada);
-
-                    recolhasClient.adicionarRecolha(novaRecolha,
-                            resposta -> Platform.runLater(() -> {
-                                carregarRecolhas();
-                                limparCampos();
-                            }),
-                            erro -> System.err.println("Erro ao registar recolha: " + erro)
-                    );
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        // Aqui poderias usar um estado "Notificado", por exemplo ID = 4
+        int idEstadoNotificado = 4;
+        recolhasClient.atualizarEstadoRecolha(idRecolha, idEstadoNotificado,
+                sucesso -> Platform.runLater(() -> {
+                    carregarRecolhas();
+                    comboEmpregados.getSelectionModel().clearSelection();
+                    tabelaRecolhas.getSelectionModel().clearSelection();
+                    System.out.println("✅ Empregado notificado!");
+                }),
+                erro -> System.err.println("Erro ao notificar: " + erro));
     }
 
-    private void limparCampos() {
-        comboContrato.getSelectionModel().clearSelection();
-        txtQuantidade.clear();
-        txtBidoes.clear();
-        txtObservacoes.clear();
-        dateRecolha.setValue(null);
-        txtMorada.clear();
-    }
+
 
     @FXML
     private void voltarHome() {

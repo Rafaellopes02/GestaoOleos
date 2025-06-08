@@ -33,66 +33,28 @@
                 </VBox>
                 <VBox alignment="TOP_LEFT">
                     <Label text="Recolhas" styleClass="titulo" />
-                    <Label text="Solicitar Recolha de Óleo" styleClass="titulo2" />
+                    <Label text="Consulte as recolhas" styleClass="titulo2" />
                 </VBox>
             </HBox>
 
-            <!-- Formulário Centralizado -->
-            <HBox alignment="CENTER">
-                <GridPane hgap="20" vgap="10" style="-fx-padding: 0 20 0 20;">
-                    <columnConstraints>
-                        <ColumnConstraints halignment="LEFT" />
-                        <ColumnConstraints halignment="RIGHT" />
-                    </columnConstraints>
-
-                    <!-- Linha 1 -->
-                    <Label text="Contrato Associado" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-                    <Label text="Morada" GridPane.rowIndex="2" GridPane.columnIndex="1" />
-
-                    <ComboBox fx:id="comboContrato" promptText="Selecione o Contrato..."
-                              GridPane.rowIndex="1" GridPane.columnIndex="0" prefWidth="250"/>
-
-                    <TextField fx:id="txtMorada" promptText="Escreva a morada aqui"
-                               GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="400" />
-
-                    <!-- Linha 2 -->
-                    <Label text="Data da Recolha" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-                    <Label text="Quantidade" GridPane.rowIndex="0" GridPane.columnIndex="1" />
-
-                    <DatePicker fx:id="dateRecolha" GridPane.rowIndex="3" GridPane.columnIndex="0" />
-                    <TextField fx:id="txtQuantidade" promptText="Litros"
-                               GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="400"/>
-
-                    <!-- Linha 3 -->
-                    <Label text="Número Bidões" GridPane.rowIndex="4" GridPane.columnIndex="0" />
-                    <Label text="Observações (Opcional)" GridPane.rowIndex="4" GridPane.columnIndex="1" />
-
-                    <TextField fx:id="txtBidoes" promptText="5"
-                               GridPane.rowIndex="5" GridPane.columnIndex="0" prefWidth="250"/>
-
-                    <TextArea fx:id="txtObservacoes" promptText="Escreva aqui a sua Observação..."
-                              GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="400" prefHeight="100" wrapText="true"/>
-
-                    <!-- Botão posicionado à direita -->
-                    <Button fx:id="btnSolicitar" text="Solicitar Recolha  ➕" styleClass="botao-solicitar"
-                            onAction="#solicitarRecolha"
-                            GridPane.rowIndex="6" GridPane.columnIndex="1"
-                            alignment="CENTER_RIGHT" maxWidth="200" />
-                </GridPane>
+            <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 0 20 0 20;">
+                <Label text="Selecionar Empregado:" styleClass="subtitulo"/>
+                <ComboBox fx:id="comboEmpregados" promptText="Empregado"/>
+                <Button fx:id="btnNotificar" text="Notificar" style="-fx-background-color: #90ee90; -fx-font-weight: bold;"/>
             </HBox>
+
 
             <!-- Tabela -->
             <TableView fx:id="tabelaRecolhas"
-                       prefHeight="190"
-                       maxHeight="190"
+                       prefHeight="500"
                        styleClass="tabela-recolhas"
-                       style="-fx-padding: 0 20 20 20;">
+                       style="-fx-padding: 40 20 20 20;">
                 <columns>
-                    <TableColumn fx:id="nomeContratoRecolha" text="Nome" prefWidth="180" />
-                    <TableColumn fx:id="MoradaRecolha" text="Morada" prefWidth="150" />
-                    <TableColumn fx:id="DataRecolha" text="Data Recolha" prefWidth="150" />
-                    <TableColumn fx:id="estadoRecolha" text="Estado" prefWidth="130" />
-                    <TableColumn fx:id="verRecolha" text="Ver" prefWidth="100"/>
+                    <TableColumn fx:id="nomeContratoRecolha" text="Nome" prefWidth="240" />
+                    <TableColumn fx:id="MoradaRecolha" text="Morada" prefWidth="260" />
+                    <TableColumn fx:id="DataRecolha" text="Data Recolha" prefWidth="170" />
+                    <TableColumn fx:id="estadoRecolha" text="Estado" prefWidth="200" />
+                    <TableColumn fx:id="verRecolha" text="Ver" prefWidth="70"/>
                 </columns>
             </TableView>
         </VBox>
