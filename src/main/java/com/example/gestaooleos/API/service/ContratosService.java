@@ -1,26 +1,17 @@
 package com.example.gestaooleos.API.service;
 
 import com.example.gestaooleos.API.dto.*;
-import com.example.gestaooleos.API.model.Contratos;
-import com.example.gestaooleos.API.model.Pagamentos;
-import com.example.gestaooleos.API.model.Utilizadores;
-import com.example.gestaooleos.API.model.EstadosContratos;
+import com.example.gestaooleos.API.model.*;
 import com.example.gestaooleos.API.repository.*;
-import com.example.gestaooleos.API.model.PedidosContrato;
-import com.example.gestaooleos.API.repository.PedidosContratoRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.sql.Date;
 import java.util.*;
 import java.util.stream.StreamSupport;
-
-
 
 @Service
 public class ContratosService {
@@ -28,18 +19,10 @@ public class ContratosService {
     private final ContratosRepository contratosRepository;
     private final EstadosContratosRepository estadosContratosRepository;
 
-
-    @Autowired
-    private PedidosContratoRepository pedidosContratoRepository;
-
-    @Autowired
-    private PagamentosRepository pagamentosRepository;
-
-    @Autowired
-    private UtilizadoresRepository utilizadoresRepository;
-
-    @Autowired
-    private EstadosPagamentoRepository estadosPagamentoRepository;
+    @Autowired private PedidosContratoRepository pedidosContratoRepository;
+    @Autowired private PagamentosRepository pagamentosRepository;
+    @Autowired private UtilizadoresRepository utilizadoresRepository;
+    @Autowired private EstadosPagamentoRepository estadosPagamentoRepository;
 
     public ContratosService(ContratosRepository contratosRepository, EstadosContratosRepository estadosContratosRepository) {
         this.contratosRepository = contratosRepository;
@@ -142,20 +125,11 @@ public class ContratosService {
             dto.setDataInicio(contrato.getDatainicio().toString());
             dto.setDataFim(contrato.getDatafim().toString());
 
-            String estado;
-            if (contrato.getIdestadocontrato() == 1) {
-                estado = "Ativo";
-            } else {
-                estado = "Inativo";
-            }
+            String estado = contrato.getIdestadocontrato() == 1 ? "Ativo" : "Inativo";
             dto.setEstado(estado);
 
             Utilizadores utilizador = utilizadoresRepository.findById((long) contrato.getIdutilizador()).orElse(null);
-            if (utilizador != null) {
-                dto.setMoradaCliente(utilizador.getMorada());
-            } else {
-                dto.setMoradaCliente("Desconhecida");
-            }
+            dto.setMoradaCliente(utilizador != null ? utilizador.getMorada() : "Desconhecida");
 
             return dto;
         }).toList();
@@ -183,5 +157,25 @@ public class ContratosService {
         return contadores;
     }
 
+    public void atualizarEstadoContrato(Long idContrato, String novoEstadoNome) {
+        EstadosContratos estado = StreamSupport
+                .stream(estadosContratosRepository.findAll().spliterator(), false)
+                .filter(e -> e.getNome().equalsIgnoreCase(novoEstadoNome))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Estado não encontrado: " + novoEstadoNome));
 
+        Contratos contrato = contratosRepository.findById(idContrato)
+                .orElseThrow(() -> new RuntimeException("Contrato não encontrado"));
+
+        contrato.setIdestadocontrato(estado.getIdestadocontrato());
+        contratosRepository.save(contrato);
+    }
+
+    public void atualizarContrato(Contratos contrato) {
+        if (contrato.getDatainicio() == null || contrato.getDatafim() == null) {
+            throw new IllegalArgumentException("Data de início e fim são obrigatórias.");
+        }
+
+        contratosRepository.save(contrato);
+    }
 }
