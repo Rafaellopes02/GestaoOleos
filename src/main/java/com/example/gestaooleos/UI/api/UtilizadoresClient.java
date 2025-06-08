@@ -14,11 +14,10 @@ public class UtilizadoresClient {
 
     private static final String BASE_URL = "http://localhost:8080";
     private static final String API_URL = "http://localhost:8080/Utilizadores";
-    private static final String LOGIN_URL = "http://localhost:8080/api/auth/login";
+    //private static final String LOGIN_URL = "http://localhost:8080/api/auth/login";
+    private static final String LOGIN_URL = "http://localhost:8080/Utilizadores/login";
     private final HttpClient client = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
-
-    private static final String BASE_URL = "http://localhost:8080/Utilizadores";
 
     public void buscarUtilizadorPorId(Long id, Consumer<UtilizadorDTO> onSuccess, Consumer<Throwable> onError) {
         HttpRequest request = HttpRequest.newBuilder()
