@@ -18,6 +18,31 @@ public class UtilizadoresClient {
     private final HttpClient client = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
+    private static final String BASE_URL = "http://localhost:8080/Utilizadores";
+
+    public void buscarUtilizadorPorId(Long id, Consumer<UtilizadorDTO> onSuccess, Consumer<Throwable> onError) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/" + id))
+                .GET()
+                .build();
+
+        HttpClient.newHttpClient()
+                .sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(json -> {
+                    try {
+                        UtilizadorDTO utilizador = mapper.readValue(json, UtilizadorDTO.class);
+                        onSuccess.accept(utilizador);
+                    } catch (Exception e) {
+                        onError.accept(e);
+                    }
+                })
+                .exceptionally(erro -> {
+                    onError.accept(erro);
+                    return null;
+                });
+    }
+
     // LOGIN (POST)
     public void login(String username, String password, Consumer<String> onSuccess, Consumer<String> onError) {
         try {

@@ -1,7 +1,6 @@
 package com.example.gestaooleos.UI.controller;
 
-import com.example.gestaooleos.UI.api.UtilizadorDTO;
-import com.example.gestaooleos.UI.api.UtilizadoresClient;
+import com.example.gestaooleos.UI.api.ContratoDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
@@ -29,11 +28,9 @@ public class ModalAdicionarContratoController {
     @FXML private TextField txtNome;
     @FXML private DatePicker dpInicio;
     @FXML private DatePicker dpFim;
-    @FXML private ComboBox<UtilizadorDTO> cbCliente;
-    @FXML private TextField txtValor;
+    @FXML private ComboBox<ContratoDTO> cbCliente;
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private final UtilizadoresClient utilizadoresClient = new UtilizadoresClient();
     private ContratosController contratosController;
 
     @FXML
@@ -66,12 +63,12 @@ public class ModalAdicionarContratoController {
     private void configurarComboBoxCliente() {
         cbCliente.setConverter(new StringConverter<>() {
             @Override
-            public String toString(UtilizadorDTO cliente) {
-                return cliente != null ? cliente.getNome() : "";
+            public String toString(ContratoDTO contrato) {
+                return contrato != null ? contrato.getNome() : "";
             }
 
             @Override
-            public UtilizadorDTO fromString(String string) {
+            public ContratoDTO fromString(String string) {
                 return null;
             }
         });
@@ -79,7 +76,7 @@ public class ModalAdicionarContratoController {
 
     private void carregarClientes() {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/Utilizadores/clientes"))
+                .uri(URI.create("http://localhost:8080/Contratos/com-estado"))
                 .GET()
                 .build();
 
@@ -88,8 +85,11 @@ public class ModalAdicionarContratoController {
                 .thenApply(HttpResponse::body)
                 .thenAccept(response -> {
                     try {
-                        List<UtilizadorDTO> clientes = mapper.readValue(response, new TypeReference<List<UtilizadorDTO>>() {});
-                        Platform.runLater(() -> cbCliente.getItems().addAll(clientes));
+                        List<ContratoDTO> contratos = mapper.readValue(response, new TypeReference<>() {});
+                        List<ContratoDTO> contratosAtivos = contratos.stream()
+                                .filter(c -> "Ativo".equalsIgnoreCase(c.getEstado()))
+                                .toList();
+                        Platform.runLater(() -> cbCliente.getItems().addAll(contratosAtivos));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -105,8 +105,7 @@ public class ModalAdicionarContratoController {
         String nome = txtNome.getText().trim();
         LocalDate dataInicio = dpInicio.getValue();
         LocalDate dataFim = dpFim.getValue();
-        UtilizadorDTO clienteSelecionado = cbCliente.getValue();
-        String valorTexto = txtValor.getText().trim();
+        ContratoDTO contratoSelecionado = cbCliente.getValue();
 
         limparEstilos();
 
@@ -124,25 +123,9 @@ public class ModalAdicionarContratoController {
             dpFim.getStyleClass().add("campo-obrigatorio");
             valido = false;
         }
-        if (clienteSelecionado == null) {
+        if (contratoSelecionado == null) {
             cbCliente.getStyleClass().add("campo-obrigatorio");
             valido = false;
-        }
-        if (valorTexto.isEmpty()) {
-            txtValor.getStyleClass().add("campo-obrigatorio");
-            valido = false;
-        }
-
-        if (dataInicio == null) {
-            mostrarToast("Por favor, selecione uma data de início.", false);
-            dpInicio.getStyleClass().add("campo-obrigatorio");
-            return;
-        }
-
-        if (dataFim == null) {
-            mostrarToast("Por favor, selecione uma data de fim.", false);
-            dpFim.getStyleClass().add("campo-obrigatorio");
-            return;
         }
 
         if (!valido) {
@@ -150,22 +133,11 @@ public class ModalAdicionarContratoController {
             return;
         }
 
-        double valor;
-        try {
-            valor = Double.parseDouble(valorTexto);
-        } catch (NumberFormatException e) {
-            txtValor.getStyleClass().add("campo-obrigatorio");
-            mostrarToast("Valor inválido. Introduza um número!", false);
-            return;
-        }
-
-        // ⚡️ Aqui, garantimos que enviamos a data no formato correto "yyyy-MM-dd"
         Map<String, Object> contrato = new HashMap<>();
         contrato.put("nome", nome);
-        contrato.put("dataInicio", dataInicio.toString()); // LocalDate.toString() já dá "yyyy-MM-dd"
+        contrato.put("dataInicio", dataInicio.toString());
         contrato.put("dataFim", dataFim.toString());
-        contrato.put("idutilizador", clienteSelecionado.getIdutilizador());
-        contrato.put("valor", valor);
+        contrato.put("idutilizador", contratoSelecionado.getIdutilizador());
         contrato.put("idEstadoContrato", 2);
 
         try {
@@ -218,7 +190,6 @@ public class ModalAdicionarContratoController {
         dpInicio.getStyleClass().remove("campo-obrigatorio");
         dpFim.getStyleClass().remove("campo-obrigatorio");
         cbCliente.getStyleClass().remove("campo-obrigatorio");
-        txtValor.getStyleClass().remove("campo-obrigatorio");
     }
 
     @FXML

@@ -1,32 +1,30 @@
 package com.example.gestaooleos.UI.controller;
 
 import com.example.gestaooleos.UI.api.*;
-import com.example.gestaooleos.UI.api.ContratoDTO;
-import com.example.gestaooleos.UI.api.ContratosClient;
-import com.example.gestaooleos.UI.utils.*;
+import com.example.gestaooleos.UI.utils.FullscreenHelper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;       // ← necessário
-import javafx.scene.Parent;          // ← necessário
-import javafx.scene.Scene;           // ← necessário
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+
 public class ContratosController {
 
     @FXML private Label lblAtivos;
@@ -37,6 +35,7 @@ public class ContratosController {
     @FXML private TableColumn<ContratoDTO, String> dataInicioCol;
     @FXML private TableColumn<ContratoDTO, String> dataFimCol;
     @FXML private TableColumn<ContratoDTO, String> estadoCol;
+    @FXML private TableColumn<ContratoDTO, Void> verContrato;
 
     @FXML private Button btnAdicionar;
     @FXML private Button btnBack;
@@ -50,9 +49,57 @@ public class ContratosController {
         dataInicioCol.setCellValueFactory(new PropertyValueFactory<>("dataInicio"));
         dataFimCol.setCellValueFactory(new PropertyValueFactory<>("dataFim"));
         estadoCol.setCellValueFactory(new PropertyValueFactory<>("estado"));
+
+        verContrato.setCellFactory(coluna -> new TableCell<>() {
+            private final Button btn = new Button();
+
+            {
+                ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/image/ver.png")));
+                icon.setFitHeight(20);
+                icon.setFitWidth(20);
+                btn.setGraphic(icon);
+                btn.setStyle("-fx-background-color: transparent;");
+                btn.setOnAction(event -> {
+                    ContratoDTO contrato = getTableView().getItems().get(getIndex());
+                    abrirDialogContrato(contrato);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btn);
+                }
+            }
+        });
+
         btnAdicionar.setOnAction(e -> abrirModalAdicionarContrato());
         carregarContratos();
         carregarContadores();
+    }
+
+    private void abrirDialogContrato(ContratoDTO contrato) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/ver-contrato-dialog.fxml"));
+            Parent root = loader.load();
+
+            VerContratoController controller = loader.getController();
+            controller.setContrato(contrato);
+            controller.setOnSaveCallback(this::carregarContratos);
+
+            Stage dialog = new Stage();
+            dialog.initStyle(StageStyle.UNDECORATED);
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(btnBack.getScene().getWindow());
+            dialog.setTitle("Detalhes Contrato");
+            dialog.setScene(new Scene(root));
+            dialog.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void carregarContratos() {
@@ -92,11 +139,9 @@ public class ContratosController {
     @FXML
     private void abrirModalAdicionarContrato() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/com.example.gestaooleos/view/ModalAdicionarContrato.fxml"
-            ));
-            Parent root = loader.load();               // ← load()
-            ModalAdicionarContratoController modalCtrl = loader.getController(); // ← getController()
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/ModalAdicionarContrato.fxml"));
+            Parent root = loader.load();
+            ModalAdicionarContratoController modalCtrl = loader.getController();
 
             modalCtrl.setContratosController(this);
 
@@ -121,9 +166,7 @@ public class ContratosController {
     @FXML
     private void voltarHome() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com.example.gestaooleos/view/home-funcionario.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/home-funcionario.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) btnBack.getScene().getWindow();
             stage.getScene().setRoot(root);
@@ -131,8 +174,6 @@ public class ContratosController {
             FullscreenHelper.ativarFullscreen(stage);
         } catch (Exception ex) {
             ex.printStackTrace();
-            // podes mostrar um alerta aqui, se quiseres
         }
     }
-
 }

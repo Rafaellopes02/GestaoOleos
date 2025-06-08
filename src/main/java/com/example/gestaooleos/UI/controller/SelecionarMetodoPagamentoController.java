@@ -24,7 +24,7 @@ public class SelecionarMetodoPagamentoController {
 
     @FXML
     public void initialize() {
-        comboMetodo.getItems().addAll("Cartão", "MBWay","Multibanco", "Transferência");
+        comboMetodo.getItems().addAll("MBWay", "Transferência", "Multibanco");
     }
 
     @FXML
@@ -46,7 +46,7 @@ public class SelecionarMetodoPagamentoController {
             case "MBWay" -> 1L;
             case "Transferência" -> 2L;
             case "Multibanco" -> 3L;
-            case "Cartão" -> 4L;
+            case "Aguardando Pagamento" -> 4L;
             default -> throw new IllegalArgumentException("Método de pagamento inválido: " + metodoSelecionado);
         };
     }
