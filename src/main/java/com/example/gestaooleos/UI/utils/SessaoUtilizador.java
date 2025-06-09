@@ -4,6 +4,7 @@ public class SessaoUtilizador {
 
     private static String nomeUtilizador;
     private static Integer tipoUtilizador;
+
     private static Integer idUtilizador;
 
     public static void setNomeUtilizador(String nome) {

@@ -166,3 +166,49 @@
     -fx-shape: "";
     -fx-padding: 0;
 }
+
+.botao-aceitar {
+    -fx-background-color: #90ee90;
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-pref-width: 800px;
+}
+
+.botao-cancelar {
+    -fx-background-color: #f08080;
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-pref-width: 800px;
+}
+
+.custom-dialog {
+    -fx-background-color: #fff8dc;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+}
+
+.custom-dialog .header-panel {
+    -fx-background-color: transparent;
+}
+
+.custom-dialog .label.content {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.custom-dialog .text-field {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #ccc;
+}
+
+.custom-dialog .button {
+    -fx-background-color: #f4d35e;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+}

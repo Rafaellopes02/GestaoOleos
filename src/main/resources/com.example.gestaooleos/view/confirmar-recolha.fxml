@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -10,8 +9,7 @@
             style="-fx-background-color: white;"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.gestaooleos.UI.controller.RecolhasController">
-
+            fx:controller="com.example.gestaooleos.UI.controller.ConfirmarRecolhasController">
 
     <left>
         <fx:include source="menu-lateral.fxml" />
@@ -33,33 +31,22 @@
                     </Button>
                 </VBox>
                 <VBox alignment="TOP_LEFT">
-                    <Label text="Recolhas" styleClass="titulo" />
-                    <Label text="Consulte as recolhas" styleClass="titulo2" />
+                    <Label text="Confirmar Recolhas" styleClass="titulo" />
+                    <Label text="Apenas recolhas em andamento aguardam confirmação" styleClass="titulo2" />
                 </VBox>
             </HBox>
 
-            <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 30 10 0 20;">
-                <Label text="Selecionar Empregado:" styleClass="subtitulo"/>
-                <ComboBox fx:id="comboEmpregados" promptText="Empregado"/>
-                <Button fx:id="btnNotificar" text="Notificar"  onAction="#notificarSelecionado" style="-fx-background-color: #90ee90; -fx-font-weight: bold;"/>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10 0 0 20;">
-                <Label text="Total de recolhas pendentes:" styleClass="subtitulo"/>
-                <Label fx:id="lblRecolhasPedidas" text="0" styleClass="valor-destaque"/>
-            </HBox>
-
-
             <!-- Tabela -->
-            <TableView fx:id="tabelaRecolhas"
+            <TableView fx:id="tabelaConfirmar"
                        prefHeight="500"
                        styleClass="tabela-recolhas"
                        style="-fx-padding: 40 20 20 20;">
                 <columns>
-                    <TableColumn fx:id="nomeContratoRecolha" text="Nome" prefWidth="240" />
-                    <TableColumn fx:id="MoradaRecolha" text="Morada" prefWidth="260" />
-                    <TableColumn fx:id="DataRecolha" text="Data Recolha" prefWidth="170" />
-                    <TableColumn fx:id="estadoRecolha" text="Estado" prefWidth="200" />
-                    <TableColumn fx:id="verRecolha" text="Ver" prefWidth="70"/>
+                    <TableColumn fx:id="nomeContratoRecolha" text="Contrato" prefWidth="230" />
+                    <TableColumn fx:id="colMorada" text="Morada" prefWidth="260" />
+                    <TableColumn fx:id="colData" text="Data Recolha" prefWidth="170" />
+                    <TableColumn fx:id="colQuantidade" text="Quantidade" prefWidth="150" />
+                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="160"/>
                 </columns>
             </TableView>
         </VBox>

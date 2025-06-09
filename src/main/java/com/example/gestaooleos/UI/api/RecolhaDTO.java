@@ -1,6 +1,9 @@
 package com.example.gestaooleos.UI.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class RecolhaDTO {
     private Long idrecolha;
@@ -10,6 +13,7 @@ public class RecolhaDTO {
     private int numbidoes;
     private int idcontrato;
     private int idutilizador;
+    @JsonProperty("idestadorecolha")
     private int idestadorecolha;
     private String morada;
 
@@ -50,4 +54,9 @@ public class RecolhaDTO {
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
+
+    public String getDataFormatada() {
+        return data != null ? data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "";
+    }
+
 }

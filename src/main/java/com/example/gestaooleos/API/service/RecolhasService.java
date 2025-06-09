@@ -8,6 +8,8 @@ import com.example.gestaooleos.API.repository.PagamentosRepository;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -65,9 +67,45 @@ public class RecolhasService {
         }
     }
 
+    public List<Recolhas> listarPorEstado(int estadoId) {
+        return recolhasRepository.findByIdestadorecolha(estadoId);
+    }
+
+
     public int contarPorEstado(int estadoId) {
         return (int) recolhasRepository.countByIdestadorecolha(estadoId);
     }
+
+    public void notificarEmpregado(Long idRecolha, int novoEstadoId, Long idEmpregado) {
+        Optional<Recolhas> recolhaOpt = recolhasRepository.findById(idRecolha);
+        if (recolhaOpt.isPresent()) {
+            Recolhas recolha = recolhaOpt.get();
+
+            System.out.println("🔁 Atualizando recolha " + idRecolha +
+                    " para estado " + novoEstadoId +
+                    " com empregado " + idEmpregado);
+
+            recolha.setIdestadorecolha(novoEstadoId);
+            recolha.setIdutilizador(idEmpregado); // <- VERIFICA ESTE CAMPO
+
+            recolhasRepository.save(recolha);
+        } else {
+            throw new RuntimeException("❌ Recolha não encontrada com ID: " + idRecolha);
+        }
+    }
+
+    public void atualizarObservacoes(Long idRecolha, String novasObservacoes) {
+        Optional<Recolhas> optional = recolhasRepository.findById(idRecolha);
+        if (optional.isPresent()) {
+            Recolhas recolha = optional.get();
+            recolha.setObservacoes(novasObservacoes);
+            recolhasRepository.save(recolha);
+        } else {
+            throw new RuntimeException("Recolha com ID " + idRecolha + " não encontrada.");
+        }
+    }
+
+
 
 
 

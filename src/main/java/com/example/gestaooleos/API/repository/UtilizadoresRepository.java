@@ -14,4 +14,6 @@ public interface UtilizadoresRepository extends CrudRepository<Utilizadores, Lon
     List<Utilizadores> findClientes();
 
     Optional<Utilizadores> findByUsername(String username);
+
+    List<Utilizadores> findByIdtipoutilizador(Integer idTipo);
 }

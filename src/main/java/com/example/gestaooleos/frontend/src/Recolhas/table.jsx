@@ -132,7 +132,7 @@ export default function TableContratos() {
                 const idutilizador = parseInt(decoded.sub, 10);
 
                 const [recolhasRes, contratosRes] = await Promise.all([
-                    axios.get('http://localhost:8080/Recolhas', {
+                    axios.get('http://localhost:8080/recolhas', {
                         headers: { Authorization: `Bearer ${token}` }
                     }),
                     axios.get('http://localhost:8080/Contratos/com-estado', {

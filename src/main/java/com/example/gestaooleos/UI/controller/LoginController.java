@@ -88,7 +88,7 @@ public class LoginController {
                     paginaInicial = "/com.example.gestaooleos/view/home-cliente.fxml";
                     break;
                 case 2: // Empregado
-                    paginaInicial = "/com.example.gestaooleos/view/home-empregado.fxml";
+                    paginaInicial = "/com.example.gestaooleos/view/home-funcionario.fxml";
                     break;
                 case 3: // Escritório
                     paginaInicial = "/com.example.gestaooleos/view/home-escritorio.fxml";

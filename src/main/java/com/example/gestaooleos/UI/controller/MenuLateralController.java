@@ -37,26 +37,27 @@ public class MenuLateralController {
                 btnUtilizadores.setManaged(false);
 
             } else if (tipo == 2) { // Empregado (normal)
-                btnPaginaInicial.setOnAction(e -> navegar("home-empregado.fxml"));
-
+                btnPaginaInicial.setOnAction(e -> navegar("home-funcionario.fxml"));
                 btnContratos.setVisible(false);
                 btnContratos.setManaged(false);
-
+                btnRecolhas.setVisible(false);
+                btnRecolhas.setManaged(false);
                 btnPagamentos.setVisible(false);
                 btnPagamentos.setManaged(false);
-
                 btnUtilizadores.setVisible(false);
                 btnUtilizadores.setManaged(false);
 
             } else if (tipo == 3) { // Escritório
                 btnPaginaInicial.setOnAction(e -> navegar("home-escritorio.fxml"));
 
-                btnContratos.setOnAction(e -> navegar("contratos-view.fxml"));
                 btnRecolhas.setOnAction(e -> navegar("recolhas-view.fxml"));
-                btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
+                btnPagamentos.setText(" Confirma Recolha");
+                btnPagamentos.setOnAction(e -> navegar("confirmar-recolha.fxml"));
 
                 btnUtilizadores.setVisible(false);
                 btnUtilizadores.setManaged(false);
+                btnContratos.setVisible(false);
+                btnContratos.setManaged(false);
 
             } else { // Admin ou genérico
                 btnPaginaInicial.setOnAction(e -> navegar("home-funcionario.fxml"));

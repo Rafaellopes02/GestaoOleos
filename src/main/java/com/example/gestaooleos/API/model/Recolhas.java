@@ -12,7 +12,6 @@ public class Recolhas {
 
     @Id
     private Long idrecolha;
-
     private LocalDate data;
     private double quantidade;
     private String observacoes;

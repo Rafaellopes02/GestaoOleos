@@ -3,56 +3,64 @@ package com.example.gestaooleos.API.dto;
 public class RecolhaDTOBackend {
     private Long idrecolha;
     private String data;
-    private int quantidade;
+    private double quantidade;
     private String observacoes;
     private int numbidoes;
     private String morada;
+    private int idestadorecolha;
 
-    /*public Long getIdcontrato() {
-        return idcontrato;
+
+
+    public int getIdestadorecolha() { return idestadorecolha; }
+    public void setIdestadorecolha(int idestadorecolha) { this.idestadorecolha = idestadorecolha; }
+
+
+    // Getters e Setters
+    public Long getIdrecolha() {
+        return idrecolha;
     }
 
-    public void setIdcontrato(Long idcontrato) {
-        this.idcontrato = idcontrato;
+    public void setIdrecolha(Long idrecolha) {
+        this.idrecolha = idrecolha;
     }
 
-    public String getNome() {
-        return nome;
+    public String getData() {
+        return data;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setData(String data) {
+        this.data = data;
     }
 
-    public String getDataInicio() {
-        return dataInicio;
+    public double getQuantidade() {
+        return quantidade;
     }
 
-    public void setDataInicio(String dataInicio) {
-        this.dataInicio = dataInicio;
+    public void setQuantidade(double quantidade) {
+        this.quantidade = quantidade;
     }
 
-    public String getDataFim() {
-        return dataFim;
+    public String getObservacoes() {
+        return observacoes;
     }
 
-    public void setDataFim(String dataFim) {
-        this.dataFim = dataFim;
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
     }
 
-    public int getIdEstadoContrato() {
-        return idEstadoContrato;
+    public int getNumbidoes() {
+        return numbidoes;
     }
 
-    public void setIdEstadoContrato(int idEstadoContrato) {
-        this.idEstadoContrato = idEstadoContrato;
+    public void setNumbidoes(int numbidoes) {
+        this.numbidoes = numbidoes;
     }
 
-    public String getEstado() {
-        return estado;
+    public String getMorada() {
+        return morada;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }*/
+    public void setMorada(String morada) {
+        this.morada = morada;
+    }
 }

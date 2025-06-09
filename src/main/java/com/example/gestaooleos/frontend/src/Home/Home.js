@@ -25,7 +25,7 @@ function Home() {
                 const decoded = jwtDecode(token);
                 const idUtilizador = parseInt(decoded.sub, 10);
 
-                const recolhasResponse = await axios.get('http://localhost:8080/Recolhas');
+                const recolhasResponse = await axios.get('http://localhost:8080/recolhas');
                 const recolhasDoUtilizador = recolhasResponse.data.filter(r => r.idutilizador === idUtilizador);
                 setTotalRecolhas(recolhasDoUtilizador.length);
 

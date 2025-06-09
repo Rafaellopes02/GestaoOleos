@@ -2,6 +2,8 @@ package com.example.gestaooleos.API.service;
 
 import com.example.gestaooleos.API.model.Utilizadores;
 import com.example.gestaooleos.API.repository.UtilizadoresRepository;
+import com.example.gestaooleos.API.dto.UtilizadorDTO;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,5 +73,13 @@ public class UtilizadoresService {
                         Collectors.counting()
                 ));
     }
+
+    public List<UtilizadorDTO> buscarEmpregados() {
+        List<Utilizadores> empregados = utilizadoresRepository.findByIdtipoutilizador(2); // tipo 2 = empregado
+        return empregados.stream()
+                .map(emp -> new UtilizadorDTO(emp.getIdutilizador(), emp.getNome()))
+                .collect(Collectors.toList());
+    }
+
 
 }

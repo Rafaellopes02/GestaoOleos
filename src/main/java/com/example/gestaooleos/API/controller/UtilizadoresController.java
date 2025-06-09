@@ -1,6 +1,7 @@
 package com.example.gestaooleos.API.controller;
 
 import com.example.gestaooleos.API.dto.LoginRequest;
+import com.example.gestaooleos.API.dto.UtilizadorDTO;
 import com.example.gestaooleos.API.model.Utilizadores;
 import com.example.gestaooleos.API.security.JwtUtil;
 import com.example.gestaooleos.API.service.UtilizadoresService;
@@ -12,8 +13,9 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/Utilizadores")
+@RequestMapping("/api/utilizadores")
 public class UtilizadoresController {
+
     private final UtilizadoresService utilizadoresService;
     private final JwtUtil jwtUtil;
 
@@ -54,6 +56,12 @@ public class UtilizadoresController {
         return (List<Utilizadores>) utilizadoresService.listarClientes();
     }
 
+    @GetMapping("/empregados")
+    public ResponseEntity<List<UtilizadorDTO>> listarEmpregados() {
+        List<UtilizadorDTO> empregados = utilizadoresService.buscarEmpregados();
+        return ResponseEntity.ok(empregados);
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
@@ -73,10 +81,13 @@ public class UtilizadoresController {
 
             return ResponseEntity.ok().body(Map.of("token", token));
         } catch (Exception e) {
-            e.printStackTrace(); // Mostra erro detalhado no terminal
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Erro interno no servidor: " + e.getMessage());
         }
+
+
     }
+
 
     @GetMapping("/contar-por-tipo")
     public Map<String, Long> contarPorTipoUtilizador() {

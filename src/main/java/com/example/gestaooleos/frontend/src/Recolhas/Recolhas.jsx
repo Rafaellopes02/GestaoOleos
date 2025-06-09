@@ -69,7 +69,7 @@ function Recolhas() {
 
             console.log("Recolha a enviar:", novaRecolha);
 
-            await axios.post("http://localhost:8080/Recolhas", novaRecolha);
+            await axios.post("http://localhost:8080/recolhas", novaRecolha);
             alert("Recolha solicitada com sucesso!");
 
             setContratoSelecionado("");

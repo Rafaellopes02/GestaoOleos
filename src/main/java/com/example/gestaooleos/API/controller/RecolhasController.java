@@ -1,20 +1,24 @@
 package com.example.gestaooleos.API.controller;
 
-import java.util.Map;
-import java.util.HashMap;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.example.gestaooleos.API.dto.RecolhaDTOBackend;
+import com.example.gestaooleos.API.mapper.RecolhaMapper;
 import com.example.gestaooleos.API.model.Recolhas;
+import com.example.gestaooleos.API.repository.RecolhasRepository;
 import com.example.gestaooleos.API.service.RecolhasService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.*;
 
 @RestController
-@RequestMapping("/Recolhas")
+@RequestMapping("/recolhas")
 public class RecolhasController {
+
     private final RecolhasService recolhasService;
+
+    @Autowired
+    private RecolhasRepository recolhasRepository;
 
     public RecolhasController(RecolhasService recolhasService) {
         this.recolhasService = recolhasService;
@@ -36,7 +40,7 @@ public class RecolhasController {
     }
 
     @DeleteMapping("/{id}")
-    public void removeRecolhas(@PathVariable Long id) {
+    public void removerRecolhas(@PathVariable Long id) {
         recolhasService.removeRecolhas(id);
     }
 
@@ -52,5 +56,42 @@ public class RecolhasController {
         resposta.put("quantidade", total);
         return ResponseEntity.ok(resposta);
     }
+
+    @GetMapping("/em-andamento")
+    public List<Recolhas> listarRecolhasEmAndamento() {
+        return recolhasService.listarPorEstado(2); // Estado 2 = Em andamento
+    }
+
+    @GetMapping("/funcionario/{id}")
+    public ResponseEntity<List<RecolhaDTOBackend>> listarRecolhasFuncionario(@PathVariable Long id) {
+        System.out.println("📥 Pedido de recolhas para funcionário ID: " + id);
+        List<Recolhas> lista = recolhasRepository.findByIdutilizadorAndIdestadorecolha(id, 5);
+        System.out.println("🔎 Recolhas encontradas: " + lista.size());
+
+        List<RecolhaDTOBackend> dtos = lista.stream()
+                .map(RecolhaMapper::toDTO)
+                .toList();
+
+        return ResponseEntity.ok(dtos);
+    }
+
+    @PatchMapping("/{id}/observacoes")
+    public ResponseEntity<?> atualizarObservacoes(@PathVariable Long id, @RequestBody String obs) {
+        recolhasService.atualizarObservacoes(id, obs);
+        return ResponseEntity.ok().build();
+    }
+
+
+
+
+    @PatchMapping("/{id}/notificar/{estado}/{empregado}")
+    public ResponseEntity<?> notificarEmpregado(
+            @PathVariable Long id,
+            @PathVariable int estado,
+            @PathVariable Long empregado) {
+        recolhasService.notificarEmpregado(id, estado, empregado);
+        return ResponseEntity.ok().build();
+    }
+
 
 }

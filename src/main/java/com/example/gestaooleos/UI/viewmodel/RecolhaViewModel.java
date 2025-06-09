@@ -5,12 +5,14 @@ public class RecolhaViewModel {
     private String morada;
     private String data;
     private String estado;
+    private String observacoes;
 
-    public RecolhaViewModel(String nome, String morada, String data, String estado) {
+    public RecolhaViewModel(String nome, String morada, String data, String estado, String observacoes) {
         this.nome = nome;
         this.morada = morada;
         this.data = data;
         this.estado = estado;
+        this.observacoes = observacoes;
     }
 
     public String getNome() {
@@ -28,4 +30,7 @@ public class RecolhaViewModel {
     public String getEstado() {
         return estado;
     }
-}
+
+    public String getObservacoes() { return observacoes; }
+    }
+
