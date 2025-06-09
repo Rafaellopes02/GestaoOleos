@@ -14,8 +14,7 @@ public class UtilizadoresClient {
 
     private static final String BASE_URL = "http://localhost:8080";
     private static final String API_URL = "http://localhost:8080/Utilizadores";
-    //private static final String LOGIN_URL = "http://localhost:8080/api/auth/login";
-    private static final String LOGIN_URL = "http://localhost:8080/Utilizadores/login";
+    private static final String LOGIN_URL = "http://localhost:8080/api/utilizadores/login";
     private final HttpClient client = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
 
