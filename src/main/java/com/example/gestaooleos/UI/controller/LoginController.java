@@ -3,6 +3,7 @@ package com.example.gestaooleos.UI.controller;
 import com.example.gestaooleos.UI.api.UtilizadorDTO;
 import com.example.gestaooleos.UI.api.UtilizadoresClient;
 import com.example.gestaooleos.UI.utils.SessaoUtilizador;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -42,7 +43,18 @@ public class LoginController {
                         System.out.println("Resposta da API: " + json);
                         if (json.startsWith("{")) {
                             ObjectMapper mapper = new ObjectMapper();
-                            UtilizadorDTO utilizador = mapper.readValue(json, UtilizadorDTO.class);
+                            JsonNode node = mapper.readTree(json);
+
+                            if (!node.has("idutilizador") || !node.has("nome") || !node.has("idtipoutilizador")) {
+                                Platform.runLater(() -> mostrarErro("Resposta inválida da API."));
+                                return;
+                            }
+
+                            UtilizadorDTO utilizador = new UtilizadorDTO();
+                            utilizador.setIdutilizador(node.get("idutilizador").asLong());
+                            utilizador.setNome(node.get("nome").asText());
+                            utilizador.setIdtipoutilizador(node.get("idtipoutilizador").asInt());
+
                             Platform.runLater(() -> redirecionarParaHome(utilizador));
                         } else {
                             Platform.runLater(() -> mostrarErro(json));
@@ -92,6 +104,9 @@ public class LoginController {
                     break;
                 case 3: // Escritório
                     paginaInicial = "/com.example.gestaooleos/view/home-escritorio.fxml";
+                    break;
+                case 4: // Comercial
+                    paginaInicial = "/com.example.gestaooleos/view/home-comercial.fxml";
                     break;
                 default:
                     mostrarErro("Tipo de utilizador inválido.");

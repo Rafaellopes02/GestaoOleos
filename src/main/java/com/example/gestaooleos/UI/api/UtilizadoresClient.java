@@ -14,9 +14,33 @@ public class UtilizadoresClient {
 
     private static final String BASE_URL = "http://localhost:8080";
     private static final String API_URL = "http://localhost:8080/Utilizadores";
-    private static final String LOGIN_URL = "http://localhost:8080/api/auth/login";
+    //private static final String LOGIN_URL = "http://localhost:8080/api/auth/login";
+    private static final String LOGIN_URL = "http://localhost:8080/Utilizadores/login";
     private final HttpClient client = HttpClient.newHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
+
+    public void buscarUtilizadorPorId(Long id, Consumer<UtilizadorDTO> onSuccess, Consumer<Throwable> onError) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/" + id))
+                .GET()
+                .build();
+
+        HttpClient.newHttpClient()
+                .sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(json -> {
+                    try {
+                        UtilizadorDTO utilizador = mapper.readValue(json, UtilizadorDTO.class);
+                        onSuccess.accept(utilizador);
+                    } catch (Exception e) {
+                        onError.accept(e);
+                    }
+                })
+                .exceptionally(erro -> {
+                    onError.accept(erro);
+                    return null;
+                });
+    }
 
     // LOGIN (POST)
     public void login(String username, String password, Consumer<String> onSuccess, Consumer<String> onError) {

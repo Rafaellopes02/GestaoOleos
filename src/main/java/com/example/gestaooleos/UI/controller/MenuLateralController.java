@@ -71,7 +71,6 @@ public class MenuLateralController {
         }
 
 
-
         private void navegar(String nomeFxml) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/" + nomeFxml));

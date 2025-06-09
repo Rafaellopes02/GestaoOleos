@@ -6,8 +6,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -75,5 +77,30 @@ public class PagamentosClient {
             }
         }).start();
     }
+    public void atualizarEstadoParaConcluido(Long idPagamento, Long idMetodo, Runnable onSuccess, Consumer<Exception> onError) {
+        new Thread(() -> {
+            try {
+                URL url = new URL("http://localhost:8080/api/pagamentos/" + idPagamento + "/concluir");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Content-Type", "application/json");
 
+                String json = "{\"idmetodopagamento\":" + idMetodo + "}";
+
+                try (OutputStream os = connection.getOutputStream()) {
+                    os.write(json.getBytes(StandardCharsets.UTF_8));
+                }
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == 200 || responseCode == 204) {
+                    onSuccess.run();
+                } else {
+                    onError.accept(new RuntimeException("Erro HTTP: " + responseCode));
+                }
+            } catch (Exception e) {
+                onError.accept(e);
+            }
+        }).start();
+    }
 }

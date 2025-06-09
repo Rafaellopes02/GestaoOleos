@@ -10,6 +10,9 @@ public class ContratosClient {
     private static final String API_URL = "http://localhost:8080/Contratos/com-estado";
     private static final String API_URL1 = "http://localhost:8080/Contratos";
     private final HttpClient client = HttpClient.newHttpClient();
+    private final ObjectMapper mapper = new ObjectMapper();
+
+
 
     public void buscarContratos(Consumer<String> onSuccess, Consumer<String> onError) {
         HttpRequest request = HttpRequest.newBuilder()
@@ -93,5 +96,35 @@ public class ContratosClient {
                     return null;
                 });
     }
+
+    public void atualizarContrato(Long id, ContratoDTO contrato, Runnable onSuccess, Consumer<Throwable> onError) {
+        try {
+            String json = mapper.writeValueAsString(contrato);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/Contratos/" + id))
+                    .PUT(HttpRequest.BodyPublishers.ofString(json))
+                    .header("Content-Type", "application/json")
+                    .build();
+
+            HttpClient.newHttpClient()
+                    .sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenAccept(response -> {
+                        if (response.statusCode() == 200 || response.statusCode() == 204) {
+                            onSuccess.run();
+                        } else {
+                            onError.accept(new RuntimeException("Erro: " + response.body()));
+                        }
+                    })
+                    .exceptionally(e -> {
+                        onError.accept(e);
+                        return null;
+                    });
+
+        } catch (Exception e) {
+            onError.accept(e);
+        }
+    }
+
 
 }

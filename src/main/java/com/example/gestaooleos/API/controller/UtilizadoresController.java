@@ -8,6 +8,7 @@ import com.example.gestaooleos.API.service.UtilizadoresService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -79,7 +80,14 @@ public class UtilizadoresController {
 
             String token = jwtUtil.generateToken(utilizador.getIdutilizador(), utilizador.getIdtipoutilizador());
 
-            return ResponseEntity.ok().body(Map.of("token", token));
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("idutilizador", utilizador.getIdutilizador());
+            response.put("nome", utilizador.getNome());
+            response.put("idtipoutilizador", utilizador.getIdtipoutilizador());
+
+            return ResponseEntity.ok().body(response);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Erro interno no servidor: " + e.getMessage());
