@@ -87,7 +87,7 @@ public class ContratosClienteController {
     @FXML
     private void voltarHome() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/home-cliente.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com.example.gestaooleos/view/home-comercial.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) btnBack.getScene().getWindow();

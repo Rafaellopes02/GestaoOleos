@@ -40,7 +40,6 @@ function Contratos() {
         fetchContagens();
     }, []);
 
-
     const handleSaveContrato = async (form) => {
         try {
             const token = localStorage.getItem("token");
@@ -60,7 +59,6 @@ function Contratos() {
                 idEstadoContrato: 4,
             };
 
-            // Apenas cria o contrato — o backend trata do resto
             await axios.post("http://localhost:8080/Contratos", novoContrato);
 
             alert("Contrato criado com sucesso!");
@@ -70,7 +68,6 @@ function Contratos() {
             alert("Erro ao guardar contrato!");
         }
     };
-
 
     return (
         <div>

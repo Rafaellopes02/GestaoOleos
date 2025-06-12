@@ -92,10 +92,7 @@ public class UtilizadoresController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Erro interno no servidor: " + e.getMessage());
         }
-
-
     }
-
 
     @GetMapping("/contar-por-tipo")
     public Map<String, Long> contarPorTipoUtilizador() {

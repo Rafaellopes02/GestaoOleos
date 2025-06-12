@@ -50,7 +50,6 @@ export default function NovoContrato({ open, onClose, onSave }) {
         onClose();
     };
 
-
     return (
         <Modal open={open} onClose={onClose}>
             <Box sx={style}>

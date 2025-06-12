@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 public class MenuLateralController {
 
     @FXML private Button btnPaginaInicial;
-    @FXML private Button btnPaginaInicialCli;
+    @FXML private Button btnConfirmaRecolhas;
     @FXML private Button btnContratos;
     @FXML private Button btnRecolhas;
     @FXML private Button btnPagamentos;
@@ -51,15 +51,28 @@ public class MenuLateralController {
                 btnPaginaInicial.setOnAction(e -> navegar("home-escritorio.fxml"));
 
                 btnRecolhas.setOnAction(e -> navegar("recolhas-view.fxml"));
-                btnPagamentos.setText(" Confirma Recolha");
-                btnPagamentos.setOnAction(e -> navegar("confirmar-recolha.fxml"));
+                btnUtilizadores.setText(" Confirma Recolha");
+                btnUtilizadores.setOnAction(e -> navegar("confirmar-recolha.fxml"));
+                btnPagamentos.setOnAction(e -> navegar("pagamentos-view.fxml"));
+
+                btnContratos.setVisible(false);
+                btnContratos.setManaged(false);
+                btnPagamentos.setVisible(true);
+                btnPagamentos.setManaged(true);
+
+            } else if (tipo == 4) { // Comercial
+                btnPaginaInicial.setOnAction(e -> navegar("home-comercial.fxml"));
+                btnContratos.setOnAction(e -> navegar("contratos-view.fxml"));
 
                 btnUtilizadores.setVisible(false);
                 btnUtilizadores.setManaged(false);
-                btnContratos.setVisible(false);
-                btnContratos.setManaged(false);
-
-            } else { // Admin ou genérico
+                btnContratos.setVisible(true);
+                btnContratos.setManaged(true);
+                btnRecolhas.setVisible(false);
+                btnRecolhas.setManaged(false);
+                btnPagamentos.setVisible(false);
+                btnPagamentos.setManaged(false);
+            }else { // Admin ou genérico
                 btnPaginaInicial.setOnAction(e -> navegar("home-funcionario.fxml"));
                 btnContratos.setOnAction(e -> navegar("contratos-view.fxml"));
                 btnRecolhas.setOnAction(e -> navegar("recolhas-view.fxml"));

@@ -144,12 +144,11 @@ export default function TableContratos() {
 
                 let contratos = response.data;
 
-                // Filtrar contratos do próprio utilizador (caso tipo === 1)
                 if (tipo === 1) {
                     contratos = contratos.filter(c => c.idutilizador === idUtilizador);
                 }
 
-                // Filtrar contratos com estado diferente de "Pendente"
+                //Filtra contratos com estado diferente de "Pendente"
                 contratos = contratos.filter(c => c.idEstadoContrato !== 4);
 
                 contratos.sort((a, b) => b.idcontrato - a.idcontrato);
@@ -162,7 +161,6 @@ export default function TableContratos() {
 
         fetchContratos();
     }, []);
-
 
     return (
         <Paper style={{ height: 400, width: '90%', margin: '30px auto' }}>

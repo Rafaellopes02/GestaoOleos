@@ -36,11 +36,9 @@ function Home() {
                 const pagamentosResponse = await axios.get('http://localhost:8080/api/pagamentos');
                 const pagamentosDoUtilizador = pagamentosResponse.data.filter(p => idsContratos.includes(p.idcontrato));
 
-                // Total ganho
                 const total = pagamentosDoUtilizador.reduce((sum, p) => sum + parseFloat(p.valor || 0), 0);
                 setTotalGanho(total.toFixed(2));
 
-                // Agrupar ganhos por mês
                 const ganhosMap = {};
 
                 pagamentosDoUtilizador.forEach(p => {
