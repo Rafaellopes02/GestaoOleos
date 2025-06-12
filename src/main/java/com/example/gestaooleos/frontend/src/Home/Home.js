@@ -34,7 +34,8 @@ function Home() {
                 const idsContratos = contratosDoUtilizador.map(c => c.idcontrato);
 
                 const pagamentosResponse = await axios.get('http://localhost:8080/api/pagamentos');
-                const pagamentosDoUtilizador = pagamentosResponse.data.filter(p => idsContratos.includes(p.idcontrato));
+                const pagamentosDoUtilizador = pagamentosResponse.data
+                    .filter(p => idsContratos.includes(p.idcontrato) && p.idestadospagamento === 2);
 
                 const total = pagamentosDoUtilizador.reduce((sum, p) => sum + parseFloat(p.valor || 0), 0);
                 setTotalGanho(total.toFixed(2));
@@ -84,7 +85,7 @@ function Home() {
 
                 <div className="cards-row">
                     <div className="card">
-                        <p><b>Total de Recolhass</b></p>
+                        <p><b>Total de Recolhas</b></p>
                         <div className="content">
                             <span className="count"><b>{totalRecolhas}</b></span>
                             <span className="icon-wrapper orange">
